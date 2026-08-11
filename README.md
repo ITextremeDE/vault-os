@@ -1,47 +1,206 @@
 # Vault-OS
 
-Vault-OS is a portable, local-first operating layer for Obsidian vaults.
-It provides versioned system rules, schemas, workflows, reusable assets,
-automation foundations, and runtime conventions without owning a vault's
-content or identity.
+Vault-OS is a portable, local-first operating layer for Obsidian vaults. It
+provides versioned rules, schemas, workflows, reusable assets, validation, and
+agent context without owning a vault's content, name, language, or identity.
+
+It is not a pre-populated second brain, hosted service, Obsidian plugin, or AI
+model. It is an inspectable file-based system that is managed alongside the
+vault owner's content without taking ownership of that content.
 
 ## Status
 
 Vault-OS is under active development and has not reached its first public
-release. Installation and update behavior have been validated against both a
-clean vault and a hash-verified copy of an existing real-world vault. Publishing
-the initial `0.1.0` release remains pending.
+release. Installation and update behavior have been validated against a clean
+vault and a hash-verified copy of an existing real-world vault. Publishing
+`0.1.0` and completing a deliberate live-vault migration remain pending.
 
-## Goals
+Use the current `main` branch for evaluation and development, not as a stable
+release contract.
 
-- Keep the operating layer separate from vault-specific content and settings.
-- Allow every user to choose the name and language of their vault.
-- Install a new vault without personal, organizational, or source-vault data.
-- Update managed Vault-OS files without overwriting local content or
-  customizations.
-- Keep the system transparent, inspectable, and usable as ordinary files.
+## Requirements
 
-## Non-goals
+- Python 3.10 or newer;
+- Git to obtain or update the checkout;
+- Obsidian to use the target directory as an Obsidian vault; and
+- a backup before installing into an existing vault.
 
-- Shipping a pre-populated personal vault.
-- Prescribing a user's projects, areas, contacts, or private workflows.
-- Hiding the system behind a hosted service or proprietary file format.
-- Modifying `.obsidian` settings as part of the portable core.
+The lifecycle is currently release-validated on macOS. Linux and Windows have
+not yet completed the release acceptance matrix. Vault-OS does not modify
+`.obsidian` and requires no Obsidian plugin for its core.
 
-## Ownership model
+Codex, Claude Code, and [QMD](https://github.com/tobi/qmd) are optional.
 
-Vault-OS distinguishes between three ownership domains:
+## Quick start
 
-- **Managed files** belong to a specific Vault-OS release and are updated only
-  through the Vault-OS tooling.
-- **Instance files** belong to the vault owner and are never overwritten by a
-  Vault-OS update.
-- **Runtime files** are generated locally and never supplied as release
-  content.
+Once the public repository is available, clone it and prepare an isolated
+Python environment:
 
-The updater uses manifests and checksums recorded in the local release lock. If
-a managed file was changed locally, an update stops before writing anything and
-reports the conflict instead of overwriting the file.
+```bash
+git clone https://github.com/ITextremeDE/vault-os.git
+cd vault-os
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Install a practical personal-knowledge profile into a new vault:
+
+```bash
+.venv/bin/python -m vault_os install "/path/to/My Vault" \
+  --module para \
+  --module inbox \
+  --module journal \
+  --module knowledge \
+  --module templates
+
+.venv/bin/python -m vault_os doctor "/path/to/My Vault"
+```
+
+The installer may create the target directory. Open it in Obsidian after the
+command succeeds. For an existing vault, custom language or paths, and
+side-by-side adoption, follow the complete [installation guide](docs/how-to/install.md).
+
+A local coding agent such as Codex or Claude Code can also perform the complete
+installation when it has authorized filesystem and terminal access. Give it the
+target vault, desired modules, and permission boundaries, then ask it to follow
+the [agent-assisted installation procedure](docs/how-to/install.md#let-an-ai-agent-install-vault-os).
+A browser-only LLM can explain the process but cannot install local files.
+
+## What Vault-OS installs
+
+The mandatory core provides:
+
+- operating principles and change rules;
+- portable schema and metadata conventions;
+- instance registers and runtime contracts;
+- deterministic validation; and
+- manifest-driven installation, update, diff, and health checks.
+
+Fourteen optional modules add PARA, inbox, journal, knowledge processing,
+contacts, publishing, templates, review, governance, Git, search, navigation,
+agent conventions, and audits. Every module is disabled by default. The
+[module catalog](docs/reference/modules.md) explains each module and suggests
+useful profiles.
+
+Vault name, language, folder names, enabled modules, registers, and local
+integration choices belong to the installed instance. `MindOS` is not embedded
+as a required name or identity.
+
+## How it works
+
+Release manifests map package sources to target paths and checksums. The
+installer validates the complete package, stages all writes, and records the
+installed release in `.vault-os/lock.json` only after a successful transaction.
+
+Vault-OS distinguishes three ownership domains:
+
+- **Managed files** belong to a Vault-OS release and are changed only through
+  lifecycle commands.
+- **Instance files** belong to the vault owner and are created only when
+  missing; updates never overwrite them.
+- **Runtime files** are generated locally and are not release content.
+
+Before an update, every installed managed file must still match its recorded
+checksum. A missing or locally modified managed file stops the entire operation
+instead of being overwritten. `.obsidian`, ordinary vault content, credentials,
+external schedules, indexes, and client permissions remain outside Vault-OS
+ownership.
+
+## Operate and update an installation
+
+Edit `.vault-os/config.yaml` to change modules or instance paths. Preview before
+applying:
+
+```bash
+.venv/bin/python -m vault_os diff "/path/to/My Vault"
+.venv/bin/python -m vault_os update "/path/to/My Vault"
+.venv/bin/python -m vault_os doctor "/path/to/My Vault"
+```
+
+Installation and updates are transactional. There is no automatic downgrade or
+uninstall in version `0.1`; use a pre-change backup for release rollback or
+removal. The complete operating procedure is documented in
+[Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md).
+
+## AI and agent integration
+
+Vault-OS is designed for direct work by humans and authorized local AI agents.
+It supplies provider-neutral instructions, installed canonical skills, and
+runtime context, but does not bundle a model, client, authentication, or
+permission system.
+
+Install useful agent modules and initialize one built-in provider:
+
+```bash
+.venv/bin/python -m vault_os install "/path/to/AI Vault" \
+  --module agents \
+  --module search \
+  --module knowledge \
+  --module audit
+
+.venv/bin/python -m vault_os agent-init "/path/to/AI Vault" \
+  --provider codex
+
+.venv/bin/python -m vault_os doctor "/path/to/AI Vault" --ai
+```
+
+Use `--provider claude` for Claude Code or omit the option to initialize all
+registered adapters. The command generates a shared `AGENTS.md`, a thin
+`CLAUDE.md` import when needed, and provider discovery wrappers under
+`.agents/skills` or `.claude/skills`. Canonical skills remain below the
+configured system root, normally `99 System/04 Assets/Skills`.
+
+The common lifecycle depends on an extensible provider registry and contains no
+Codex- or Claude-specific branch. Browser-only ChatGPT and claude.ai sessions do
+not gain local vault access from these files.
+
+Follow [Set up AI assistance](docs/how-to/ai-setup.md) for client installation,
+provider initialization, permissions, QMD indexing, MCP, and end-to-end checks.
+
+## Optional local search with QMD
+
+[QMD](https://github.com/tobi/qmd) is the recommended optional local search
+engine for AI-assisted Vault-OS installations. It provides keyword, semantic,
+and hybrid retrieval and can expose the index through MCP.
+
+Vault-OS does not bundle or install QMD. After installing it from upstream:
+
+```bash
+.venv/bin/python -m vault_os agent-init "/path/to/My Vault" \
+  --provider codex \
+  --qmd
+cd "/path/to/My Vault"
+qmd update
+qmd embed
+qmd status
+```
+
+The adapter creates a project-local `.qmd/index.yml`, configures `qmd mcp` for
+the selected clients, and reports health through `doctor --ai`. Search results
+remain candidates; an agent must retrieve the original Markdown note before
+using it as evidence or changing it.
+
+## Documentation
+
+### How-to guides
+
+- [Install Vault-OS](docs/how-to/install.md)
+- [Set up AI assistance](docs/how-to/ai-setup.md)
+- [Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md)
+- [Troubleshooting](docs/how-to/troubleshooting.md)
+
+### Reference
+
+- [CLI commands and exit codes](docs/reference/cli.md)
+- [Module catalog](docs/reference/modules.md)
+- [Manifest and ownership contract](docs/reference/manifests.md)
+- [Provider adapter contract](docs/reference/provider-adapters.md)
+
+### Explanation and evidence
+
+- [Architecture decisions](docs/adr/)
+- [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
+- [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
 
 ## Repository layout
 
@@ -50,163 +209,63 @@ src/core/                 Portable core files
 src/modules/              Optional Vault-OS modules
 instance-template/        Neutral instance configuration
 manifests/                Ownership, source, target, and checksum declarations
-vault_os/                 Lifecycle command implementation
+vault_os/                 Lifecycle and provider-adapter implementation
 bin/                      Executable command wrapper
 analysis/                 Canonical source classification data
 scripts/                  Development and validation tools
 tests/                    Automated checks and test vaults
+docs/how-to/              Installation and operating guides
+docs/reference/           Technical contracts and catalogs
 docs/adr/                 Architecture decision records
 docs/analysis/            Human-readable analysis results
-docs/reference/           Technical contracts and formats
-docs/validation/          Evidence from release acceptance checks
+docs/validation/          Release acceptance evidence
 ```
-
-The current extraction baseline is documented in the
-[MindOS portability analysis](docs/analysis/mindos-portability-matrix.md).
-The [manifest reference](docs/reference/manifests.md) defines the current
-package contract.
-
-## Lifecycle commands
-
-The repository is directly executable after installing the Python dependency:
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-source .venv/bin/activate
-./bin/vault-os install "/path/to/My Vault" --module para --module knowledge
-./bin/vault-os doctor "/path/to/My Vault"
-```
-
-Change the selected modules or other instance settings in
-`.vault-os/config.yaml`, inspect the result, and then apply it:
-
-```bash
-./bin/vault-os diff "/path/to/My Vault"
-./bin/vault-os update "/path/to/My Vault"
-```
-
-Installation and updates are transactional. Existing instance files are
-preserved, locally changed managed files stop an update, and `.obsidian` is
-never modified. See the [CLI reference](docs/reference/cli.md) for the complete
-contract.
-
-## AI and agent integration
-
-Vault-OS is designed for direct work by humans and AI agents. It provides the
-portable rules, schemas, workflows, prompts, skills, validation, and runtime
-context that an agent needs to operate consistently inside a vault. It does not
-bundle an AI model, agent client, or permission system.
-
-An agent runtime must still have explicitly authorized access to the vault and
-must load both its host instructions and the installed Vault-OS context.
-Agent-facing assets can be selected during installation, for example:
-
-```bash
-./bin/vault-os install "/path/to/My Vault" \
-  --module agents \
-  --module search \
-  --module knowledge \
-  --module audit
-```
-
-Installing these modules places their managed prompts and skills in the
-configured system root. Registering those skills with Codex, Claude Code, or
-another agent runtime remains the responsibility of a provider adapter.
-Vault-OS keeps the portable core independent from any one AI vendor.
-
-Instance-owned integration settings live under `.vault-os`:
-
-- `runtime/agent-context.yaml` defines the capture path and source read order;
-- `integrations/search.yaml` declares approved search sources and precedence;
-- `integrations/automation.yaml` records automation contracts and ownership.
-
-Credentials, active schedules, model selection, tool permissions, indexes,
-caches, and current runtime state remain in their canonical external systems.
-
-### Recommended local search: QMD
-
-[QMD](https://github.com/tobi/qmd) is the recommended optional local search
-engine for agent-assisted Vault-OS installations. It is an external project
-licensed under the MIT License. QMD indexes Markdown and provides BM25
-full-text search, vector search, and local LLM reranking. It can be used from
-its CLI or through its MCP server.
-
-QMD is a good fit because it keeps the searchable index local while giving an
-agent a faster orientation path than scanning an entire vault. Search hits are
-still candidates: the agent must retrieve the relevant original note before
-using it as evidence or changing content.
-
-Vault-OS does not bundle, fork, install, update, or relicense QMD. Install it
-separately using its upstream documentation. A provider adapter may then:
-
-1. detect the configured QMD executable and compatible version;
-2. create or select a collection scoped to the installed vault;
-3. define explicit refresh and embedding behavior;
-4. expose QMD to the agent through CLI or MCP;
-5. register the portable local-search skill;
-6. report executable, collection, index, and MCP health without exposing data.
-
-The current Vault-OS release provides the provider-neutral configuration and
-search skill, but not this automatic adapter. Without QMD, an agent may still
-use ordinary filesystem search such as `rg`; semantic and hybrid retrieval are
-then unavailable.
 
 ## Current implementation
 
 - All 15 pure core sources, all 88 pure module sources, both pure instance
   sources, and all portions of the 13 mixed sources have been extracted into
   their assigned ownership domains.
-- The current package contains 25 core files, 78 files in 14 optional modules,
-  11 instance seeds, and one declared runtime artifact.
-- The validator is vault-neutral and loads module models, field mappings, and
-  register values from installed and instance-owned configuration.
-- The sole runtime-history source remains deliberately excluded from release
-  content; runtime state is generated and owned by each installation.
-- Transactional installation, update, diff, doctor, release locking, package
-  integrity validation, and managed-file conflict protection are implemented.
-- Clean-vault installation and update behavior are covered by automated
-  integration tests. The lifecycle has also passed a hash-verified installation,
-  update, validation, and conflict test against a temporary copy of an existing
-  real-world vault.
+- The package contains 25 core files, 79 files in 14 optional modules, 12
+  instance seeds, and one declared runtime artifact.
+- Transactional installation, update, diff, doctor, release locking, integrity
+  validation, conflict protection, provider adapters, and optional QMD MCP
+  integration are implemented.
+- The lifecycle has passed automated clean-vault tests and hash-verified
+  acceptance against a temporary copy of an existing real-world vault.
+- Installing into the live source vault remains a deliberate migration outside
+  the current `0.1.0` acceptance scope.
 
 ## Development roadmap
 
 1. [x] Classify the existing operating layer by ownership and portability.
 2. [x] Extract and neutralize the portable core.
-3. [x] Implement deterministic install, update, diff, and doctor commands.
-4. [x] Validate installation in a clean test vault.
-5. [x] Validate updates without changing instance-owned files in test vaults.
-6. [x] Validate installation and updates against an existing real-world vault.
-7. [ ] Publish version `0.1.0`.
+3. [x] Implement deterministic lifecycle commands.
+4. [x] Validate clean-vault installation and updates.
+5. [x] Validate the lifecycle against a real-world vault copy.
+6. [x] Add provider-neutral agent integration with Codex and Claude adapters.
+7. [x] Complete public installation, operation, AI, module, and
+   troubleshooting documentation.
+8. [ ] Publish version `0.1.0`.
 
-## Validation
-
-The vault validator requires PyYAML. Prepare an isolated environment once:
-
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-```
-
-Run the repository checks with:
+## Development validation
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
 .venv/bin/python scripts/check_portability.py
 .venv/bin/python scripts/validate_portability_matrix.py
 .venv/bin/python scripts/validate_manifests.py
+git diff --check
 ```
 
-The [real-vault lifecycle report](docs/validation/2026-08-11-real-vault-lifecycle.md)
-records the pre-release acceptance evidence and its remaining migration boundary.
+Contribution rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
 Vault-OS is licensed under the [Mozilla Public License 2.0](LICENSE). Changes to
 covered Vault-OS files remain available under the MPL when distributed. Files
-created separately by a vault owner, including personal vault content, are not
-made part of Vault-OS merely because they coexist in the same vault.
+created separately by a vault owner, including personal vault content, do not
+become part of Vault-OS merely because they coexist in the same vault.
 
 Vault-OS is an independent project and is not affiliated with or endorsed by
-Obsidian.
+Obsidian, OpenAI, Anthropic, or QMD.

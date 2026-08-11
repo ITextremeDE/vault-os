@@ -79,6 +79,15 @@
       "origins": [
         "99 System/06 Runtime/Agenten-Kurzkontext.md"
       ],
+      "source": "instance-template/integrations/agents.yaml",
+      "target": ".vault-os/integrations/agents.yaml",
+      "sha256": "3574ab9e620759bb3534ae18cc2910e33b679079249b84fa82f3a07247427287",
+      "installMode": "create-only"
+    },
+    {
+      "origins": [
+        "99 System/06 Runtime/Agenten-Kurzkontext.md"
+      ],
       "source": "instance-template/runtime/agent-context.yaml",
       "target": ".vault-os/runtime/agent-context.yaml",
       "sha256": "df1c588474a0ec1d20458d427da71d43ee0418128e1f7904dc5a7f5a72b01490",

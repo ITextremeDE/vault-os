@@ -14,10 +14,10 @@ layer portable, local-first, and independent from any specific vault owner.
 ## Validate a change
 
 ```bash
-python3 -m unittest discover -s tests
-python3 scripts/check_portability.py
-python3 scripts/validate_portability_matrix.py
-python3 scripts/validate_manifests.py
+.venv/bin/python -m unittest discover -s tests
+.venv/bin/python scripts/check_portability.py
+.venv/bin/python scripts/validate_portability_matrix.py
+.venv/bin/python scripts/validate_manifests.py
 git diff --check
 ```
 

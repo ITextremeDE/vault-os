@@ -35,6 +35,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   conflicts, symbolic-link protection, package tampering, and rollback.
 - Hash-verified lifecycle acceptance against a temporary copy of an existing
   real-world vault.
+- Provider-neutral `AGENTS.md` generation with native Codex and Claude Code
+  instruction and skill discovery.
+- Extensible provider registry that confines discovery paths, instruction
+  shims, MCP configuration, and client diagnostics to adapter modules.
+- Transactional `agent-init` command with checksum-protected provider adapters
+  and `doctor --ai` health checks.
+- Optional project-local QMD collection and MCP integration for Codex and
+  Claude Code.
+- Portable vault-search skill with retrieval-first evidence rules.
+- Shared repository `AGENTS.md` with a thin Claude Code import adapter.
+- Complete public user documentation for prerequisites, installation into new
+  and existing vaults, agent-assisted installation, module selection, AI and
+  QMD setup, upgrades, recovery, removal boundaries, and troubleshooting.
 
 ### Changed
 
@@ -44,3 +57,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Vault-OS kind, type, and status identifiers.
 - Documented the provider-neutral AI runtime boundary and QMD as an optional
   external local-search recommendation.
+- Advanced the development package to `0.1.0-dev.3` for provider adapters and
+  agent health validation.

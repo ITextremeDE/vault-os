@@ -19,7 +19,10 @@ from pathlib import Path
 
 import yaml
 
+from vault_os.agents import doctor_agents, initialize_agents
 from vault_os.operations import Change, apply_changes
+from vault_os.package import Package
+from vault_os.providers import ProviderAdapter, ProviderRegistry
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -32,6 +35,7 @@ class VaultOSCliTests(unittest.TestCase):
         command: str,
         vault: Path,
         *arguments: str,
+        environment: dict[str, str] | None = None,
     ) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [
@@ -49,6 +53,7 @@ class VaultOSCliTests(unittest.TestCase):
             check=False,
             capture_output=True,
             text=True,
+            env=environment,
         )
 
     def copy_package(self, destination: Path) -> None:
@@ -62,7 +67,7 @@ class VaultOSCliTests(unittest.TestCase):
         self.copy_package(destination)
         repository_path = destination / "manifests/repository.json"
         repository = json.loads(repository_path.read_text(encoding="utf-8"))
-        repository["version"] = "0.1.0-dev.2"
+        repository["version"] = "0.1.0-dev.4"
         repository_path.write_text(
             json.dumps(repository, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -177,7 +182,7 @@ class VaultOSCliTests(unittest.TestCase):
             lock = json.loads(
                 (vault / ".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.2")
+            self.assertEqual(lock["packageVersion"], "0.1.0-dev.4")
 
     def test_update_conflict_does_not_partially_apply_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -247,6 +252,201 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertTrue(
                 any("changed locally" in error for error in report["errors"])
             )
+
+    def test_agent_init_registers_codex_and_claude_instructions_and_skills(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(
+                REPOSITORY_ROOT,
+                "install",
+                vault,
+                "--module",
+                "knowledge",
+                "--module",
+                "search",
+            )
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            runtime_path = vault / ".vault-os/runtime/agent-context.yaml"
+            runtime = yaml.safe_load(runtime_path.read_text(encoding="utf-8"))
+            runtime["readOrder"] = ["03 Resources/Start Here.md"]
+            runtime_path.write_text(
+                yaml.safe_dump(runtime, sort_keys=False), encoding="utf-8"
+            )
+
+            initialized = self.run_cli(REPOSITORY_ROOT, "agent-init", vault)
+
+            self.assertEqual(
+                initialized.returncode, 0, initialized.stdout + initialized.stderr
+            )
+            report = json.loads(initialized.stdout)
+            self.assertEqual(report["providers"], ["claude", "codex"])
+            self.assertEqual(report["skills"], 6)
+            agents = vault.joinpath("AGENTS.md").read_text(encoding="utf-8")
+            self.assertIn("99 System/06 Runtime/Agent Context.md", agents)
+            self.assertIn(".vault-os/runtime/agent-context.yaml", agents)
+            self.assertIn("03 Resources/Start Here.md", agents)
+            self.assertTrue(
+                vault.joinpath("CLAUDE.md")
+                .read_text(encoding="utf-8")
+                .startswith("@AGENTS.md\n")
+            )
+            for provider_root in (".agents/skills", ".claude/skills"):
+                wrapper = vault / provider_root / "vault-search/SKILL.md"
+                self.assertTrue(wrapper.is_file())
+                self.assertIn(
+                    "99 System/04 Assets/Skills/Vault Search/SKILL.md",
+                    wrapper.read_text(encoding="utf-8"),
+                )
+
+            second = self.run_cli(REPOSITORY_ROOT, "agent-init", vault)
+            health = self.run_cli(REPOSITORY_ROOT, "doctor", vault, "--ai")
+            self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+            self.assertEqual(json.loads(second.stdout)["counts"]["created"], 0)
+            self.assertEqual(health.returncode, 0, health.stdout + health.stderr)
+            self.assertTrue(json.loads(health.stdout)["healthy"])
+
+    def test_agent_init_preserves_preexisting_agents_file_and_stops_atomically(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            agents = vault / "AGENTS.md"
+            agents.write_text("user instructions\n", encoding="utf-8")
+            state_before = vault.joinpath(
+                ".vault-os/integrations/agents.yaml"
+            ).read_bytes()
+
+            initialized = self.run_cli(REPOSITORY_ROOT, "agent-init", vault)
+
+            self.assertEqual(
+                initialized.returncode, 2, initialized.stdout + initialized.stderr
+            )
+            self.assertEqual(agents.read_text(encoding="utf-8"), "user instructions\n")
+            self.assertFalse(vault.joinpath("CLAUDE.md").exists())
+            self.assertEqual(
+                vault.joinpath(".vault-os/integrations/agents.yaml").read_bytes(),
+                state_before,
+            )
+
+    def test_agent_runtime_accepts_a_provider_without_core_changes(self) -> None:
+        class ExampleProviderAdapter(ProviderAdapter):
+            provider_id = "example"
+            display_name = "Example Agent"
+            skill_root = ".example/skills"
+            qmd_ignore_patterns = (".example/**",)
+
+            def instruction_artifacts(self) -> dict[str, bytes]:
+                return {"EXAMPLE.md": b"Read AGENTS.md first.\n"}
+
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(
+                REPOSITORY_ROOT, "install", vault, "--module", "search"
+            )
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            registry = ProviderRegistry((ExampleProviderAdapter(),))
+
+            result = initialize_agents(
+                Package.load(REPOSITORY_ROOT),
+                vault,
+                "example",
+                False,
+                "qmd",
+                registry,
+            )
+            health = doctor_agents(Package.load(REPOSITORY_ROOT), vault, registry)
+
+            self.assertEqual(result["providers"], ["example"])
+            self.assertTrue(vault.joinpath("EXAMPLE.md").is_file())
+            wrapper = vault / ".example/skills/vault-search/SKILL.md"
+            self.assertTrue(wrapper.is_file())
+            self.assertIn(
+                "99 System/04 Assets/Skills/Vault Search/SKILL.md",
+                wrapper.read_text(encoding="utf-8"),
+            )
+            self.assertTrue(health["healthy"])
+            self.assertEqual(health["details"]["skills"], {"example": 2})
+
+    @unittest.skipIf(os.name == "nt", "test helper uses a POSIX executable")
+    def test_agent_init_configures_project_local_qmd_for_both_providers(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            vault = base / "vault"
+            install = self.run_cli(
+                REPOSITORY_ROOT, "install", vault, "--module", "search"
+            )
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            vault.joinpath(".codex").mkdir()
+            vault.joinpath(".codex/config.toml").write_text(
+                'model_verbosity = "low"\n', encoding="utf-8"
+            )
+            vault.joinpath(".mcp.json").write_text(
+                json.dumps({"mcpServers": {"existing": {"command": "example"}}})
+                + "\n",
+                encoding="utf-8",
+            )
+            executable_root = base / "bin"
+            executable_root.mkdir()
+            qmd = executable_root / "qmd"
+            qmd.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            qmd.chmod(0o755)
+            environment = os.environ.copy()
+            environment["PATH"] = str(executable_root) + os.pathsep + environment["PATH"]
+
+            initialized = self.run_cli(
+                REPOSITORY_ROOT,
+                "agent-init",
+                vault,
+                "--qmd",
+                environment=environment,
+            )
+
+            self.assertEqual(
+                initialized.returncode, 0, initialized.stdout + initialized.stderr
+            )
+            report = json.loads(initialized.stdout)
+            self.assertTrue(report["qmd"]["enabled"])
+            self.assertTrue(report["qmd"]["available"])
+            index = yaml.safe_load(vault.joinpath(".qmd/index.yml").read_text())
+            self.assertEqual(
+                index["collections"]["vault"]["path"], str(vault.resolve())
+            )
+            codex = vault.joinpath(".codex/config.toml").read_text(encoding="utf-8")
+            self.assertIn('model_verbosity = "low"', codex)
+            self.assertIn("[mcp_servers.qmd]", codex)
+            claude = json.loads(vault.joinpath(".mcp.json").read_text(encoding="utf-8"))
+            self.assertIn("existing", claude["mcpServers"])
+            self.assertEqual(claude["mcpServers"]["qmd"]["args"], ["mcp"])
+
+            qmd_next = executable_root / "qmd-next"
+            qmd_next.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            qmd_next.chmod(0o755)
+            refreshed = self.run_cli(
+                REPOSITORY_ROOT,
+                "agent-init",
+                vault,
+                "--qmd",
+                "--qmd-command",
+                "qmd-next",
+                environment=environment,
+            )
+            self.assertEqual(refreshed.returncode, 0, refreshed.stdout + refreshed.stderr)
+            self.assertIn(
+                'command = "qmd-next"',
+                vault.joinpath(".codex/config.toml").read_text(encoding="utf-8"),
+            )
+            claude = json.loads(vault.joinpath(".mcp.json").read_text(encoding="utf-8"))
+            self.assertEqual(claude["mcpServers"]["qmd"]["command"], "qmd-next")
+
+            health = self.run_cli(
+                REPOSITORY_ROOT,
+                "doctor",
+                vault,
+                "--ai",
+                environment=environment,
+            )
+            self.assertEqual(health.returncode, 0, health.stdout + health.stderr)
+            self.assertTrue(json.loads(health.stdout)["healthy"])
 
     @unittest.skipIf(os.name == "nt", "symbolic-link behavior differs on Windows")
     def test_install_rejects_symlinked_system_root(self) -> None:

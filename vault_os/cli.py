@@ -11,6 +11,7 @@ import json
 import sys
 from pathlib import Path
 
+from .agents import doctor_agents, initialize_agents
 from .operations import (
     Plan,
     diff_installation,
@@ -21,6 +22,7 @@ from .operations import (
     vault_root,
 )
 from .package import ConflictError, Package, VaultOSError
+from .providers import provider_ids
 
 
 DEFAULT_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
@@ -68,7 +70,35 @@ def parser() -> argparse.ArgumentParser:
 
     health = commands.add_parser("doctor", help="Check package and installation integrity without changing files.")
     health.add_argument("vault", type=Path)
+    health.add_argument(
+        "--ai",
+        action="store_true",
+        help="Also validate initialized agent providers, skills, and optional QMD integration.",
+    )
     health.add_argument("--json", action="store_true", help="Emit machine-readable output.")
+
+    agents = commands.add_parser(
+        "agent-init",
+        help="Initialize provider-native agent instructions, skills, and optional QMD integration.",
+    )
+    agents.add_argument("vault", type=Path)
+    agents.add_argument(
+        "--provider",
+        choices=(*provider_ids(), "all"),
+        default="all",
+        help="Provider adapter to initialize; defaults to every registered adapter.",
+    )
+    agents.add_argument(
+        "--qmd",
+        action="store_true",
+        help="Enable a project-local QMD index and MCP configuration.",
+    )
+    agents.add_argument(
+        "--qmd-command",
+        default="qmd",
+        help="QMD executable name or path; used only when --qmd is supplied.",
+    )
+    agents.add_argument("--json", action="store_true", help="Emit machine-readable output.")
     return value
 
 
@@ -128,6 +158,33 @@ def print_doctor(result: dict[str, object], *, json_output: bool) -> None:
             print(f"- {error}")
 
 
+def print_agent_init(result: dict[str, object], *, json_output: bool) -> None:
+    if json_output:
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return
+    providers = ", ".join(result["providers"])  # type: ignore[arg-type]
+    print("Vault-OS agent initialization")
+    print(f"Providers: {providers}")
+    print(f"Registered skills: {result['skills']}")
+    qmd = result["qmd"]
+    if isinstance(qmd, dict):
+        state = "enabled" if qmd["enabled"] else "disabled"
+        availability = "available" if qmd["available"] else "not available"
+        print(f"QMD: {state}; command {qmd['command']!r} is {availability}")
+    counts = result["counts"]
+    if isinstance(counts, dict):
+        print(
+            "Changes: "
+            f"created={counts['created']}, updated={counts['updated']}, "
+            f"removed={counts['removed']}, unchanged={counts['unchanged']}"
+        )
+    warnings = result.get("warnings", [])
+    if isinstance(warnings, list) and warnings:
+        print("Warnings:")
+        for warning in warnings:
+            print(f"- {warning}")
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
@@ -147,6 +204,16 @@ def main(argv: list[str] | None = None) -> int:
             print_plan(plan, json_output=args.json)
             return 0
         vault = vault_root(args.vault)
+        if args.command == "agent-init":
+            result = initialize_agents(
+                package,
+                vault,
+                args.provider,
+                args.qmd,
+                args.qmd_command,
+            )
+            print_agent_init(result, json_output=args.json)
+            return 0
         if args.command == "update":
             plan = execute_update(package, vault)
             print_plan(plan, json_output=args.json)
@@ -157,6 +224,16 @@ def main(argv: list[str] | None = None) -> int:
             return ConflictError.exit_code if plan.conflicts else 0
         if args.command == "doctor":
             result = doctor(package, vault)
+            if args.ai and result["healthy"]:
+                agent_result = doctor_agents(package, vault)
+                result["details"]["agents"] = agent_result["details"]
+                result["warnings"].extend(
+                    f"agent: {warning}" for warning in agent_result["warnings"]
+                )
+                result["errors"].extend(
+                    f"agent: {error}" for error in agent_result["errors"]
+                )
+                result["healthy"] = not result["errors"]
             print_doctor(result, json_output=args.json)
             return 0 if result["healthy"] else 1
         raise VaultOSError(f"unsupported command: {args.command}")

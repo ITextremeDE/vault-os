@@ -40,6 +40,10 @@ Instance seeds have a release source and checksum but use
 `installMode: create-only`. Installation creates a missing target. Updates never
 replace an existing target, regardless of whether it still resembles the seed.
 
+The agent integration seed remains instance-owned but may be updated explicitly
+by `agent-init`. It records selected providers, QMD activation, and checksums of
+generated provider artifacts; ordinary release updates still leave it untouched.
+
 The initial configuration seed becomes `.vault-os/config.yaml` and defines the
 vault name, language, system root, and selected modules.
 
@@ -77,7 +81,7 @@ The lifecycle behavior and exit codes are defined in the
 Run:
 
 ```bash
-python3 scripts/validate_manifests.py
+.venv/bin/python scripts/validate_manifests.py
 ```
 
 The validator checks manifest structure, ownership rules, path safety, source
