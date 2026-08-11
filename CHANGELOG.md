@@ -27,6 +27,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Neutral Git commit and local conversation-search skills with instance-owned policy.
 - Configuration-driven, read-only vault validation without embedded source-vault assumptions.
 - Neutral instance seeds for schema fields, registers, integrations, journal policy, validation, and agent context.
+- Transactional `install`, `update`, `diff`, and `doctor` lifecycle commands.
+- Local release locks with package fingerprints and managed-file checksums.
+- Preflight conflict protection, package-integrity checks, rollback behavior,
+  and create-only preservation of instance files.
+- Integration tests for clean installation, safe updates, module changes,
+  conflicts, symbolic-link protection, package tampering, and rollback.
 
 ### Changed
 

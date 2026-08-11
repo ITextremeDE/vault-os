@@ -11,6 +11,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -19,6 +20,7 @@ from typing import Any
 SCHEMA_VERSION = 1
 MANIFEST_KEYS = {"core", "modules", "instance", "runtime"}
 TARGET_ROOTS = {"system", "vault"}
+VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 
 
 @dataclass(frozen=True)
@@ -368,6 +370,9 @@ def validate_repository(root: Path) -> Counts:
     entry = load_json(entry_path)
     require(entry, "schemaVersion", SCHEMA_VERSION, "repository")
     require(entry, "product", "vault-os", "repository")
+    version = entry.get("version")
+    if not isinstance(version, str) or not VERSION_PATTERN.fullmatch(version):
+        raise ValueError("repository: version must be a semantic version")
     references = entry.get("manifests")
     if not isinstance(references, dict) or set(references) != MANIFEST_KEYS:
         raise ValueError(

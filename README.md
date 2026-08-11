@@ -39,9 +39,9 @@ Vault-OS distinguishes between three ownership domains:
 - **Runtime files** are generated locally and never supplied as release
   content.
 
-The updater will use a manifest and recorded checksums. If a managed file was
-changed locally, an update must stop and report the conflict instead of
-overwriting the file.
+The updater uses manifests and checksums recorded in the local release lock. If
+a managed file was changed locally, an update stops before writing anything and
+reports the conflict instead of overwriting the file.
 
 ## Repository layout
 
@@ -50,6 +50,8 @@ src/core/                 Portable core files
 src/modules/              Optional Vault-OS modules
 instance-template/        Neutral instance configuration
 manifests/                Ownership, source, target, and checksum declarations
+vault_os/                 Lifecycle command implementation
+bin/                      Executable command wrapper
 analysis/                 Canonical source classification data
 scripts/                  Development and validation tools
 tests/                    Automated checks and test vaults
@@ -63,6 +65,31 @@ The current extraction baseline is documented in the
 The [manifest reference](docs/reference/manifests.md) defines the current
 package contract.
 
+## Lifecycle commands
+
+The repository is directly executable after installing the Python dependency:
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+source .venv/bin/activate
+./bin/vault-os install "/path/to/My Vault" --module para --module knowledge
+./bin/vault-os doctor "/path/to/My Vault"
+```
+
+Change the selected modules or other instance settings in
+`.vault-os/config.yaml`, inspect the result, and then apply it:
+
+```bash
+./bin/vault-os diff "/path/to/My Vault"
+./bin/vault-os update "/path/to/My Vault"
+```
+
+Installation and updates are transactional. Existing instance files are
+preserved, locally changed managed files stop an update, and `.obsidian` is
+never modified. See the [CLI reference](docs/reference/cli.md) for the complete
+contract.
+
 ## Current implementation
 
 - All 15 pure core sources, all 88 pure module sources, both pure instance
@@ -74,17 +101,21 @@ package contract.
   register values from installed and instance-owned configuration.
 - The sole runtime-history source remains deliberately excluded from release
   content; runtime state is generated and owned by each installation.
-- Installation, update, diff, doctor, and release-lock behavior are not yet
-  implemented.
+- Transactional installation, update, diff, doctor, release locking, package
+  integrity validation, and managed-file conflict protection are implemented.
+- Clean-vault installation and update behavior are covered by automated
+  integration tests. Validation against an existing real-world vault remains
+  outstanding before `0.1.0`.
 
 ## Development roadmap
 
-1. Classify the existing operating layer by ownership and portability.
-2. Extract and neutralize the portable core.
-3. Implement deterministic install, update, diff, and doctor commands.
-4. Validate installation in a clean vault.
-5. Validate updates without changing instance-owned files.
-6. Publish version `0.1.0`.
+1. [x] Classify the existing operating layer by ownership and portability.
+2. [x] Extract and neutralize the portable core.
+3. [x] Implement deterministic install, update, diff, and doctor commands.
+4. [x] Validate installation in a clean test vault.
+5. [x] Validate updates without changing instance-owned files in test vaults.
+6. [ ] Validate installation and updates against an existing real-world vault.
+7. [ ] Publish version `0.1.0`.
 
 ## Validation
 

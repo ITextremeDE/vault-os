@@ -25,9 +25,10 @@ Each managed entry in `core.json` or a module manifest contains:
 - `target`: destination relative to the configured system root;
 - `sha256`: lowercase SHA-256 digest of the source file.
 
-Managed files use `installMode: managed`. A future updater may replace an
-installed file only when it still matches the checksum recorded in the local
-release lock.
+Managed files use `installMode: managed`. The updater replaces or removes an
+installed managed file only when it still matches the checksum recorded in the
+local release lock. Any mismatch stops the complete update before files are
+changed.
 
 `modules.json` lists optional module manifests. Every module owns a disjoint
 source tree and installation targets that do not collide with core or another
@@ -47,6 +48,24 @@ vault name, language, system root, and selected modules.
 Runtime entries declare a target and generator but no release source or
 checksum. They use `installMode: generated` and remain local to the installed
 vault.
+
+## Release metadata and lock
+
+`repository.json` declares the package version using Semantic Versioning. Every
+successful installation creates `.vault-os/lock.json` with:
+
+- the lock schema and product identifier;
+- package version and manifest fingerprint;
+- installation and last-update timestamps;
+- the configured system root and selected modules;
+- the target, owner, and installed checksum of every managed file.
+
+The lock records only release-managed state. It does not claim ownership of
+instance files. The lock is generated locally and written last in the same
+transaction as managed file changes.
+
+The lifecycle behavior and exit codes are defined in the
+[CLI reference](cli.md).
 
 ## Validation
 

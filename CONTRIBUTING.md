@@ -16,6 +16,8 @@ layer portable, local-first, and independent from any specific vault owner.
 ```bash
 python3 -m unittest discover -s tests
 python3 scripts/check_portability.py
+python3 scripts/validate_portability_matrix.py
+python3 scripts/validate_manifests.py
 git diff --check
 ```
 

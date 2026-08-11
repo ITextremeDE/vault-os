@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 
-DISTRIBUTION_ROOTS = ("src", "instance-template")
+DISTRIBUTION_ROOTS = ("src", "instance-template", "vault_os", "bin")
 TEXT_SUFFIXES = {".md", ".py", ".sh", ".json", ".yaml", ".yml", ".toml", ".txt"}
 FORBIDDEN = {
     "source vault name": re.compile(r"\bMindOS\b", re.IGNORECASE),
