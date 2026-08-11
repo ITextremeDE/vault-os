@@ -91,6 +91,67 @@ preserved, locally changed managed files stop an update, and `.obsidian` is
 never modified. See the [CLI reference](docs/reference/cli.md) for the complete
 contract.
 
+## AI and agent integration
+
+Vault-OS is designed for direct work by humans and AI agents. It provides the
+portable rules, schemas, workflows, prompts, skills, validation, and runtime
+context that an agent needs to operate consistently inside a vault. It does not
+bundle an AI model, agent client, or permission system.
+
+An agent runtime must still have explicitly authorized access to the vault and
+must load both its host instructions and the installed Vault-OS context.
+Agent-facing assets can be selected during installation, for example:
+
+```bash
+./bin/vault-os install "/path/to/My Vault" \
+  --module agents \
+  --module search \
+  --module knowledge \
+  --module audit
+```
+
+Installing these modules places their managed prompts and skills in the
+configured system root. Registering those skills with Codex, Claude Code, or
+another agent runtime remains the responsibility of a provider adapter.
+Vault-OS keeps the portable core independent from any one AI vendor.
+
+Instance-owned integration settings live under `.vault-os`:
+
+- `runtime/agent-context.yaml` defines the capture path and source read order;
+- `integrations/search.yaml` declares approved search sources and precedence;
+- `integrations/automation.yaml` records automation contracts and ownership.
+
+Credentials, active schedules, model selection, tool permissions, indexes,
+caches, and current runtime state remain in their canonical external systems.
+
+### Recommended local search: QMD
+
+[QMD](https://github.com/tobi/qmd) is the recommended optional local search
+engine for agent-assisted Vault-OS installations. It is an external project
+licensed under the MIT License. QMD indexes Markdown and provides BM25
+full-text search, vector search, and local LLM reranking. It can be used from
+its CLI or through its MCP server.
+
+QMD is a good fit because it keeps the searchable index local while giving an
+agent a faster orientation path than scanning an entire vault. Search hits are
+still candidates: the agent must retrieve the relevant original note before
+using it as evidence or changing content.
+
+Vault-OS does not bundle, fork, install, update, or relicense QMD. Install it
+separately using its upstream documentation. A provider adapter may then:
+
+1. detect the configured QMD executable and compatible version;
+2. create or select a collection scoped to the installed vault;
+3. define explicit refresh and embedding behavior;
+4. expose QMD to the agent through CLI or MCP;
+5. register the portable local-search skill;
+6. report executable, collection, index, and MCP health without exposing data.
+
+The current Vault-OS release provides the provider-neutral configuration and
+search skill, but not this automatic adapter. Without QMD, an agent may still
+use ordinary filesystem search such as `rg`; semantic and hybrid retrieval are
+then unavailable.
+
 ## Current implementation
 
 - All 15 pure core sources, all 88 pure module sources, both pure instance

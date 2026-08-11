@@ -42,3 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added PyYAML as the explicit runtime dependency for frontmatter and instance configuration.
 - Allowed instance field profiles to map localized stored values to stable
   Vault-OS kind, type, and status identifiers.
+- Documented the provider-neutral AI runtime boundary and QMD as an optional
+  external local-search recommendation.
