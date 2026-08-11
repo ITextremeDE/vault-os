@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "runtime",
+  "kind": "runtime",
+  "owner": "runtime",
+  "targetRoot": "vault",
+  "files": [
+    {
+      "target": ".vault-os/lock.json",
+      "installMode": "generated",
+      "generator": "vault-os installer"
+    }
+  ]
+}

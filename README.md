@@ -30,12 +30,14 @@ existing real-world vault.
 
 ## Ownership model
 
-Vault-OS distinguishes between two ownership domains:
+Vault-OS distinguishes between three ownership domains:
 
 - **Managed files** belong to a specific Vault-OS release and are updated only
   through the Vault-OS tooling.
 - **Instance files** belong to the vault owner and are never overwritten by a
   Vault-OS update.
+- **Runtime files** are generated locally and never supplied as release
+  content.
 
 The updater will use a manifest and recorded checksums. If a managed file was
 changed locally, an update must stop and report the conflict instead of
@@ -47,15 +49,27 @@ overwriting the file.
 src/core/                 Portable core files
 src/modules/              Optional Vault-OS modules
 instance-template/        Neutral instance configuration
+manifests/                Ownership, source, target, and checksum declarations
 analysis/                 Canonical source classification data
 scripts/                  Development and validation tools
 tests/                    Automated checks and test vaults
 docs/adr/                 Architecture decision records
 docs/analysis/            Human-readable analysis results
+docs/reference/           Technical contracts and formats
 ```
 
 The current extraction baseline is documented in the
 [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md).
+The [manifest reference](docs/reference/manifests.md) defines the current
+package contract.
+
+## Current implementation
+
+- All 15 files classified as pure core have been extracted and neutralized.
+- Core, module, instance-seed, and runtime domains have validated manifests.
+- The core parts of the 13 mixed source files still need to be separated.
+- Installation, update, diff, doctor, and release-lock behavior are not yet
+  implemented.
 
 ## Development roadmap
 
@@ -74,6 +88,7 @@ Run the current repository checks with:
 python3 -m unittest discover -s tests
 python3 scripts/check_portability.py
 python3 scripts/validate_portability_matrix.py
+python3 scripts/validate_manifests.py
 ```
 
 ## License

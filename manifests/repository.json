@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "product": "vault-os",
+  "manifests": {
+    "core": "manifests/core.json",
+    "modules": "manifests/modules.json",
+    "instance": "manifests/instance.json",
+    "runtime": "manifests/runtime.json"
+  }
+}

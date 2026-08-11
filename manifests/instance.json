@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "instance",
+  "kind": "instance",
+  "owner": "instance",
+  "targetRoot": "vault",
+  "files": [
+    {
+      "source": "instance-template/vault-os.yaml",
+      "target": ".vault-os/config.yaml",
+      "sha256": "ed4da0fc22cde2263ca9f935333eb7adf4d97cb724d57d79413a7174100ea23c",
+      "installMode": "create-only"
+    }
+  ]
+}

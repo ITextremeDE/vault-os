@@ -3,3 +3,8 @@ schema: 1
 vault:
   name: Example Vault
   language: en
+
+paths:
+  system: 99 System
+
+modules: []
