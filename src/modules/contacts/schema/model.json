@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "module": "contacts",
+  "contentKinds": {
+    "contact": {
+      "types": ["person", "representative", "organization"],
+      "statuses": ["active", "inactive", "departed", "deceased", "archived"],
+      "areaRequired": true,
+      "filenameByType": {
+        "person": "Family name, Given name",
+        "representative": "Family name, Given name",
+        "organization": "Organization name"
+      }
+    }
+  },
+  "fields": {
+    "job": {"type": "string"},
+    "relationship": {"type": "register", "register": "relationships"},
+    "relevance": {"type": "register", "register": "relevance"},
+    "last_contact": {"type": "date"},
+    "organizations": {"type": "wiki-link-list", "typeRequired": "representative"}
+  }
+}

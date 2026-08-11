@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "journal",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/01 Schema/Benennungsstandard.md",
+        "99 System/01 Schema/Frontmatter-Schema.md",
+        "99 System/01 Schema/Inhaltsarten.md",
+        "99 System/01 Schema/Statusmodell.md",
+        "99 System/01 Schema/Typenmodell.md"
+      ],
+      "source": "src/modules/journal/schema/model.json",
+      "target": "01 Schema/Models/journal.json",
+      "sha256": "499e2d877a75f474acb6f2f232afdda7bd48280988a478aa560d66279c2e5c1c",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md"],
+      "source": "src/modules/journal/templates/daily-note.md",
+      "target": "04 Assets/Templates/Journal/Daily Note.md",
+      "sha256": "452ab8cc6c087ea1d0fcb1d24af945a256b84cd69e78d632c169a1409145d542",
+      "installMode": "managed"
+    }
+  ]
+}

@@ -7,105 +7,179 @@
   "targetRoot": "system",
   "files": [
     {
-      "origin": "99 System/_README.md",
+      "origins": ["99 System/_README.md"],
       "source": "src/core/README.md",
       "target": "README.md",
       "sha256": "c47442d865f19ae97d6baee42295e4be49fb9514ad5009df6071ffa784a7234e",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/00 OS/_README.md",
+      "origins": ["99 System/00 OS/_README.md"],
       "source": "src/core/os/README.md",
       "target": "00 OS/README.md",
       "sha256": "15f29625b69552d13b273f714b283c00a7b3c3208a3e5cc405d23126894a087c",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/00 OS/Architektur.md",
+      "origins": ["99 System/00 OS/Architektur.md"],
       "source": "src/core/os/architecture.md",
       "target": "00 OS/Architecture.md",
       "sha256": "2847580d99f4744fe5fabf33da6779ee1dc2708118c5cb2d13b322d28b96487b",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/00 OS/Änderungsprinzipien.md",
+      "origins": ["99 System/00 OS/Änderungsprinzipien.md"],
       "source": "src/core/os/change-principles.md",
       "target": "00 OS/Change Principles.md",
       "sha256": "34169381496d0d66b68e2681044cc60642bf80aeca5c99021e9cb77811fe9669",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/00 OS/Entscheidungslogik.md",
+      "origins": ["99 System/00 OS/Entscheidungslogik.md"],
       "source": "src/core/os/decision-logic.md",
       "target": "00 OS/Decision Logic.md",
       "sha256": "b4a16e2313af4a1deedf9dca6384e0d62b75d3e14774763edadd7e64fb93feae",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/00 OS/Prinzipien.md",
+      "origins": ["99 System/00 OS/Prinzipien.md"],
       "source": "src/core/os/principles.md",
       "target": "00 OS/Principles.md",
       "sha256": "bdadd8fb5c6a972579fcadbcfe0a636cc2b35612185499b7e94ce1e634fef33a",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/01 Schema/_README.md",
+      "origins": ["99 System/01 Schema/_README.md"],
       "source": "src/core/schema/README.md",
       "target": "01 Schema/README.md",
       "sha256": "ed15f435f0d4981a5b3661b70b61c0068d56bc472177d8d23f972b6148a5ec2c",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/01 Schema/Linkstandard.md",
+      "origins": ["99 System/01 Schema/Benennungsstandard.md"],
+      "source": "src/core/schema/naming.md",
+      "target": "01 Schema/Naming.md",
+      "sha256": "a15b00bed4dd7626301c3d34a1629ad29be91beee292b43a69d6f31621c1c65d",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/01 Schema/Frontmatter-Schema.md"],
+      "source": "src/core/schema/frontmatter.md",
+      "target": "01 Schema/Frontmatter.md",
+      "sha256": "cf0363771703f29860b5c385056d63f8b9d89b5d9267557d6a75fbeaf4699ef1",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/01 Schema/Inhaltsarten.md"],
+      "source": "src/core/schema/content-kinds.md",
+      "target": "01 Schema/Content Kinds.md",
+      "sha256": "d9963ce12b958d1a3c95fb2cbee5501622f79714dd4b015a72093e4ab2a1c041",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/01 Schema/Linkstandard.md"],
       "source": "src/core/schema/link-standard.md",
       "target": "01 Schema/Link Standard.md",
       "sha256": "17ec67584303fa938642ee9dc2f57439d6ac0ce92bfeac69fd599eec6f15c32b",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/02 Register/_README.md",
+      "origins": ["99 System/01 Schema/Statusmodell.md"],
+      "source": "src/core/schema/status-model.md",
+      "target": "01 Schema/Status Model.md",
+      "sha256": "65a79d9572ac772f3b3c0cb6510d77492d8218599c64a1ae12ab6c0245dadb99",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/01 Schema/Typenmodell.md"],
+      "source": "src/core/schema/type-model.md",
+      "target": "01 Schema/Type Model.md",
+      "sha256": "d5e1a25ee72df57635cfb198860199c9aa430eb95c5296e46f0a943f439ba348",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/01 Schema/Inhaltsarten.md",
+        "99 System/01 Schema/Statusmodell.md",
+        "99 System/01 Schema/Typenmodell.md"
+      ],
+      "source": "src/core/schema/system.schema.json",
+      "target": "01 Schema/Models/core.json",
+      "sha256": "799b2749e086d32bb61cda37630d255dbb12f80f601741f5d1d8d653d975b57e",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/02 Register/_README.md"],
       "source": "src/core/registers/README.md",
       "target": "02 Registers/README.md",
       "sha256": "ee7fd437e526c2ba1261220517e397e9a6bf6a14b54be279469251a527785f2e",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/02 Register/Tag-Konventionen.md",
+      "origins": ["99 System/02 Register/Bereiche.md"],
+      "source": "src/core/registers/areas.md",
+      "target": "02 Registers/Areas.md",
+      "sha256": "f4a99f98c93f60f439ed319cc2e0f3b841340f7ac8b9b3b446f50c4f50f7153b",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/02 Register/Tag-Konventionen.md"],
       "source": "src/core/registers/tag-conventions.md",
       "target": "02 Registers/Tag Conventions.md",
       "sha256": "3361dfb699c65c5ec6c70a56257eb5c9c76029fe0d856c5857a41da58b6fb9a3",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/03 Workflows/_README.md",
+      "origins": ["99 System/03 Workflows/_README.md"],
       "source": "src/core/workflows/README.md",
       "target": "03 Workflows/README.md",
       "sha256": "5a5cd3c764742e74d7e147df34bf0ee086e53067b9220c9a63510a363f928ce3",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/04 Assets/_README.md",
+      "origins": ["99 System/04 Assets/_README.md"],
       "source": "src/core/assets/README.md",
       "target": "04 Assets/README.md",
       "sha256": "86d89ea2510f466fb96825a3b01cb5a8e24cd094148ff4f9fea21e77c62edf74",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/05 Automation/Validatoren/_README.md",
-      "source": "src/core/validation/README.md",
-      "target": "05 Automation/Validators/README.md",
-      "sha256": "9e89eb57e16dd2518845b4fe6697e666610bc1fbae260508d3dc8b0c51cf7696",
+      "origins": ["99 System/05 Automation/_README.md"],
+      "source": "src/core/automation/README.md",
+      "target": "05 Automation/README.md",
+      "sha256": "74900ea7c44f19d691e61219d4c39e4b92bd434881a45ac2ba14d0909c82ab24",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/06 Runtime/_README.md",
+      "origins": ["99 System/05 Automation/Validatoren/_README.md"],
+      "source": "src/core/validation/README.md",
+      "target": "05 Automation/Validators/README.md",
+      "sha256": "faba71ea1e2281c394e196ee0311b53a64dfc2924f9f391666a152c137165757",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/05 Automation/Validatoren/validate_mindos.py"],
+      "source": "src/core/validation/validate_vault.py",
+      "target": "05 Automation/Validators/validate_vault.py",
+      "sha256": "5be749f3b902fd0f271f0e5954d0b1dd4478368d9a8852e822ce710046d6eb24",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/06 Runtime/_README.md"],
       "source": "src/core/runtime/README.md",
       "target": "06 Runtime/README.md",
       "sha256": "2c9e3015711de905f88aa69e8c8ee49dfa913aa3097eec7d027e06081fd7a426",
       "installMode": "managed"
     },
     {
-      "origin": "99 System/06 Runtime/Betriebsregeln.md",
+      "origins": ["99 System/06 Runtime/Agenten-Kurzkontext.md"],
+      "source": "src/core/runtime/agent-context.md",
+      "target": "06 Runtime/Agent Context.md",
+      "sha256": "85a36b17e77cd31415f08540bcda08f0671eb43a66b4cd94803b271bcf37d52c",
+      "installMode": "managed"
+    },
+    {
+      "origins": ["99 System/06 Runtime/Betriebsregeln.md"],
       "source": "src/core/runtime/operating-rules.md",
       "target": "06 Runtime/Operating Rules.md",
       "sha256": "09030e384008bceb8763d852f533de1ea84304a111a608ce8ba8bf367f8ef9c5",

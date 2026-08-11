@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "contacts",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/01 Schema/Benennungsstandard.md",
+        "99 System/01 Schema/Frontmatter-Schema.md",
+        "99 System/01 Schema/Inhaltsarten.md",
+        "99 System/01 Schema/Statusmodell.md",
+        "99 System/01 Schema/Typenmodell.md"
+      ],
+      "source": "src/modules/contacts/schema/model.json",
+      "target": "01 Schema/Models/contacts.json",
+      "sha256": "be0c9174e373f78608897fb435617362bcaeb6c38c9c394807409c294787eb81",
+      "installMode": "managed"
+    }
+  ]
+}

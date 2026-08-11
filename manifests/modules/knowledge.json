@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "knowledge",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/01 Schema/Benennungsstandard.md",
+        "99 System/01 Schema/Frontmatter-Schema.md",
+        "99 System/01 Schema/Inhaltsarten.md",
+        "99 System/01 Schema/Statusmodell.md",
+        "99 System/01 Schema/Typenmodell.md"
+      ],
+      "source": "src/modules/knowledge/schema/model.json",
+      "target": "01 Schema/Models/knowledge.json",
+      "sha256": "2538ad90113a35b7f08e0afed1a423687f5e54d16034af65c7bcab6661e2d0f1",
+      "installMode": "managed"
+    }
+  ]
+}

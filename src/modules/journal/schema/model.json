@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "module": "journal",
+  "contentKinds": {
+    "journal": {
+      "types": ["daily", "weekly", "yearly"],
+      "statuses": ["open", "completed"],
+      "areaRequired": false,
+      "filenameByType": {
+        "daily": "YYYY-MM-DD",
+        "weekly": "YYYY-Www",
+        "yearly": "YYYY"
+      }
+    }
+  },
+  "fields": {}
+}

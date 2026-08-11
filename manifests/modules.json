@@ -3,5 +3,12 @@
   "id": "modules",
   "kind": "module-catalog",
   "owner": "managed",
-  "modules": []
+  "modules": [
+    {"id": "contacts", "manifest": "manifests/modules/contacts.json", "default": false},
+    {"id": "git", "manifest": "manifests/modules/git.json", "default": false},
+    {"id": "journal", "manifest": "manifests/modules/journal.json", "default": false},
+    {"id": "knowledge", "manifest": "manifests/modules/knowledge.json", "default": false},
+    {"id": "para", "manifest": "manifests/modules/para.json", "default": false},
+    {"id": "search", "manifest": "manifests/modules/search.json", "default": false}
+  ]
 }

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "module": "core",
+  "contentKinds": {
+    "system": {
+      "types": [
+        "rule",
+        "reference",
+        "template",
+        "prompt",
+        "skill",
+        "dashboard",
+        "readme",
+        "operating-document"
+      ],
+      "statuses": ["active", "in-progress", "archived"],
+      "areaRequired": false
+    }
+  },
+  "fields": {}
+}

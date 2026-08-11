@@ -1,0 +1,13 @@
+schema: 1
+
+automations: []
+
+requiredContractFields:
+  - id
+  - purpose
+  - canonicalSource
+  - readScope
+  - writeScope
+  - runtime
+  - errorBehavior
+  - recoveryOwner

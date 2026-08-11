@@ -65,9 +65,14 @@ package contract.
 
 ## Current implementation
 
-- All 15 files classified as pure core have been extracted and neutralized.
-- Core, module, instance-seed, and runtime domains have validated manifests.
-- The core parts of the 13 mixed source files still need to be separated.
+- All 15 pure core sources and all portions of the 13 mixed sources have been
+  extracted into their assigned ownership domains.
+- The current package contains 25 core files, six optional modules, nine
+  instance seeds, and one declared runtime artifact.
+- The validator is vault-neutral and loads module models, field mappings, and
+  register values from installed and instance-owned configuration.
+- The remaining source extraction covers files classified as pure modules or
+  instance data.
 - Installation, update, diff, doctor, and release-lock behavior are not yet
   implemented.
 
@@ -82,13 +87,20 @@ package contract.
 
 ## Validation
 
-Run the current repository checks with:
+The vault validator requires PyYAML. Prepare an isolated environment once:
 
 ```bash
-python3 -m unittest discover -s tests
-python3 scripts/check_portability.py
-python3 scripts/validate_portability_matrix.py
-python3 scripts/validate_manifests.py
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
+
+Run the repository checks with:
+
+```bash
+.venv/bin/python -m unittest discover -s tests
+.venv/bin/python scripts/check_portability.py
+.venv/bin/python scripts/validate_portability_matrix.py
+.venv/bin/python scripts/validate_manifests.py
 ```
 
 ## License

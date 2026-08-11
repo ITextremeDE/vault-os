@@ -1,0 +1,45 @@
+schema: 1
+
+fields:
+  kind: kind
+  type: type
+  status: status
+  area: area
+
+required:
+  - kind
+  - type
+  - status
+  - aliases
+  - tags
+  - cssclasses
+  - created
+
+lists:
+  - aliases
+  - tags
+  - cssclasses
+
+dates:
+  - created
+  - modified
+  - reviewed
+
+order:
+  - kind
+  - type
+  - status
+  - area
+  - aliases
+  - tags
+  - cssclasses
+  - created
+  - modified
+
+externalReferences:
+  idSuffixes:
+    - _id
+    - _uid
+  urlSuffix: _url
+  requireVerifiedPair: true
+  allowSecretsInUrls: false

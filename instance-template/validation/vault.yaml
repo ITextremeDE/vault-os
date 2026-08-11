@@ -1,0 +1,26 @@
+schema: 1
+
+excludePathParts:
+  - .git
+  - .obsidian
+  - .trash
+  - .vault-os
+
+frontmatter:
+  enabled: true
+  include:
+    - "**/*.md"
+  exclude:
+    - "{system}/**"
+  fields: .vault-os/schema/fields.yaml
+  models:
+    - "{system}/01 Schema/Models/*.json"
+  registers:
+    areas: .vault-os/registers/areas.yaml
+
+links:
+  enabled: true
+  requireFullWikiPaths: true
+
+git:
+  sizeReport: false

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "module": "para",
+  "contentKinds": {
+    "project": {
+      "types": ["introduction", "optimization", "planning", "research", "implementation"],
+      "statuses": ["idea", "open", "in-progress", "waiting", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "YYYY-MM-DD Title"
+    },
+    "area": {
+      "types": ["area", "documentation", "article", "website", "video"],
+      "statuses": ["open", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "Title"
+    }
+  },
+  "fields": {
+    "published": {"type": "date"},
+    "meta_title": {"type": "string"},
+    "meta_description": {"type": "string"},
+    "excerpt": {"type": "string"},
+    "slug": {"type": "string"}
+  }
+}

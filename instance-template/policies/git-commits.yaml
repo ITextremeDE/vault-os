@@ -1,0 +1,18 @@
+schema: 1
+
+language: en
+summaryMaxLength: 72
+bodyBulletRange:
+  minimum: 2
+  maximum: 6
+
+categories:
+  - id: system
+    prefix: "System: "
+    paths: []
+  - id: content
+    prefix: "Content: "
+    paths: []
+
+validationCommands: []
+acceptedSecretFindings: []

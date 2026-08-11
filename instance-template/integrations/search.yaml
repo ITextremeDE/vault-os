@@ -1,0 +1,11 @@
+schema: 1
+
+sources: []
+
+searchOrder:
+  - indexes
+  - metadata
+  - sessions
+  - logs
+
+durableCaptureWorkflow: null

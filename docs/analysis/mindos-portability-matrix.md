@@ -81,6 +81,13 @@ The 13 `split` decisions carry the main architectural risk:
 The local content change log is the sole `runtime` file and must be excluded
 from Vault-OS releases.
 
+## Implementation status
+
+The 15 pure core sources and all target-domain portions of the 13 mixed sources
+have been extracted. Manifest validation now proves their lineage and domain
+coverage. The remaining extraction scope consists of the files classified as
+pure modules or instance data.
+
 ## Extraction order
 
 1. Define manifests for core, modules, instance seeds, and generated runtime

@@ -23,7 +23,8 @@ TARGET_ROOTS = {"system", "vault"}
 
 @dataclass(frozen=True)
 class Counts:
-    managed: int
+    core: int
+    module_files: int
     instance: int
     runtime: int
     modules: int
@@ -109,7 +110,48 @@ def validate_files(value: dict[str, Any], root: Path, owner: str) -> tuple[set[s
     return sources, targets
 
 
-def validate_core(value: dict[str, Any], root: Path) -> int:
+def entry_origins(entry: dict[str, Any], label: str, required: bool) -> set[str]:
+    value = entry.get("origins")
+    if value is None and not required:
+        return set()
+    if not isinstance(value, list) or not value or any(
+        not isinstance(item, str) or not item for item in value
+    ):
+        raise ValueError(f"{label}.origins: expected a non-empty string array")
+    origins = {
+        safe_relative_path(item, f"{label}.origins")
+        for item in value
+    }
+    if len(origins) != len(value):
+        raise ValueError(f"{label}.origins: duplicate origins")
+    if any(not origin.startswith("99 System/") for origin in origins):
+        raise ValueError(f"{label}.origins: every origin must be below 99 System")
+    return origins
+
+
+def source_tree_files(path: Path, root: Path) -> set[str]:
+    return {
+        candidate.relative_to(root).as_posix()
+        for candidate in path.rglob("*")
+        if candidate.is_file()
+        and "__pycache__" not in candidate.parts
+        and candidate.suffix.lower() not in {".pyc", ".pyo"}
+    }
+
+
+def load_matrix(root: Path) -> dict[str, dict[str, str]]:
+    matrix_path = root / "analysis/mindos-portability-matrix.tsv"
+    with matrix_path.open(encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        if not {"source_path", "decision", "target"}.issubset(reader.fieldnames or ()):
+            raise ValueError("portability matrix has unexpected columns")
+        rows = list(reader)
+    return {row["source_path"]: row for row in rows}
+
+
+def validate_core(
+    value: dict[str, Any], root: Path, matrix: dict[str, dict[str, str]]
+) -> tuple[int, set[str], set[str]]:
     label = "core"
     require(value, "schemaVersion", SCHEMA_VERSION, label)
     require(value, "id", "core", label)
@@ -117,24 +159,15 @@ def validate_core(value: dict[str, Any], root: Path) -> int:
     require(value, "owner", "managed", label)
     require(value, "required", True, label)
     require(value, "targetRoot", "system", label)
-    sources, _ = validate_files(value, root, "managed")
+    sources, targets = validate_files(value, root, "managed")
     if any(not source.startswith("src/core/") for source in sources):
         raise ValueError("core: every source must be below src/core")
 
     origins: set[str] = set()
     for index, entry in enumerate(value["files"]):
-        origin = safe_relative_path(entry.get("origin"), f"core.files[{index}].origin")
-        if not origin.startswith("99 System/"):
-            raise ValueError(f"core.files[{index}]: origin must be below 99 System")
-        if origin in origins:
-            raise ValueError(f"core.files[{index}]: duplicate origin {origin}")
-        origins.add(origin)
+        origins.update(entry_origins(entry, f"core.files[{index}]", required=True))
 
-    actual_sources = {
-        path.relative_to(root).as_posix()
-        for path in (root / "src/core").rglob("*")
-        if path.is_file()
-    }
+    actual_sources = source_tree_files(root / "src/core", root)
     missing = sorted(actual_sources - sources)
     extra = sorted(sources - actual_sources)
     if missing:
@@ -142,24 +175,51 @@ def validate_core(value: dict[str, Any], root: Path) -> int:
     if extra:
         raise ValueError("core: listed sources outside core tree: " + ", ".join(extra))
 
-    matrix_path = root / "analysis/mindos-portability-matrix.tsv"
-    with matrix_path.open(encoding="utf-8", newline="") as handle:
-        matrix = csv.DictReader(handle, delimiter="\t")
-        if not {"source_path", "decision"}.issubset(matrix.fieldnames or ()):
-            raise ValueError("core: portability matrix has unexpected columns")
-        expected_origins = {
-            row["source_path"] for row in matrix if row.get("decision") == "core"
-        }
+    expected_origins = {
+        path
+        for path, row in matrix.items()
+        if row["decision"] == "core"
+        or (row["decision"] == "split" and "src/core" in row["target"])
+    }
     missing_origins = sorted(expected_origins - origins)
     extra_origins = sorted(origins - expected_origins)
     if missing_origins:
         raise ValueError("core: missing classified origins: " + ", ".join(missing_origins))
     if extra_origins:
         raise ValueError("core: unclassified origins: " + ", ".join(extra_origins))
-    return len(sources)
+    return len(sources), origins, targets
 
 
-def validate_modules(value: dict[str, Any], root: Path) -> int:
+def validate_module(
+    value: dict[str, Any], root: Path, identifier: str
+) -> tuple[int, set[str], set[str]]:
+    label = f"module {identifier}"
+    require(value, "schemaVersion", SCHEMA_VERSION, label)
+    require(value, "id", identifier, label)
+    require(value, "kind", "module", label)
+    require(value, "owner", "managed", label)
+    require(value, "required", False, label)
+    require(value, "targetRoot", "system", label)
+    sources, targets = validate_files(value, root, "managed")
+    prefix = f"src/modules/{identifier}/"
+    if any(not source.startswith(prefix) for source in sources):
+        raise ValueError(f"{label}: every source must be below src/modules/{identifier}")
+    actual_sources = source_tree_files(root / f"src/modules/{identifier}", root)
+    missing = sorted(actual_sources - sources)
+    extra = sorted(sources - actual_sources)
+    if missing:
+        raise ValueError(f"{label}: unlisted module sources: " + ", ".join(missing))
+    if extra:
+        raise ValueError(f"{label}: listed sources outside module tree: " + ", ".join(extra))
+    origins: set[str] = set()
+    for index, entry in enumerate(value["files"]):
+        origins.update(entry_origins(entry, f"{label}.files[{index}]", required=True))
+    return len(sources), origins, targets
+
+
+def validate_modules(
+    value: dict[str, Any], root: Path
+) -> tuple[int, int, set[str], set[str]]:
     label = "modules"
     require(value, "schemaVersion", SCHEMA_VERSION, label)
     require(value, "id", "modules", label)
@@ -171,6 +231,9 @@ def validate_modules(value: dict[str, Any], root: Path) -> int:
 
     ids: set[str] = set()
     manifests: set[str] = set()
+    targets: set[str] = set()
+    origins: set[str] = set()
+    file_count = 0
     for index, entry in enumerate(modules):
         item_label = f"modules.modules[{index}]"
         if not isinstance(entry, dict):
@@ -185,12 +248,25 @@ def validate_modules(value: dict[str, Any], root: Path) -> int:
             raise ValueError(f"{item_label}: duplicate module manifest {manifest}")
         if not (root / manifest).is_file():
             raise ValueError(f"{item_label}: module manifest does not exist: {manifest}")
+        if not isinstance(entry.get("default"), bool):
+            raise ValueError(f"{item_label}: default must be boolean")
+        module_files, module_origins, module_targets = validate_module(
+            load_json(root / manifest), root, identifier
+        )
+        duplicate_targets = sorted(targets & module_targets)
+        if duplicate_targets:
+            raise ValueError(
+                f"{item_label}: duplicate module targets: " + ", ".join(duplicate_targets)
+            )
+        targets.update(module_targets)
+        origins.update(module_origins)
+        file_count += module_files
         ids.add(identifier)
         manifests.add(manifest)
-    return len(modules)
+    return len(modules), file_count, origins, targets
 
 
-def validate_instance(value: dict[str, Any], root: Path) -> int:
+def validate_instance(value: dict[str, Any], root: Path) -> tuple[int, set[str]]:
     label = "instance"
     require(value, "schemaVersion", SCHEMA_VERSION, label)
     require(value, "id", "instance", label)
@@ -200,7 +276,17 @@ def validate_instance(value: dict[str, Any], root: Path) -> int:
     sources, _ = validate_files(value, root, "instance")
     if any(not source.startswith("instance-template/") for source in sources):
         raise ValueError("instance: every seed must be below instance-template")
-    return len(sources)
+    actual_sources = source_tree_files(root / "instance-template", root)
+    missing = sorted(actual_sources - sources)
+    extra = sorted(sources - actual_sources)
+    if missing:
+        raise ValueError("instance: unlisted seed sources: " + ", ".join(missing))
+    if extra:
+        raise ValueError("instance: listed sources outside template tree: " + ", ".join(extra))
+    origins: set[str] = set()
+    for index, entry in enumerate(value["files"]):
+        origins.update(entry_origins(entry, f"instance.files[{index}]", required=False))
+    return len(sources), origins
 
 
 def validate_runtime(value: dict[str, Any]) -> int:
@@ -232,6 +318,35 @@ def validate_runtime(value: dict[str, Any]) -> int:
     return len(files)
 
 
+def validate_split_coverage(
+    matrix: dict[str, dict[str, str]],
+    core_origins: set[str],
+    module_origins: set[str],
+    instance_origins: set[str],
+) -> None:
+    domains = {
+        "core": ("src/core", core_origins),
+        "modules": ("src/modules", module_origins),
+        "instance": ("instance-template", instance_origins),
+    }
+    known = set(matrix)
+    for name, (_, origins) in domains.items():
+        unknown = sorted(origins - known)
+        if unknown:
+            raise ValueError(f"{name}: origins absent from portability matrix: " + ", ".join(unknown))
+
+    for path, row in matrix.items():
+        if row["decision"] != "split":
+            continue
+        for name, (target_marker, origins) in domains.items():
+            expected = target_marker in row["target"]
+            present = path in origins
+            if expected and not present:
+                raise ValueError(f"split coverage: {path} is missing its {name} artifact")
+            if present and not expected:
+                raise ValueError(f"split coverage: {path} has an unexpected {name} artifact")
+
+
 def validate_repository(root: Path) -> Counts:
     entry_path = root / "manifests/repository.json"
     entry = load_json(entry_path)
@@ -252,11 +367,29 @@ def validate_repository(root: Path) -> Counts:
         seen_paths.add(path)
         loaded[domain] = load_json(root / path)
 
+    matrix = load_matrix(root)
+    core_count, core_origins, core_targets = validate_core(
+        loaded["core"], root, matrix
+    )
+    module_count, module_files, module_origins, module_targets = validate_modules(
+        loaded["modules"], root
+    )
+    duplicate_managed_targets = sorted(core_targets & module_targets)
+    if duplicate_managed_targets:
+        raise ValueError(
+            "managed targets collide between core and modules: "
+            + ", ".join(duplicate_managed_targets)
+        )
+    instance_count, instance_origins = validate_instance(loaded["instance"], root)
+    validate_split_coverage(
+        matrix, core_origins, module_origins, instance_origins
+    )
     return Counts(
-        managed=validate_core(loaded["core"], root),
-        instance=validate_instance(loaded["instance"], root),
+        core=core_count,
+        module_files=module_files,
+        instance=instance_count,
         runtime=validate_runtime(loaded["runtime"]),
-        modules=validate_modules(loaded["modules"], root),
+        modules=module_count,
     )
 
 
@@ -276,10 +409,11 @@ def main() -> int:
 
     print(
         "Manifest validation passed: "
-        f"{counts.managed} managed files, "
-        f"{counts.instance} instance seed, "
+        f"{counts.core} core files, "
+        f"{counts.module_files} files in {counts.modules} modules, "
+        f"{counts.instance} instance seeds, "
         f"{counts.runtime} runtime artifact, "
-        f"{counts.modules} modules."
+        "all split origins covered."
     )
     return 0
 

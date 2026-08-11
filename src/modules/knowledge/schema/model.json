@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "module": "knowledge",
+  "contentKinds": {
+    "resource": {
+      "types": [
+        "article",
+        "book",
+        "document",
+        "study",
+        "tool",
+        "link",
+        "file",
+        "material",
+        "note",
+        "video",
+        "website",
+        "letter",
+        "email"
+      ],
+      "statuses": ["open", "in-progress", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "Title"
+    },
+    "knowledge": {
+      "types": [
+        "guide",
+        "biography",
+        "experience",
+        "model",
+        "pattern",
+        "person",
+        "principle",
+        "recipe",
+        "strategy",
+        "overview",
+        "quote"
+      ],
+      "statuses": ["open", "completed", "archived"],
+      "areaRequired": false,
+      "filename": "Title"
+    },
+    "conversation-note": {
+      "types": [
+        "chat",
+        "clarification",
+        "minutes",
+        "board-meeting",
+        "one-to-one",
+        "working-session",
+        "strategy-meeting",
+        "reflection",
+        "case-note"
+      ],
+      "statuses": ["open", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "YYYY-MM-DD-HHmm Title"
+    },
+    "working-note": {
+      "types": ["analysis", "distillation", "comparison", "intermediate", "structuring"],
+      "statuses": ["open", "in-progress", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "Title"
+    },
+    "insight": {
+      "types": ["guide", "experience", "model", "pattern", "principle", "strategy", "overview"],
+      "statuses": ["open", "completed", "archived"],
+      "areaRequired": true,
+      "filename": "Precise statement"
+    }
+  },
+  "fields": {
+    "reviewed": {"type": "date"}
+  }
+}

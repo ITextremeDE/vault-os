@@ -10,6 +10,65 @@
       "target": ".vault-os/config.yaml",
       "sha256": "ed4da0fc22cde2263ca9f935333eb7adf4d97cb724d57d79413a7174100ea23c",
       "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/01 Schema/Frontmatter-Schema.md"],
+      "source": "instance-template/schema/fields.yaml",
+      "target": ".vault-os/schema/fields.yaml",
+      "sha256": "756b43cb7effadf2c24fdc3fe832171c9b8ef35fbce22c70f9b3591f92d9e282",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/02 Register/Bereiche.md"],
+      "source": "instance-template/registers/areas.yaml",
+      "target": ".vault-os/registers/areas.yaml",
+      "sha256": "b8b55a203feaf9155bc0c5cd8fa7c762f113e7e74df8492e58021f9b6fd644e2",
+      "installMode": "create-only"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Commit Nachricht/SKILL.md",
+        "99 System/04 Assets/Skills/Commit Nachricht/_README.md"
+      ],
+      "source": "instance-template/policies/git-commits.yaml",
+      "target": ".vault-os/policies/git-commits.yaml",
+      "sha256": "8d3c7097dfd2f526ba969a2d46ebdf97e258232f8373cfe1fc317bda84ecf266",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/04 Assets/Skills/Suche in Codex/SKILL.md"],
+      "source": "instance-template/integrations/search.yaml",
+      "target": ".vault-os/integrations/search.yaml",
+      "sha256": "9d6ad3be5b8889b453773ea4c6e120cbefcdb561f7af11d323a8b93796e2bd95",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md"],
+      "source": "instance-template/modules/journal/daily-note.yaml",
+      "target": ".vault-os/modules/journal/daily-note.yaml",
+      "sha256": "fcb608b6fda8839a344f1d1f95d0f8f4f3ae93d5616f8bc1ad855dbdfa9d9ae9",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/05 Automation/Validatoren/validate_mindos.py"],
+      "source": "instance-template/validation/vault.yaml",
+      "target": ".vault-os/validation.yaml",
+      "sha256": "23b3563d8178557ee0bee8e8aad8c44d6a2c4c5b81564442c05b71d808d5e7f0",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/05 Automation/_README.md"],
+      "source": "instance-template/integrations/automation.yaml",
+      "target": ".vault-os/integrations/automation.yaml",
+      "sha256": "cd69d3f5904874a1a9f11d4d18460b8828c8b07f0e2d3a3f892e515c92aea534",
+      "installMode": "create-only"
+    },
+    {
+      "origins": ["99 System/06 Runtime/Agenten-Kurzkontext.md"],
+      "source": "instance-template/runtime/agent-context.yaml",
+      "target": ".vault-os/runtime/agent-context.yaml",
+      "sha256": "df1c588474a0ec1d20458d427da71d43ee0418128e1f7904dc5a7f5a72b01490",
+      "installMode": "create-only"
     }
   ]
 }

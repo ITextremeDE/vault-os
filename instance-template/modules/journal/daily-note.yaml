@@ -1,0 +1,16 @@
+schema: 1
+
+defaultArea: null
+maximumFocusItems: 3
+removeEmptySections: true
+taskSystem: null
+
+sections:
+  - appointments
+  - focus
+  - state
+  - what-mattered
+  - progress
+  - challenge
+  - insight
+  - next-step

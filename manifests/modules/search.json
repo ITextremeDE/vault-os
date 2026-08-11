@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "id": "search",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": ["99 System/04 Assets/Skills/Suche in Codex/SKILL.md"],
+      "source": "src/modules/search/skills/local-conversation-search/SKILL.md",
+      "target": "04 Assets/Skills/Local Conversation Search/SKILL.md",
+      "sha256": "b876890fe738ecf9d9105a1bbf071174ddb2f72f4be466bbe60728a45e5de14c",
+      "installMode": "managed"
+    }
+  ]
+}
