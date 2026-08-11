@@ -172,6 +172,7 @@ uses the lock to reject missing or locally modified managed files.
 
 ## Next steps
 
+- Apply the optional [recommended Obsidian profile](obsidian-setup.md).
 - Set up a local AI client with the [AI setup guide](ai-setup.md).
 - Learn safe upgrades and recovery in
   [Upgrade, recover, and remove](upgrade-recover-remove.md).

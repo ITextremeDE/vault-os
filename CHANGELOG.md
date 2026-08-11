@@ -48,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Complete public user documentation for prerequisites, installation into new
   and existing vaults, agent-assisted installation, module selection, AI and
   QMD setup, upgrades, recovery, removal boundaries, and troubleshooting.
+- Recommended Obsidian settings and core-plugin profile with module mappings,
+  community-plugin boundaries, and explicit `.obsidian` ownership.
 
 ### Changed
 

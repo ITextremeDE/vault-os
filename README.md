@@ -29,6 +29,11 @@ The lifecycle is currently release-validated on macOS. Linux and Windows have
 not yet completed the release acceptance matrix. Vault-OS does not modify
 `.obsidian` and requires no Obsidian plugin for its core.
 
+An optional [recommended Obsidian profile](docs/how-to/obsidian-setup.md)
+describes compatible editor settings, official core plugins, and carefully
+scoped community-plugin choices. Vault-OS never applies that profile
+automatically.
+
 Codex, Claude Code, and [QMD](https://github.com/tobi/qmd) are optional.
 
 ## Quick start
@@ -185,6 +190,7 @@ using it as evidence or changing it.
 ### How-to guides
 
 - [Install Vault-OS](docs/how-to/install.md)
+- [Configure Obsidian for Vault-OS](docs/how-to/obsidian-setup.md)
 - [Set up AI assistance](docs/how-to/ai-setup.md)
 - [Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md)
 - [Troubleshooting](docs/how-to/troubleshooting.md)
