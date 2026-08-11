@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: area
-type: video
-status: open
-area:
+{{fields.kind}}: "{{values.kind.area}}"
+{{fields.type}}: "{{values.type.video}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

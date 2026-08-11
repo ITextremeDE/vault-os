@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: resource
-type:
-status: active
-area:
+{{fields.kind}}: "{{values.kind.resource}}"
+{{fields.type}}:
+{{fields.status}}: "{{values.status.active}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

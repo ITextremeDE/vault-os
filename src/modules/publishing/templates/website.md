@@ -1,17 +1,17 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: area
-type: website
-status: open
-area:
+{{fields.kind}}: "{{values.kind.area}}"
+{{fields.type}}: "{{values.type.website}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
 created:
-meta_title:
-meta_description:
-slug:
+{{moduleFields.meta_title}}:
+{{moduleFields.meta_description}}:
+{{moduleFields.slug}}:
 ---
 
 # {{title}}

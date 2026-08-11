@@ -16,6 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterator
 
+from .materialization import render_instance_source
 from .package import (
     ConflictError,
     FileSpec,
@@ -30,6 +31,7 @@ from .package import (
 
 LOCK_SCHEMA_VERSION = 1
 CONFIG_SOURCE = "instance-template/vault-os.yaml"
+FIELD_PROFILE_SOURCE = "instance-template/schema/fields.yaml"
 SYNCED_INSTANCE_ROOT = "Vault-OS"
 LEGACY_INSTANCE_ROOT = ".vault-os"
 OPERATION_LOCK = ".vault-os/operation.lock"
@@ -42,6 +44,13 @@ class Change:
     target: str
     content: bytes | None
     category: str
+
+
+@dataclass(frozen=True)
+class ManagedArtifact:
+    spec: FileSpec
+    content: bytes
+    sha256: str
 
 
 @dataclass
@@ -57,7 +66,14 @@ class Plan:
     instance_preserved: int = 0
 
     def counts(self) -> dict[str, int]:
-        result = {"add": 0, "update": 0, "remove": 0, "seed": 0, "lock": 0}
+        result = {
+            "add": 0,
+            "update": 0,
+            "remove": 0,
+            "seed": 0,
+            "directory": 0,
+            "lock": 0,
+        }
         for change in self.changes:
             result[change.category] = result.get(change.category, 0) + 1
         result["unchanged"] = self.unchanged
@@ -140,6 +156,41 @@ def config_spec(package: Package) -> FileSpec:
     if len(matches) != 1:
         raise VaultOSError("instance manifest must contain exactly one configuration seed")
     return matches[0]
+
+
+def field_profile_spec(package: Package) -> FileSpec:
+    matches = [spec for spec in package.instance if spec.source == FIELD_PROFILE_SOURCE]
+    if len(matches) != 1:
+        raise VaultOSError("instance manifest must contain exactly one field profile seed")
+    return matches[0]
+
+
+def materialization_profile_bytes(
+    package: Package, vault: Path, config: InstanceConfig
+) -> bytes:
+    spec = field_profile_spec(package)
+    target = package.resolve_target(spec, config)
+    path, exists = _path_state(vault, target)
+    if exists:
+        return path.read_bytes()
+    return source_bytes(package, spec)
+
+
+def managed_artifacts(
+    package: Package, vault: Path, config: InstanceConfig
+) -> dict[str, ManagedArtifact]:
+    profile_content: bytes | None = None
+    result: dict[str, ManagedArtifact] = {}
+    for target, spec in package.managed_files(config).items():
+        content = source_bytes(package, spec)
+        if spec.materialize == "instance":
+            if profile_content is None:
+                profile_content = materialization_profile_bytes(package, vault, config)
+            content = render_instance_source(
+                content, config, profile_content, spec.source
+            )
+        result[target] = ManagedArtifact(spec, content, sha256_bytes(content))
+    return result
 
 
 def prepare_install_config(
@@ -281,7 +332,7 @@ def load_lock(package: Package, vault: Path) -> dict[str, Any]:
 def lock_bytes(
     package: Package,
     config: InstanceConfig,
-    managed: dict[str, FileSpec],
+    managed: dict[str, ManagedArtifact],
     installed_at: str | None = None,
 ) -> bytes:
     now = utc_now()
@@ -299,14 +350,16 @@ def lock_bytes(
     return (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
 
 
-def managed_lock_entries(managed: dict[str, FileSpec]) -> list[dict[str, str]]:
+def managed_lock_entries(
+    managed: dict[str, ManagedArtifact],
+) -> list[dict[str, str]]:
     return [
         {
-            "owner": spec.owner,
+            "owner": artifact.spec.owner,
             "target": target,
-            "sha256": spec.sha256,
+            "sha256": artifact.sha256,
         }
-        for target, spec in sorted(managed.items())
+        for target, artifact in sorted(managed.items())
     ]
 
 
@@ -317,19 +370,47 @@ def _path_state(root: Path, target: str) -> tuple[Path, bool]:
     return path, path.is_file()
 
 
+def _directory_state(root: Path, target: str) -> tuple[Path, bool]:
+    path = secure_target(root, target)
+    if path.exists() and not path.is_dir():
+        raise ConflictError(f"target is not a directory: {target}")
+    return path, path.is_dir()
+
+
+def configured_directory_targets(config: InstanceConfig) -> tuple[str, ...]:
+    keys = ["inbox"]
+    if "para" in config.modules:
+        keys.extend(("projects", "areas", "resources", "archive"))
+    if "journal" in config.modules:
+        keys.extend(("journal", "journalDaily", "journalWeekly", "journalYearly"))
+    targets: list[str] = []
+    seen: set[str] = set()
+    for key in keys:
+        target = safe_relative(
+            config.data["paths"][key],
+            f"configuration.paths.{key}",
+            protect_obsidian=True,
+        )
+        folded = target.casefold()
+        if folded not in seen:
+            targets.append(target)
+            seen.add(folded)
+    return tuple(targets)
+
+
 def build_install_plan(package: Package, vault: Path, config: InstanceConfig) -> Plan:
     plan = Plan("install", None, package.version, (), config.modules, [], [])
     lock_path, lock_exists = _path_state(vault, package.runtime_target)
     if lock_exists:
         plan.conflicts.append(f"installation already has a release lock: {package.runtime_target}")
 
-    managed = package.managed_files(config)
-    for target, spec in sorted(managed.items()):
+    managed = managed_artifacts(package, vault, config)
+    for target, artifact in sorted(managed.items()):
         _, exists = _path_state(vault, target)
         if exists:
             plan.conflicts.append(f"managed install target already exists: {target}")
         else:
-            plan.changes.append(Change("write", target, source_bytes(package, spec), "add"))
+            plan.changes.append(Change("write", target, artifact.content, "add"))
 
     generated_config = config.to_yaml()
     for target, spec in sorted(package.instance_files(config).items()):
@@ -343,6 +424,38 @@ def build_install_plan(package: Package, vault: Path, config: InstanceConfig) ->
             plan.instance_preserved += 1
         else:
             plan.changes.append(Change("write", target, source_bytes(package, spec), "seed"))
+
+    file_targets = {
+        change.target
+        for change in plan.changes
+        if change.action in {"write", "delete"}
+    }
+    for directory_target in configured_directory_targets(config):
+        try:
+            _, directory_exists = _directory_state(vault, directory_target)
+        except ConflictError as error:
+            plan.conflicts.append(str(error))
+            continue
+        if not directory_exists:
+            directory_parts = PurePosixPath(directory_target).parts
+            blocking_file = next(
+                (
+                    target
+                    for target in sorted(file_targets)
+                    if PurePosixPath(target).parts
+                    == directory_parts[: len(PurePosixPath(target).parts)]
+                ),
+                None,
+            )
+            if blocking_file is not None:
+                plan.conflicts.append(
+                    f"configured directory {directory_target} conflicts with "
+                    f"file target: {blocking_file}"
+                )
+            else:
+                plan.changes.append(
+                    Change("mkdir", directory_target, None, "directory")
+                )
 
     if not plan.conflicts:
         plan.changes.append(
@@ -369,7 +482,7 @@ def build_update_plan(
         [],
     )
     old = _old_managed(lock)
-    desired = package.managed_files(config)
+    desired = managed_artifacts(package, vault, config)
 
     for target, entry in sorted(old.items()):
         try:
@@ -382,12 +495,12 @@ def build_update_plan(
         elif sha256_file(path) != entry["sha256"]:
             plan.conflicts.append(f"managed file was changed locally: {target}")
 
-    for target, spec in sorted(desired.items()):
+    for target, artifact in sorted(desired.items()):
         if target in old:
-            if old[target]["sha256"] == spec.sha256:
+            if old[target]["sha256"] == artifact.sha256:
                 plan.unchanged += 1
             else:
-                plan.changes.append(Change("write", target, source_bytes(package, spec), "update"))
+                plan.changes.append(Change("write", target, artifact.content, "update"))
             continue
         try:
             _, exists = _path_state(vault, target)
@@ -397,7 +510,7 @@ def build_update_plan(
         if exists:
             plan.conflicts.append(f"new managed target already exists: {target}")
         else:
-            plan.changes.append(Change("write", target, source_bytes(package, spec), "add"))
+            plan.changes.append(Change("write", target, artifact.content, "add"))
 
     for target in sorted(set(old) - set(desired)):
         plan.changes.append(Change("delete", target, None, "remove"))
@@ -456,7 +569,7 @@ def build_update_plan(
 def _lock_matches(
     package: Package,
     config: InstanceConfig,
-    managed: dict[str, FileSpec],
+    managed: dict[str, ManagedArtifact],
     lock: dict[str, Any] | None,
 ) -> bool:
     if lock is None:
@@ -493,8 +606,8 @@ def build_device_sync_plan(
         [],
         [],
     )
-    desired = package.managed_files(config)
-    for target, spec in sorted(desired.items()):
+    desired = managed_artifacts(package, vault, config)
+    for target, artifact in sorted(desired.items()):
         try:
             path, exists = _path_state(vault, target)
         except ConflictError as error:
@@ -502,7 +615,7 @@ def build_device_sync_plan(
             continue
         if not exists:
             plan.conflicts.append(f"synchronized managed file is missing: {target}")
-        elif sha256_file(path) != spec.sha256:
+        elif sha256_file(path) != artifact.sha256:
             plan.conflicts.append(
                 f"synchronized managed file does not match the package: {target}"
             )
@@ -627,6 +740,16 @@ def apply_changes(vault: Path, changes: list[Change]) -> None:
             target = secure_target(vault, change.target)
             target.parent.mkdir(parents=True, exist_ok=True)
             backup: Path | None = None
+            if change.action == "mkdir":
+                if target.exists():
+                    if not target.is_dir():
+                        raise ConflictError(
+                            f"target is not a directory: {change.target}"
+                        )
+                    continue
+                target.mkdir()
+                applied.append((change, None))
+                continue
             if target.exists():
                 if not target.is_file():
                     raise ConflictError(f"target is not a regular file: {change.target}")
@@ -640,6 +763,12 @@ def apply_changes(vault: Path, changes: list[Change]) -> None:
     except Exception:
         for change, backup in reversed(applied):
             target = secure_target(vault, change.target)
+            if change.action == "mkdir":
+                try:
+                    target.rmdir()
+                except OSError:
+                    pass
+                continue
             if target.exists() and target.is_file():
                 target.unlink()
             if backup is not None and backup.exists():

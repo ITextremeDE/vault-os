@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: area
-type: area
-status: open
-area:
+{{fields.kind}}: "{{values.kind.area}}"
+{{fields.type}}: "{{values.type.area}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

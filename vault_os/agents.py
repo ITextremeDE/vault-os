@@ -173,6 +173,7 @@ def _agent_instructions(config: InstanceConfig, runtime: dict[str, Any]) -> byte
         "- Treat Vault-OS managed files as release-owned; do not edit them directly.",
         "- Preserve instance-owned configuration and user content unless the user authorizes a change.",
         "- Never modify `.obsidian` as part of Vault-OS work.",
+        "- Do not add, rename, move, or remove top-level vault directories without explicit user authorization.",
         "- Read before writing and make the smallest reversible change that achieves the request.",
         "",
         "## Startup context",

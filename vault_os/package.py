@@ -83,6 +83,7 @@ class FileSpec:
     owner: str
     target_root: str
     install_mode: str
+    materialize: str | None
 
     def source_path(self, package_root: Path) -> Path:
         return package_root / self.source
@@ -271,6 +272,11 @@ class Package:
             install_mode = entry.get("installMode")
             if install_mode not in {"managed", "create-only"}:
                 raise VaultOSError(f"{label}: invalid installMode")
+            materialize = entry.get("materialize")
+            if materialize not in {None, "instance"}:
+                raise VaultOSError(f"{label}: invalid materialize mode")
+            if materialize is not None and install_mode != "managed":
+                raise VaultOSError(f"{label}: only managed files may be materialized")
             result.append(
                 FileSpec(
                     source=source,
@@ -279,6 +285,7 @@ class Package:
                     owner=owner,
                     target_root=target_root,
                     install_mode=install_mode,
+                    materialize=materialize,
                 )
             )
         return tuple(result)
@@ -356,6 +363,16 @@ class Package:
         if unknown:
             raise VaultOSError("configuration: unknown modules: " + ", ".join(unknown))
         normalized = tuple(sorted(modules))
+        required_paths = ["system", "inbox"]
+        if "para" in normalized:
+            required_paths.extend(("projects", "areas", "resources", "archive"))
+        if "journal" in normalized:
+            required_paths.extend(
+                ("journal", "journalDaily", "journalWeekly", "journalYearly")
+            )
+        for key in required_paths:
+            if not isinstance(paths.get(key), str):
+                raise VaultOSError(f"configuration: paths.{key} is required")
         value["modules"] = list(normalized)
         return InstanceConfig(value, system_root, normalized)
 

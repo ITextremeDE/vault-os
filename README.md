@@ -1,9 +1,12 @@
 # Vault-OS
 
-Vault-OS is a portable, AI-first and local-first operating layer for Obsidian
-vaults. It provides versioned rules, schemas, workflows, reusable assets,
+**A portable, AI-first and local-first framework for Obsidian vaults.**
+
+Vault-OS provides versioned rules, schemas, workflows, reusable assets,
 validation, and agent context without owning a vault's content, name, language,
-or identity.
+or identity. Use Obsidian Sync for vault content and shared configuration while
+AI clients, search indexes, credentials, and runtime settings remain
+device-local.
 
 It is not a pre-populated second brain, hosted service, Obsidian plugin, or AI
 model. It is an inspectable file-based system that is managed alongside the
@@ -13,8 +16,9 @@ vault owner's content without taking ownership of that content.
 
 Vault-OS is under active development and has not reached its first public
 release. Installation and update behavior have been validated against a clean
-vault and a hash-verified copy of an existing real-world vault. Publishing
-`0.1.0` and completing a deliberate live-vault migration remain pending.
+vault and a hash-verified copy of an existing real-world vault. A deliberate
+side-by-side production migration into a fresh Vault-OS instance has also been
+completed and validated. Publishing `0.1.0` remains pending.
 
 Use the current `main` branch for evaluation and development, not as a stable
 release contract.
@@ -92,15 +96,21 @@ agent conventions, and audits. Every module is disabled by default. The
 [module catalog](docs/reference/modules.md) explains each module and suggests
 useful profiles.
 
+Every installation creates the configured inbox directory. With `para`, it
+also creates the configured projects, areas, resources, and archive roots; with
+`journal`, the configured journal root and its daily, weekly, and yearly
+subdirectories. These directories and everything later placed inside them
+remain user-owned and are not recorded as managed release content.
+
 Vault name, language, folder names, enabled modules, registers, and local
 integration choices belong to the installed instance. `MindOS` is not embedded
 as a required name or identity.
 
 The optional `bootstrap` command adds a user-owned vault entry point after
-installation: a profile note, root `README.md`, `Dashboard.md`, and, when the
-`para` module is enabled, global project and area overviews. It creates missing
-files only and never adopts or overwrites existing content. Filenames are
-configured below `bootstrap` in `Vault-OS/config.yaml`; for example,
+installation: a profile note, root `README.md`, `Dashboard.md`, and READMEs for
+the configured inbox and enabled PARA and journal structures. It creates
+missing files only and never adopts or overwrites existing content. Filenames
+are configured below `bootstrap` in `Vault-OS/config.yaml`; for example,
 `profileFile: Ich.md` produces the German filename without making it a product
 default.
 
@@ -109,6 +119,9 @@ default.
 Release manifests map package sources to target paths and checksums. The
 installer validates the complete package, stages all writes, and records the
 installed release in `.vault-os/lock.json` only after a successful transaction.
+Managed templates and views are materialized during the lifecycle from the
+installed field profile and path configuration. Their portable sources remain
+stable while each vault receives directly usable field names, values, and paths.
 
 Vault-OS distinguishes three ownership domains:
 
@@ -136,8 +149,9 @@ ownership.
 
 ## Operate and update an installation
 
-Edit `Vault-OS/config.yaml` to change modules or instance paths. Preview before
-applying:
+Edit `Vault-OS/config.yaml` to change modules or instance paths and
+`Vault-OS/schema/fields.yaml` to change local field or value mappings. Preview
+and apply afterward so managed templates and views are materialized again:
 
 ```bash
 .venv/bin/python -m vault_os diff "/path/to/My Vault"
@@ -245,6 +259,7 @@ using it as evidence or changing it.
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
 - [Agent integration validation](docs/validation/2026-08-11-agent-integration.md)
+- [Production vault migration validation](docs/validation/2026-08-11-production-vault-migration.md)
 
 ## Repository layout
 
@@ -279,12 +294,12 @@ docs/validation/          Release acceptance evidence
   implemented.
 - The lifecycle has passed automated clean-vault tests and hash-verified
   acceptance against a temporary copy of an existing real-world vault.
-- Installing into the live source vault remains a deliberate migration outside
-  the current `0.1.0` acceptance scope.
+- A production vault has been migrated side by side into a fresh installation;
+  the legacy source remained unchanged as the recovery copy.
 
 ## Development roadmap
 
-1. [x] Classify the existing operating layer by ownership and portability.
+1. [x] Classify the existing framework by ownership and portability.
 2. [x] Extract and neutralize the portable core.
 3. [x] Implement deterministic lifecycle commands.
 4. [x] Validate clean-vault installation and updates.
@@ -292,7 +307,8 @@ docs/validation/          Release acceptance evidence
 6. [x] Add provider-neutral agent integration with Codex and Claude adapters.
 7. [x] Complete public installation, operation, AI, module, and
    troubleshooting documentation.
-8. [ ] Publish version `0.1.0`.
+8. [x] Complete and validate a deliberate production-vault migration.
+9. [ ] Publish version `0.1.0`.
 
 ## Development validation
 

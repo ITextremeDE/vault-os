@@ -20,8 +20,17 @@ and durable record of the installed release.
   installed checksums of managed files only.
 - Installation validates the complete package and preflights all destinations.
   Instance seeds are create-only.
+- Installation creates the configured inbox directory. When their modules are
+  enabled, it also creates all configured PARA roots and the journal root with
+  daily, weekly, and yearly directories. These directories are user-owned, are
+  not recorded in the release lock, and a conflicting file or symbolic link
+  stops installation before writes.
 - Updates verify every file in the installed managed set before writing. A
   missing or locally changed file stops the complete update.
+- Managed sources marked for instance materialization are rendered from the
+  current synchronized configuration and field profile. The lock records the
+  installed artifact checksum, so configuration changes can update those files
+  without weakening local-change protection.
 - Module deselection removes only unchanged managed files. Module selection may
   create missing instance seeds but never replaces existing instance files.
 - Writes are staged and applied as one transaction with backups and rollback.
@@ -41,7 +50,11 @@ and durable record of the installed release.
   and lock.
 - Direct edits to managed files require explicit conflict resolution before an
   update; the updater never guesses which content should win.
+- Changing instance field or path mappings requires an update to rematerialize
+  affected managed templates and views.
 - Instance configuration and content remain outside release ownership.
+- A newly installed vault has the operational directory structure required by
+  its selected modules without making later content release-managed.
 - Interrupted or failed writes are rolled back, while stale operation data can
   be diagnosed explicitly.
 - Real-world vault adoption still requires a deliberate migration and conflict

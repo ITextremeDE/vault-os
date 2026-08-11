@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: knowledge
-type: recipe
-status: open
+{{fields.kind}}: "{{values.kind.knowledge}}"
+{{fields.type}}: "{{values.type.recipe}}"
+{{fields.status}}: "{{values.status.open}}"
 aliases: []
 tags: []
 cssclasses: []

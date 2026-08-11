@@ -62,6 +62,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   README, dashboard, and optional PARA project and area overviews.
 - Instance-configurable bootstrap filenames with schema-aware frontmatter and
   localized semantic value mappings.
+- Instance mappings for localized module fields, established filename
+  conventions, and scalar-or-list registers during legacy-vault migration.
+- Evidence for a validated side-by-side production-vault migration with
+  preserved content and Git history.
+- Instance-aware lifecycle materialization for managed templates and Bases
+  views using configured field names, localized values, module fields, and paths.
+- Explicit external-reference ID/URL pairs for established non-derived field
+  names and documented per-value semantics for instance registers.
+- Context-qualified preferred value mappings for deterministic materialization
+  when a localized profile maps several stored values to one stable identifier.
 
 ### Changed
 
@@ -85,6 +95,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and device-local runtime separation.
 - Advanced the development package to `0.1.0-dev.6` for the user-owned vault
   bootstrap contract.
+- Advanced the development package to `0.1.0-dev.7` for required inbox
+  directory creation during installation.
+- Advanced the development package to `0.1.0-dev.8` for the user-owned inbox
+  README bootstrap contract.
+- Advanced the development package to `0.1.0-dev.9` for complete configured
+  PARA and journal directory scaffolding.
+- Advanced the development package to `0.1.0-dev.10` for localized legacy
+  content validation.
+- Advanced the development package to `0.1.0-dev.11` for instance-materialized
+  managed artifacts and strengthened instance semantics.
 
 ### Fixed
 
@@ -95,3 +115,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevented external-reference diagnostics from exposing secret URL values.
 - Excluded generated agent instructions and device-local provider wrappers from
   ordinary vault-content frontmatter validation.
+- Created the configured `paths.inbox` directory during installation instead
+  of leaving a new vault without its operational capture path.
+- Added the missing create-only README to the configured inbox during vault
+  bootstrap so its purpose is visible and the directory is not empty.
+- Added the missing resources and archive roots plus the journal root and
+  configurable daily, weekly, and yearly subdirectories, with create-only
+  bootstrap READMEs for every structural directory.
+- Prevented direct Obsidian template use and the review Bases view from ignoring
+  localized instance fields, values, module fields, and configured paths.
+- Restored the explicit authorization boundary for changes to top-level vault
+  directories in both managed operating rules and generated agent instructions.

@@ -115,8 +115,9 @@
       ],
       "source": "src/modules/knowledge/templates/conversation-note.md",
       "target": "04 Assets/Templates/Knowledge/Conversation Note.md",
-      "sha256": "b85a638c0873d6c697f1e0fd1cbad672ebeb281cf572e731751eca14c43715a2",
-      "installMode": "managed"
+      "sha256": "43dd5a5fabc14c01d66b5a272280d3e9a2656378a7699b6501de53e59b610352",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -124,8 +125,9 @@
       ],
       "source": "src/modules/knowledge/templates/working-note.md",
       "target": "04 Assets/Templates/Knowledge/Working Note.md",
-      "sha256": "4c416a524ca4fea443e26506522ff5bc3a4d837fe8e2ff8b1870aa6d430d42c8",
-      "installMode": "managed"
+      "sha256": "742c8c4e4d845efc50fc688cd4a712d6ce04af36bc2afba51fb8103e53bb6f74",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -133,8 +135,9 @@
       ],
       "source": "src/modules/knowledge/templates/insight.md",
       "target": "04 Assets/Templates/Knowledge/Insight.md",
-      "sha256": "e10d2013e5514678af5f40f548ee346d3b4823e639040421f61ea5cc1c6d5b43",
-      "installMode": "managed"
+      "sha256": "047526c30cfdc93400121f63821b5c4fb6f3ac2019115df3f12206bb94a6269d",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -142,8 +145,9 @@
       ],
       "source": "src/modules/knowledge/templates/resource.md",
       "target": "04 Assets/Templates/Knowledge/Resource.md",
-      "sha256": "a3c1bc6d865cfe173ba7aee7181712173f94f791de2d0fbea0829cffacdd9435",
-      "installMode": "managed"
+      "sha256": "d1b453e3e8121ffcf0ebea51fcb901430927ce1d2db13cc6d075d5154d228b66",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -151,8 +155,9 @@
       ],
       "source": "src/modules/knowledge/templates/source.md",
       "target": "04 Assets/Templates/Knowledge/Source.md",
-      "sha256": "cc10b7e3bd6fbebc7e9733e080b6c6c68f17e54c4d49589ade4495a2e03fde7d",
-      "installMode": "managed"
+      "sha256": "05368f46ac1aec1edcf4dac32c640eb5c93f8b791fa5fb8b95df821254d601c5",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -160,8 +165,9 @@
       ],
       "source": "src/modules/knowledge/templates/knowledge.md",
       "target": "04 Assets/Templates/Knowledge/Knowledge.md",
-      "sha256": "4d52802c48bdf7e33f2096bd7ecedde5cc81e94b76c2c4873097055d5ed58d29",
-      "installMode": "managed"
+      "sha256": "4d9f63b20a03e799923766660693896f6ff2d3e13b4209d690c504ef03efac52",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -169,8 +175,9 @@
       ],
       "source": "src/modules/knowledge/templates/recipe.md",
       "target": "04 Assets/Templates/Knowledge/Recipe.md",
-      "sha256": "cc9545bcea66a1b12178e50c30ba185f06a2344cca2ac4cfef7fe2ef71c93f9d",
-      "installMode": "managed"
+      "sha256": "224890b045e917d951ef2336768c0a9301f607b225f2a54c28a637fc3f60c44b",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -178,8 +185,9 @@
       ],
       "source": "src/modules/knowledge/templates/overview.md",
       "target": "04 Assets/Templates/Knowledge/Overview.md",
-      "sha256": "37a8dc1d071be399d468a71886183088e3782bce9160c8f9ec7093db720c7db9",
-      "installMode": "managed"
+      "sha256": "a233d319cb83d3fb22fab50f11406b9763197c27f9783f3c1cd6774290ae137e",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [

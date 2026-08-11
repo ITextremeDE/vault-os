@@ -140,6 +140,23 @@ class PortabilityCheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("visible for synchronization", result.stdout)
 
+    def test_manifest_rejects_materialized_instance_seed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["materialize"] = "instance"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("only managed files may be materialized", result.stdout)
+
     def test_manifest_requires_canonical_visible_instance_root(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -139,6 +139,7 @@ def print_plan(plan: Plan, *, json_output: bool) -> None:
         "Changes: "
         f"add={counts['add']}, update={counts['update']}, "
         f"remove={counts['remove']}, seed={counts['seed']}, "
+        f"directory={counts['directory']}, "
         f"unchanged={counts['unchanged']}"
     )
     if counts["instancePreserved"]:

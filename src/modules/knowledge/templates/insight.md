@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: insight
-type:
-status: open
-area:
+{{fields.kind}}: "{{values.kind.insight}}"
+{{fields.type}}:
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

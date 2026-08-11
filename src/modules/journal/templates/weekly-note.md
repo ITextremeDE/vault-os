@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: journal
-type: weekly
-status: open
-area:
+{{fields.kind}}: "{{values.kind.journal}}"
+{{fields.type}}: "{{values.type.weekly}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

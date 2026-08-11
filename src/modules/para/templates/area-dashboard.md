@@ -1,17 +1,17 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: system
-type: dashboard
-status: active
-area:
+{{fields.kind}}: "{{values.kind.system}}"
+{{fields.type}}: "{{values.type.dashboard}}"
+{{fields.status}}: "{{values.status.active}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
 created:
 ---
 
-# {{area}}
+# {{title}}
 
 ## Focus
 
@@ -19,35 +19,35 @@ created:
 
 ```dataview
 TASK
-FROM "{{paths.projects}}/{{area}}" OR "{{paths.areas}}/{{area}}"
-WHERE !fullyCompleted
+FROM "{{paths.projects}}" OR "{{paths.areas}}"
+WHERE !fullyCompleted AND {{fields.area}} = this.{{fields.area}} AND file.name != "README"
 SORT file.mtime DESC
 ```
 
 ## Active projects
 
 ```dataview
-TABLE file.link AS Project, type AS Type, status AS Status
-FROM "{{paths.projects}}/{{area}}"
-WHERE kind = "project" AND status != "completed" AND status != "archived"
+TABLE file.link AS Project, {{fields.type}} AS Type, {{fields.status}} AS Status
+FROM "{{paths.projects}}"
+WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} != "{{values.status.completed}}" AND {{fields.status}} != "{{values.status.archived}}" AND file.name != "README"
 SORT file.mtime DESC
 ```
 
 ## Contacts
 
 ```dataview
-TABLE file.link AS Contact, type AS Type, status AS Status, last_contact AS "Last contact"
+TABLE file.link AS Contact, {{fields.type}} AS Type, {{fields.status}} AS Status, {{moduleFields.last_contact}} AS "Last contact"
 FROM "{{paths.contacts}}"
-WHERE area = "{{area}}"
-SORT default(last_contact, date("1900-01-01")) DESC, file.name ASC
+WHERE {{fields.area}} = this.{{fields.area}} AND file.name != "README"
+SORT default({{moduleFields.last_contact}}, date("1900-01-01")) DESC, file.name ASC
 ```
 
 ## Relevant links
 
 ```dataview
-TABLE file.link AS Note, type AS Type, status AS Status
-FROM "{{paths.projects}}/{{area}}" OR "{{paths.areas}}/{{area}}" OR "{{paths.resources}}"
-WHERE area = "{{area}}" AND file.name != this.file.name
+TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status
+FROM "{{paths.projects}}" OR "{{paths.areas}}" OR "{{paths.resources}}"
+WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
 SORT file.mtime DESC
 LIMIT 10
 ```

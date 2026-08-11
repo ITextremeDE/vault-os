@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: project
-type:
-status: idea
-area:
+{{fields.kind}}: "{{values.kind.project}}"
+{{fields.type}}:
+{{fields.status}}: "{{values.status.idea}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

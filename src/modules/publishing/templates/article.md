@@ -1,19 +1,19 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: area
-type: article
-status: open
-area:
+{{fields.kind}}: "{{values.kind.area}}"
+{{fields.type}}: "{{values.type.article}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
 created:
-published:
-meta_title:
-meta_description:
-excerpt:
-slug:
+{{moduleFields.published}}:
+{{moduleFields.meta_title}}:
+{{moduleFields.meta_description}}:
+{{moduleFields.excerpt}}:
+{{moduleFields.slug}}:
 ---
 
 # {{title}}

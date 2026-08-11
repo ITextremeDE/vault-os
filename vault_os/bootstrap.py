@@ -178,37 +178,65 @@ def _render_files(config: InstanceConfig, profile: dict[str, Any]) -> tuple[dict
     profile_target = bootstrap["profileFile"]
     readme_target = bootstrap["readmeFile"]
     dashboard_target = bootstrap["dashboardFile"]
+    if not isinstance(paths.get("inbox"), str):
+        raise VaultOSError("bootstrap requires configuration.paths.inbox")
+    inbox_target = f"{paths['inbox']}/{bootstrap['overviewFile']}"
     profile_title = _title(profile_target)
     dashboard_title = _title(dashboard_target)
 
     para_enabled = "para" in config.modules
+    journal_enabled = "journal" in config.modules
     skipped: list[str] = []
     project_target: str | None = None
     area_target: str | None = None
+    resource_target: str | None = None
+    archive_target: str | None = None
+    journal_target: str | None = None
+    journal_daily_target: str | None = None
+    journal_weekly_target: str | None = None
+    journal_yearly_target: str | None = None
     if para_enabled:
-        for key in ("projects", "areas"):
+        for key in ("projects", "areas", "resources", "archive"):
             if not isinstance(paths.get(key), str):
                 raise VaultOSError(f"bootstrap requires configuration.paths.{key}")
         project_target = f"{paths['projects']}/{bootstrap['overviewFile']}"
         area_target = f"{paths['areas']}/{bootstrap['overviewFile']}"
+        resource_target = f"{paths['resources']}/{bootstrap['overviewFile']}"
+        archive_target = f"{paths['archive']}/{bootstrap['overviewFile']}"
     else:
-        skipped.extend(
-            [
-                "project overview requires the para module",
-                "area overview requires the para module",
-            ]
-        )
+        skipped.append("PARA overviews require the para module")
+
+    if journal_enabled:
+        journal_keys = ("journal", "journalDaily", "journalWeekly", "journalYearly")
+        for key in journal_keys:
+            if not isinstance(paths.get(key), str):
+                raise VaultOSError(f"bootstrap requires configuration.paths.{key}")
+        journal_target = f"{paths['journal']}/{bootstrap['overviewFile']}"
+        journal_daily_target = f"{paths['journalDaily']}/{bootstrap['overviewFile']}"
+        journal_weekly_target = f"{paths['journalWeekly']}/{bootstrap['overviewFile']}"
+        journal_yearly_target = f"{paths['journalYearly']}/{bootstrap['overviewFile']}"
+    else:
+        skipped.append("journal overviews require the journal module")
 
     navigation = [
         f"- {_link(dashboard_target, dashboard_title)}",
         f"- {_link(profile_target, profile_title)}",
     ]
-    if project_target is not None and area_target is not None:
+    if all(
+        target is not None
+        for target in (project_target, area_target, resource_target, archive_target)
+    ):
         navigation.extend(
             [
                 f"- {_link(project_target, PurePosixPath(paths['projects']).name)}",
                 f"- {_link(area_target, PurePosixPath(paths['areas']).name)}",
+                f"- {_link(resource_target, PurePosixPath(paths['resources']).name)}",
+                f"- {_link(archive_target, PurePosixPath(paths['archive']).name)}",
             ]
+        )
+    if journal_target is not None:
+        navigation.append(
+            f"- {_link(journal_target, PurePosixPath(paths['journal']).name)}"
         )
 
     files: dict[str, bytes] = {
@@ -242,9 +270,32 @@ def _render_files(config: InstanceConfig, profile: dict[str, Any]) -> tuple[dict
             + "## Open loops\n\nKeep this as a compact orientation view; canonical tasks stay in their owning notes or task system.\n\n"
             + "## Recent context\n\nLink the notes that should be read first when resuming work.\n"
         ).encode("utf-8"),
+        inbox_target: (
+            _frontmatter(profile, "readme")
+            + f"# {PurePosixPath(paths['inbox']).name}\n\n"
+            + "This user-owned directory is the configured temporary capture point.\n"
+            + "Process captured material once its reliable destination is known.\n"
+            + (
+                "\n"
+                + _link(
+                    f"{config.system_root}/03 Workflows/Inbox.md",
+                    "Inbox workflow",
+                )
+                + "\n"
+                if "inbox" in config.modules
+                else ""
+            )
+        ).encode("utf-8"),
     }
 
-    if project_target is not None and area_target is not None:
+    if all(
+        target is not None
+        for target in (project_target, area_target, resource_target, archive_target)
+    ):
+        assert project_target is not None
+        assert area_target is not None
+        assert resource_target is not None
+        assert archive_target is not None
         files[project_target] = (
             _frontmatter(profile, "dashboard")
             + f"# {PurePosixPath(paths['projects']).name}\n\n"
@@ -259,6 +310,63 @@ def _render_files(config: InstanceConfig, profile: dict[str, Any]) -> tuple[dict
             + f"Back to {_link(dashboard_target, dashboard_title)}.\n\n"
             + "## Areas\n\nLink enduring responsibilities that need regular attention.\n\n"
             + "## Review\n\nRecord which area needs clarification, maintenance, or a new project.\n"
+        ).encode("utf-8")
+        files[resource_target] = (
+            _frontmatter(profile, "dashboard")
+            + f"# {PurePosixPath(paths['resources']).name}\n\n"
+            + f"Back to {_link(dashboard_target, dashboard_title)}.\n\n"
+            + "## Resources\n\nLink reusable reference material by subject.\n\n"
+            + "## Maintenance\n\nMove actionable outcomes to projects or areas instead of managing them here.\n"
+        ).encode("utf-8")
+        files[archive_target] = (
+            _frontmatter(profile, "dashboard")
+            + f"# {PurePosixPath(paths['archive']).name}\n\n"
+            + f"Back to {_link(dashboard_target, dashboard_title)}.\n\n"
+            + "## Archive\n\nStore inactive material without changing its durable meaning.\n"
+        ).encode("utf-8")
+
+    if all(
+        target is not None
+        for target in (
+            journal_target,
+            journal_daily_target,
+            journal_weekly_target,
+            journal_yearly_target,
+        )
+    ):
+        assert journal_target is not None
+        assert journal_daily_target is not None
+        assert journal_weekly_target is not None
+        assert journal_yearly_target is not None
+        journal_workflow = _link(
+            f"{config.system_root}/03 Workflows/Journal.md", "Journal workflow"
+        )
+        files[journal_target] = (
+            _frontmatter(profile, "readme")
+            + f"# {PurePosixPath(paths['journal']).name}\n\n"
+            + f"{journal_workflow}\n\n"
+            + "## Time structure\n\n"
+            + f"- {_link(journal_daily_target, PurePosixPath(paths['journalDaily']).name)}\n"
+            + f"- {_link(journal_weekly_target, PurePosixPath(paths['journalWeekly']).name)}\n"
+            + f"- {_link(journal_yearly_target, PurePosixPath(paths['journalYearly']).name)}\n"
+        ).encode("utf-8")
+        files[journal_daily_target] = (
+            _frontmatter(profile, "readme")
+            + f"# {PurePosixPath(paths['journalDaily']).name}\n\n"
+            + "Daily journal notes use the configured `YYYY-MM-DD` filename rule.\n\n"
+            + f"{journal_workflow}\n"
+        ).encode("utf-8")
+        files[journal_weekly_target] = (
+            _frontmatter(profile, "readme")
+            + f"# {PurePosixPath(paths['journalWeekly']).name}\n\n"
+            + "Weekly journal notes use the configured `YYYY-Www` filename rule.\n\n"
+            + f"{journal_workflow}\n"
+        ).encode("utf-8")
+        files[journal_yearly_target] = (
+            _frontmatter(profile, "readme")
+            + f"# {PurePosixPath(paths['journalYearly']).name}\n\n"
+            + "Yearly journal notes use the configured `YYYY` filename rule.\n\n"
+            + f"{journal_workflow}\n"
         ).encode("utf-8")
 
     folded: dict[str, str] = {}

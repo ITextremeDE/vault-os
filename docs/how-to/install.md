@@ -96,6 +96,13 @@ The directory name becomes the vault name unless `--name` is supplied. Open
 the directory as a vault in Obsidian after installation. Obsidian creates and
 owns its own `.obsidian` configuration.
 
+Installation creates the directory configured as `paths.inbox`, such as
+`00 Inbox` or `00 Eingang`. With `para`, it also creates the configured
+projects, areas, resources, and archive roots. With `journal`, it creates the
+journal root plus the configured daily, weekly, and yearly directories. All of
+these directories are user-owned: Vault-OS does not add them to the release
+lock or manage files later placed inside them.
+
 The example installs a practical personal-knowledge profile. See the
 [module catalog](../reference/modules.md) before choosing modules. With no
 module option, Vault-OS installs only its portable core. `--all-modules`
@@ -113,9 +120,12 @@ The command creates missing files only:
 
 - `Profile.md` as stable personal or team context;
 - root `README.md` as the vault entry point;
-- root `Dashboard.md` as the compact orientation page; and
-- with the `para` module, `README.md` overviews below the configured projects
-  and areas roots.
+- root `Dashboard.md` as the compact orientation page;
+- a `README.md` inside the configured inbox as its durable entry point;
+- with `para`, `README.md` overviews below projects, areas, resources, and
+  archive; and
+- with `journal`, READMEs below the journal root and its configured daily,
+  weekly, and yearly directories.
 
 These are ordinary user-owned notes, not release-managed files. Existing files
 are reported as preserved and never read as templates, adopted, merged, or
@@ -131,6 +141,17 @@ bootstrap:
   readmeFile: README.md
   dashboardFile: Dashboard.md
   overviewFile: README.md
+```
+
+Journal period directories are instance paths rather than portable fixed
+names. For a German vault, for example:
+
+```yaml
+paths:
+  journal: 05 Journal
+  journalDaily: 05 Journal/Täglich
+  journalWeekly: 05 Journal/Wöchentlich
+  journalYearly: 05 Journal/Jährlich
 ```
 
 Each value is one Markdown filename. `profileFile` defaults to the neutral
@@ -188,7 +209,10 @@ filesystem root, and the user's home directory are rejected as targets.
 
 After installation, `Vault-OS/config.yaml` is the instance-owned canonical
 configuration. Edit that installed file for later module or path changes; do
-not keep two competing configuration sources.
+not keep two competing configuration sources. Field roles, localized stored
+values, and module fields live in `Vault-OS/schema/fields.yaml`. Run `update`
+after changing either file; this rematerializes managed templates and views
+without adopting either instance file into release ownership.
 
 ## What installation creates
 
@@ -196,7 +220,9 @@ not keep two competing configuration sources.
   selected-module files;
 - visible `Vault-OS/` instance configuration, registers, policies, integration
   choices, validation settings, and agent context;
-- `.vault-os/lock.json`, which records the installed release and checksums.
+- `.vault-os/lock.json`, which records the installed release and checksums; and
+- the configured inbox plus enabled PARA and journal directories when they do
+  not already exist; their contents remain user-owned.
 
 The visible `Vault-OS/` directory is intended to synchronize with ordinary
 vault files. Hidden `.vault-os`, `.agents`, `.claude`, `.codex`, `.qmd`, and

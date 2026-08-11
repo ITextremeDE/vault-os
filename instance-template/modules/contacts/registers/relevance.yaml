@@ -1,9 +1,14 @@
 schema: 1
 register: relevance
+description: Describes current importance to the vault's work, decisions, or relationships; it is not emotional closeness, urgency, or contact status.
 values:
   - high
   - medium
   - low
+descriptions:
+  high: Currently important to ongoing work, decisions, or relationships.
+  medium: Relevant but not central at present.
+  low: Potentially useful but currently not significant.
 rules:
   multiple: false
   freeText: false

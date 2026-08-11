@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: knowledge
-type: overview
-status: open
+{{fields.kind}}: "{{values.kind.knowledge}}"
+{{fields.type}}: "{{values.type.overview}}"
+{{fields.status}}: "{{values.status.open}}"
 aliases: []
 tags: []
 cssclasses: []

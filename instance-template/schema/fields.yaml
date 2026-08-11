@@ -11,6 +11,14 @@ values:
   type: {}
   status: {}
 
+preferredValues:
+  kind: {}
+  type: {}
+  status: {}
+
+moduleFields: {}
+filenamePatterns: {}
+
 required:
   - kind
   - type
@@ -48,3 +56,4 @@ externalReferences:
   urlSuffix: _url
   requireVerifiedPair: true
   allowSecretsInUrls: false
+  pairs: []

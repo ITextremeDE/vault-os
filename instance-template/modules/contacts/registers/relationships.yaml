@@ -1,5 +1,6 @@
 schema: 1
 register: relationships
+description: Describes the relationship to the contact, not a job title or organizational role.
 values:
   - private
   - family
@@ -12,7 +13,20 @@ values:
   - partner
   - service-provider
   - network
+descriptions:
+  private: Personal contact outside family, friendship, or partnership.
+  family: Family relationship.
+  friendship: Personal friendship.
+  partnership: Current personal partnership.
+  former-partnership: Former personal partnership retained as relevant context.
+  customer: Existing customer relationship.
+  prospect: Potential customer relationship.
+  business-contact: General professional contact without a more specific relationship.
+  partner: Business or delivery partner.
+  service-provider: External provider of services.
+  network: Broader network contact without a closer current relationship.
 rules:
   multiple: true
+  allowScalar: true
   freeText: false
   semantics: relationship-not-role

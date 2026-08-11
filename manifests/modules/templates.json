@@ -12,7 +12,7 @@
       ],
       "source": "src/modules/templates/README.md",
       "target": "04 Assets/Templates/README.md",
-      "sha256": "9b34e5112383a47d7e0690964c384adf11b2ddfbed963d0668ddf2296d776cc1",
+      "sha256": "664dc212541323a359627a1013fbabfb4e7273729185cacc6aa3c099023d1591",
       "installMode": "managed"
     },
     {

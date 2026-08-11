@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: journal
-type: yearly
-status: open
-area:
+{{fields.kind}}: "{{values.kind.journal}}"
+{{fields.type}}: "{{values.type.yearly}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

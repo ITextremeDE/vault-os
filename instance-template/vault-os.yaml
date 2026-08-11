@@ -12,6 +12,9 @@ paths:
   resources: 03 Resources
   archive: 04 Archive
   journal: 05 Journal
+  journalDaily: 05 Journal/Daily
+  journalWeekly: 05 Journal/Weekly
+  journalYearly: 05 Journal/Yearly
   contacts: 03 Resources/Contacts
   conversationNotes: 03 Resources/Conversation Notes
   workingNotes: 03 Resources/Working Notes

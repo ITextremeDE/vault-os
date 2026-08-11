@@ -66,7 +66,7 @@
       "origins": ["99 System/01 Schema/Frontmatter-Schema.md"],
       "source": "src/core/schema/frontmatter.md",
       "target": "01 Schema/Frontmatter.md",
-      "sha256": "cf0363771703f29860b5c385056d63f8b9d89b5d9267557d6a75fbeaf4699ef1",
+      "sha256": "a8a43f13ed0ed08ea5f63617e037ac4371ba4758b797792c68ba2be3ff89b1f1",
       "installMode": "managed"
     },
     {
@@ -161,7 +161,7 @@
       "origins": ["99 System/05 Automation/Validatoren/validate_mindos.py"],
       "source": "src/core/validation/validate_vault.py",
       "target": "05 Automation/Validators/validate_vault.py",
-      "sha256": "7c32c1e58fb03b794a0bc97ca24c51ad127233c88e70b26fddd35dfb9385c2fe",
+      "sha256": "52a6262324802741b7226683e18a373318c095144a24ab7c81c13ee10c5d3745",
       "installMode": "managed"
     },
     {
@@ -182,7 +182,7 @@
       "origins": ["99 System/06 Runtime/Betriebsregeln.md"],
       "source": "src/core/runtime/operating-rules.md",
       "target": "06 Runtime/Operating Rules.md",
-      "sha256": "09030e384008bceb8763d852f533de1ea84304a111a608ce8ba8bf367f8ef9c5",
+      "sha256": "8ec70a4239ffeffd5b37830c65f98485a0b059d70474846615dc86da7c68f90f",
       "installMode": "managed"
     }
   ]

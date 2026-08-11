@@ -43,8 +43,9 @@
       ],
       "source": "src/modules/contacts/templates/person.md",
       "target": "04 Assets/Templates/Contacts/Person.md",
-      "sha256": "54b3bcea2b56f6161aae6e45c8b9b38f4adeaa1524b49b9bb136d0e1fa6ba146",
-      "installMode": "managed"
+      "sha256": "340b9c0ea5d3951a60fa364705cfbb1e4874dcdc335fe0f18135265e1285c6c8",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -52,8 +53,9 @@
       ],
       "source": "src/modules/contacts/templates/representative.md",
       "target": "04 Assets/Templates/Contacts/Representative.md",
-      "sha256": "184f820db8a77e83a93edb5a5bdb9acc9a93863ce23588c2c0c6da3145350d01",
-      "installMode": "managed"
+      "sha256": "44ca3ea1cd99e8fe0175567de56c9ce2479981f641f75a5c6990e8568881ef1e",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -61,8 +63,9 @@
       ],
       "source": "src/modules/contacts/templates/organization.md",
       "target": "04 Assets/Templates/Contacts/Organization.md",
-      "sha256": "13858cf6a2e9615161e84d8e5bdc427027e022672e4a5d72ed79d0996c846f68",
-      "installMode": "managed"
+      "sha256": "f1512f12358c2924ecd31e9b050138da25d21162be6e37cd82f66439bc2eef6a",
+      "installMode": "managed",
+      "materialize": "instance"
     }
   ]
 }

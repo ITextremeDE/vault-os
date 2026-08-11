@@ -16,17 +16,19 @@ are more useful together, especially for agent-assisted work.
 | `git` | Safe commits governed by instance policy | Commit-planning skill |
 | `governance` | Normalize notes and record relevant content changes | Closing block, normalization prompt, change-log workflow |
 | `inbox` | Capture and route unclassified material | Inbox workflow and import skill |
-| `journal` | Daily, weekly, and yearly reflection | Schema, workflow, prompts, templates, instance settings |
+| `journal` | Daily, weekly, and yearly reflection | Schema, workflow, prompts, templates, configured period directories and READMEs |
 | `knowledge` | Process conversations into working notes, insights, and durable knowledge | Schema, workflows, prompts, templates, processing skills |
 | `navigation` | Open existing notes through Obsidian without changing them | Obsidian navigation skill |
-| `para` | Organize projects, areas, resources, and archives | Schema, filing/archiving workflows, project and area templates |
+| `para` | Organize projects, areas, resources, and archives | Schema, filing/archiving workflows, templates, configured roots and READMEs |
 | `publishing` | Prepare creator content | Article, video, and website templates |
 | `review` | Review content state | Review workflow and Obsidian Bases view |
 | `search` | Search vault notes and configured local conversation sources | Vault and conversation search skills |
 | `templates` | Create validated notes from installed templates | Template contract and creation skill |
 
 The `review` module's `.base` file needs an Obsidian version with Bases support
-to render as a view. Vault-OS does not install or configure Obsidian plugins.
+to render as a view. Templates and the Bases view are materialized from the
+instance field, value, module-field, and path mappings during install and
+update. Vault-OS does not install or configure Obsidian plugins.
 The [recommended Obsidian profile](../how-to/obsidian-setup.md) maps the
 relevant modules to core plugins and explains the optional community-plugin
 boundaries.

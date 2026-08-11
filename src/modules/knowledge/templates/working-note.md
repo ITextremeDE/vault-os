@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: working-note
-type:
-status: open
-area:
+{{fields.kind}}: "{{values.kind.working-note}}"
+{{fields.type}}:
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

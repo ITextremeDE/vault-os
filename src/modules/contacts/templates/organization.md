@@ -1,17 +1,17 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: contact
-type: organization
-status: active
-area:
+{{fields.kind}}: "{{values.kind.contact}}"
+{{fields.type}}: "{{values.type.organization}}"
+{{fields.status}}: "{{values.status.active}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
 created:
-relationship: []
-relevance:
-last_contact:
+{{moduleFields.relationship}}: []
+{{moduleFields.relevance}}:
+{{moduleFields.last_contact}}:
 ---
 
 # {{title}}
@@ -23,10 +23,10 @@ last_contact:
 ## Representatives
 
 ```dataview
-TABLE file.link AS Representative, status AS Status, last_contact AS "Last contact"
+TABLE file.link AS Representative, {{fields.status}} AS Status, {{moduleFields.last_contact}} AS "Last contact"
 FROM "{{paths.contacts}}"
-WHERE type = "representative" AND contains(organizations, this.file.link)
-SORT default(last_contact, date("1900-01-01")) DESC, file.name ASC
+WHERE {{fields.type}} = "{{values.type.representative}}" AND contains({{moduleFields.organizations}}, this.file.link)
+SORT default({{moduleFields.last_contact}}, date("1900-01-01")) DESC, file.name ASC
 ```
 
 ## Interactions

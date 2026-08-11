@@ -27,6 +27,7 @@ import yaml
 WIKI_LINK_RE = re.compile(r"(!?)\[\[([^\]]+)\]\]")
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+FIELD_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 FIELD_TYPES = {"date", "register", "string", "wiki-link-list"}
 SENSITIVE_QUERY_KEYS = {
     "access_token",
@@ -65,6 +66,9 @@ class FieldProfile:
     kind_values: dict[str, str]
     type_values: dict[str, str]
     status_values: dict[str, str]
+    preferred_values: dict[str, dict[str, str]]
+    module_fields: dict[str, str]
+    filename_patterns: dict[str, str]
     required: tuple[str, ...]
     lists: tuple[str, ...]
     dates: tuple[str, ...]
@@ -73,6 +77,7 @@ class FieldProfile:
     external_url_suffix: str
     external_require_pair: bool
     external_allow_secrets: bool
+    external_pairs: tuple[tuple[str, str], ...]
 
 
 @dataclass(frozen=True)
@@ -85,6 +90,9 @@ class SchemaModels:
 class RegisterDefinition:
     values: frozenset[str]
     multiple: bool
+    allow_scalar: bool
+    description: str | None
+    descriptions: dict[str, str]
 
 
 def normalize(value: str) -> str:
@@ -152,6 +160,39 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
     values = data.get("values", {})
     if not isinstance(values, dict):
         raise ValueError("frontmatter fields: values must be an object")
+    normalized_values = {
+        role: string_map(values.get(role, {}), f"frontmatter fields.values.{role}")
+        for role in ("kind", "type", "status")
+    }
+    preferred = data.get("preferredValues", {})
+    if not isinstance(preferred, dict):
+        raise ValueError("frontmatter fields: preferredValues must be an object")
+    preferred_values = {
+        role: string_map(
+            preferred.get(role, {}), f"frontmatter fields.preferredValues.{role}"
+        )
+        for role in ("kind", "type", "status")
+    }
+    for role, preferences in preferred_values.items():
+        for token, stored in preferences.items():
+            canonical = token.rsplit(".", 1)[-1]
+            if normalized_values[role].get(stored) != canonical:
+                raise ValueError(
+                    f"frontmatter fields.preferredValues.{role}.{token} must name a stored value mapped to {canonical!r}"
+                )
+    module_fields = string_map(
+        data.get("moduleFields", {}), "frontmatter fields.moduleFields"
+    )
+    filename_patterns = string_map(
+        data.get("filenamePatterns", {}), "frontmatter fields.filenamePatterns"
+    )
+    for identifier, pattern in filename_patterns.items():
+        try:
+            re.compile(pattern)
+        except re.error as error:
+            raise ValueError(
+                f"frontmatter fields.filenamePatterns.{identifier}: invalid regular expression"
+            ) from error
     external = data.get(
         "externalReferences",
         {
@@ -182,20 +223,42 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
         raise ValueError(
             "frontmatter fields.externalReferences pair and secret policies must be boolean"
         )
+    raw_pairs = external.get("pairs", [])
+    if not isinstance(raw_pairs, list):
+        raise ValueError(
+            "frontmatter fields.externalReferences.pairs must be an array"
+        )
+    pairs: list[tuple[str, str]] = []
+    pair_fields: set[str] = set()
+    for index, pair in enumerate(raw_pairs):
+        label = f"frontmatter fields.externalReferences.pairs[{index}]"
+        if not isinstance(pair, dict) or set(pair) != {"id", "url"}:
+            raise ValueError(f"{label}: expected exactly id and url fields")
+        identifier = pair.get("id")
+        url = pair.get("url")
+        if (
+            not isinstance(identifier, str)
+            or not FIELD_RE.fullmatch(identifier)
+            or not isinstance(url, str)
+            or not FIELD_RE.fullmatch(url)
+            or identifier == url
+        ):
+            raise ValueError(f"{label}: id and url must be distinct field names")
+        if identifier in pair_fields or url in pair_fields:
+            raise ValueError(f"{label}: fields must not occur in multiple pairs")
+        pair_fields.update((identifier, url))
+        pairs.append((identifier, url))
     return FieldProfile(
         kind=roles["kind"],
         type=roles["type"],
         status=roles["status"],
         area=roles["area"],
-        kind_values=string_map(
-            values.get("kind", {}), "frontmatter fields.values.kind"
-        ),
-        type_values=string_map(
-            values.get("type", {}), "frontmatter fields.values.type"
-        ),
-        status_values=string_map(
-            values.get("status", {}), "frontmatter fields.values.status"
-        ),
+        kind_values=normalized_values["kind"],
+        type_values=normalized_values["type"],
+        status_values=normalized_values["status"],
+        preferred_values=preferred_values,
+        module_fields=module_fields,
+        filename_patterns=filename_patterns,
         required=string_list(data.get("required"), "frontmatter fields.required"),
         lists=string_list(data.get("lists"), "frontmatter fields.lists"),
         dates=string_list(data.get("dates"), "frontmatter fields.dates"),
@@ -204,6 +267,7 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
         external_url_suffix=url_suffix,
         external_require_pair=require_pair,
         external_allow_secrets=allow_secrets,
+        external_pairs=tuple(pairs),
     )
 
 
@@ -343,9 +407,29 @@ def load_register(
     if not isinstance(rules, dict):
         raise ValueError(f"{label}: rules must be an object")
     multiple = rules.get("multiple", False)
-    if not isinstance(multiple, bool):
-        raise ValueError(f"{label}: rules.multiple must be boolean")
-    return RegisterDefinition(frozenset(values), multiple)
+    allow_scalar = rules.get("allowScalar", False)
+    if not isinstance(multiple, bool) or not isinstance(allow_scalar, bool):
+        raise ValueError(f"{label}: rules.multiple and rules.allowScalar must be boolean")
+    if allow_scalar and not multiple:
+        raise ValueError(f"{label}: rules.allowScalar requires rules.multiple")
+    description = data.get("description")
+    if description is not None and (
+        not isinstance(description, str) or not description.strip()
+    ):
+        raise ValueError(f"{label}: description must be a non-empty string")
+    descriptions = data.get("descriptions", {})
+    if not isinstance(descriptions, dict) or any(
+        not isinstance(name, str)
+        or not isinstance(detail, str)
+        or not detail.strip()
+        for name, detail in descriptions.items()
+    ):
+        raise ValueError(f"{label}: descriptions must map values to non-empty strings")
+    if descriptions and set(descriptions) != set(values):
+        raise ValueError(f"{label}: descriptions must cover exactly the registered values")
+    return RegisterDefinition(
+        frozenset(values), multiple, allow_scalar, description, dict(descriptions)
+    )
 
 
 def expand_patterns(values: object, system_root: str, label: str) -> tuple[str, ...]:
@@ -434,33 +518,49 @@ def module_field_findings(
     canonical_type: object,
     fields: dict[str, dict[str, Any]],
     registers: dict[str, RegisterDefinition],
+    field_names: dict[str, str],
 ) -> list[Finding]:
     findings: list[Finding] = []
     for name, definition in fields.items():
         if canonical_kind not in definition["contentKinds"]:
             continue
+        stored_name = field_names.get(name, name)
         required_type = definition.get("typeRequired")
-        if required_type == canonical_type and (name not in data or is_empty(data[name])):
+        if required_type == canonical_type and (
+            stored_name not in data or is_empty(data[stored_name])
+        ):
             findings.append(
                 Finding(
                     "error",
                     "frontmatter.required",
                     rel,
                     1,
-                    f"{name} is required for type {required_type!r}",
+                    f"{stored_name} is required for type {required_type!r}",
                 )
             )
-        if name not in data or data[name] in (None, ""):
+        if stored_name not in data or data[stored_name] in (None, ""):
             continue
-        value = data[name]
+        value = data[stored_name]
         field_type = definition["type"]
         if field_type == "string" and not isinstance(value, str):
             findings.append(
-                Finding("error", "frontmatter.string", rel, 1, f"{name} must be a string")
+                Finding(
+                    "error",
+                    "frontmatter.string",
+                    rel,
+                    1,
+                    f"{stored_name} must be a string",
+                )
             )
         elif field_type == "date" and not valid_date(value):
             findings.append(
-                Finding("error", "frontmatter.date", rel, 1, f"{name} must use YYYY-MM-DD")
+                Finding(
+                    "error",
+                    "frontmatter.date",
+                    rel,
+                    1,
+                    f"{stored_name} must use YYYY-MM-DD",
+                )
             )
         elif field_type == "wiki-link-list":
             if not isinstance(value, list) or any(
@@ -475,29 +575,41 @@ def module_field_findings(
                         "frontmatter.wiki_link_list",
                         rel,
                         1,
-                        f"{name} must be a YAML list of Wiki links",
+                        f"{stored_name} must be a YAML list of Wiki links",
                     )
                 )
         elif field_type == "register":
             register_name = definition["register"]
             register = registers[register_name]
             if register.multiple:
-                valid = (
+                valid_list = (
                     isinstance(value, list)
                     and all(isinstance(item, str) for item in value)
                     and all(item in register.values for item in value)
                 )
+                valid_scalar = (
+                    register.allow_scalar
+                    and isinstance(value, str)
+                    and value in register.values
+                )
+                valid = valid_list or valid_scalar
             else:
                 valid = isinstance(value, str) and value in register.values
             if not valid:
-                shape = "a YAML list" if register.multiple else "one value"
+                shape = (
+                    "one value or a YAML list"
+                    if register.multiple and register.allow_scalar
+                    else "a YAML list"
+                    if register.multiple
+                    else "one value"
+                )
                 findings.append(
                     Finding(
                         "error",
                         "frontmatter.register",
                         rel,
                         1,
-                        f"{name} must be {shape} from register {register_name!r}",
+                        f"{stored_name} must be {shape} from register {register_name!r}",
                     )
                 )
     return findings
@@ -507,9 +619,16 @@ def external_reference_findings(
     data: dict[str, Any], rel: str, profile: FieldProfile
 ) -> list[Finding]:
     findings: list[Finding] = []
+    explicit_fields = {
+        field for pair in profile.external_pairs for field in pair
+    }
+    references: list[tuple[str, str, list[str]]] = [
+        (identifier, url, [identifier])
+        for identifier, url in profile.external_pairs
+    ]
     bases: set[str] = set()
     for name in data:
-        if not isinstance(name, str):
+        if not isinstance(name, str) or name in explicit_fields:
             continue
         if name.endswith(profile.external_url_suffix):
             bases.add(name[: -len(profile.external_url_suffix)])
@@ -517,9 +636,16 @@ def external_reference_findings(
             if name.endswith(suffix):
                 bases.add(name[: -len(suffix)])
 
-    for base in sorted(bases):
-        url_field = base + profile.external_url_suffix
-        id_fields = [base + suffix for suffix in profile.external_id_suffixes]
+    references.extend(
+        (
+            base,
+            base + profile.external_url_suffix,
+            [base + suffix for suffix in profile.external_id_suffixes],
+        )
+        for base in sorted(bases)
+    )
+
+    for reference, url_field, id_fields in references:
         url_value = data.get(url_field)
         identifiers = [data.get(name) for name in id_fields]
         has_url = not is_empty(url_value)
@@ -542,7 +668,7 @@ def external_reference_findings(
                     "frontmatter.external_reference_pair",
                     rel,
                     1,
-                    f"external reference {base!r} requires both URL and ID/UID",
+                    f"external reference {reference!r} requires both URL and ID/UID",
                 )
             )
         if not has_url:
@@ -677,7 +803,9 @@ def frontmatter_findings(
                         f"status {status!r} is invalid for kind {kind!r}",
                     )
                 )
-            pattern = filename_pattern(definition, canonical_type)
+            pattern = profile.filename_patterns.get(
+                canonical_kind, filename_pattern(definition, canonical_type)
+            )
             if pattern is not None and re.fullmatch(pattern, path.stem) is None:
                 findings.append(
                     Finding(
@@ -697,6 +825,7 @@ def frontmatter_findings(
                 canonical_type,
                 models.fields,
                 registers,
+                profile.module_fields,
             )
         )
         findings.extend(external_reference_findings(data, rel, profile))

@@ -1,18 +1,18 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: contact
-type: representative
-status: active
-area:
+{{fields.kind}}: "{{values.kind.contact}}"
+{{fields.type}}: "{{values.type.representative}}"
+{{fields.status}}: "{{values.status.active}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
 created:
-relationship: []
-relevance:
-last_contact:
-organizations: []
+{{moduleFields.relationship}}: []
+{{moduleFields.relevance}}:
+{{moduleFields.last_contact}}:
+{{moduleFields.organizations}}: []
 ---
 
 # {{title}}

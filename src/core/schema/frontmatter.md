@@ -14,11 +14,14 @@ queries, agents, and automation.
 - Multi-value fields remain YAML lists, including when empty.
 - Date-only fields use the ISO `YYYY-MM-DD` format.
 - Extension fields require one canonical definition and a recurring purpose.
+- External references use verified ID/URL pairs; explicit instance pairs may
+  preserve established field names that do not share a derived base.
 - Secret values never belong in frontmatter.
 
 The neutral profile uses `kind`, `type`, `status`, and `area`. An existing vault
 may map these roles to other field names without changing the validation
-engine.
+engine. Managed templates and views are materialized from those mappings and
+the configured paths during lifecycle operations.
 
 Managed core files do not require frontmatter. A module or instance may opt its
 own managed or content files into frontmatter validation.

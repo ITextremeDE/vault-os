@@ -52,8 +52,9 @@
       ],
       "source": "src/modules/journal/templates/daily-note.md",
       "target": "04 Assets/Templates/Journal/Daily Note.md",
-      "sha256": "452ab8cc6c087ea1d0fcb1d24af945a256b84cd69e78d632c169a1409145d542",
-      "installMode": "managed"
+      "sha256": "24d8346d4795330b6949529c2cfe3bb0dffd9f15f2ddc78b1ff67c30a704b8c2",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -61,8 +62,9 @@
       ],
       "source": "src/modules/journal/templates/weekly-note.md",
       "target": "04 Assets/Templates/Journal/Weekly Note.md",
-      "sha256": "eed1a455dadf121582aee448711ceac43392be5831b96c1a75c9bdd219b43f72",
-      "installMode": "managed"
+      "sha256": "343a6dbcfcc550b31c5c768f98cd6c6c372bf057b8a790c8e6cad4d75cfbe20d",
+      "installMode": "managed",
+      "materialize": "instance"
     },
     {
       "origins": [
@@ -70,8 +72,9 @@
       ],
       "source": "src/modules/journal/templates/yearly-note.md",
       "target": "04 Assets/Templates/Journal/Yearly Note.md",
-      "sha256": "3c810fde5f7cfe46994201ce5117b53380ceb3e7a74a2908f80c790da45f5878",
-      "installMode": "managed"
+      "sha256": "980757d2c7edfdbf2caaa5ef4177162855cd65929f3f343c256982644591b1fe",
+      "installMode": "managed",
+      "materialize": "instance"
     }
   ]
 }

@@ -15,9 +15,10 @@ the portable product.
 ## Decision
 
 - Vault-OS provides an explicit `bootstrap` command after installation.
-- The command creates a profile note, root README, and root dashboard. With the
-  `para` module enabled, it also creates global project and area overviews below
-  their configured roots.
+- The command creates a profile note, root README, and root dashboard. It adds
+  a create-only README to the configured inbox. With `para`, it adds overviews
+  to projects, areas, resources, and archive. With `journal`, it adds READMEs to
+  the journal root and configured daily, weekly, and yearly directories.
 - Bootstrap filenames come from the instance configuration. The neutral profile
   default is `Profile.md`; an instance may select `Ich.md` or another Markdown
   filename.

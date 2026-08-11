@@ -102,6 +102,11 @@ def validate_files(value: dict[str, Any], root: Path, owner: str) -> tuple[set[s
             raise ValueError(f"{label}: entry must be an object")
         if entry.get("installMode") != expected_mode:
             raise ValueError(f"{label}: installMode must be {expected_mode!r}")
+        materialize = entry.get("materialize")
+        if materialize not in {None, "instance"}:
+            raise ValueError(f"{label}: materialize must be 'instance' when present")
+        if materialize is not None and owner != "managed":
+            raise ValueError(f"{label}: only managed files may be materialized")
         source = validate_checksum(entry, root, label)
         target = safe_relative_path(entry.get("target"), f"{label}.target")
         if source in sources:

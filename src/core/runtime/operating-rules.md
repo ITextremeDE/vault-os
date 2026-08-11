@@ -12,6 +12,7 @@ Read first, classify second, and make the smallest reversible change last.
 
 - Preserve working structures and user-owned content.
 - Add structure only for a clear recurring need.
+- Do not add, rename, move, or remove top-level vault directories without explicit user authorization.
 - Treat changes to system rules as higher risk than content changes.
 - Do not create new standards incidentally while performing operational work.
 - Do not delete user content without explicit authorization.

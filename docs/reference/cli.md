@@ -19,7 +19,11 @@ from `requirements.txt` is active.
 
 Installation may create the vault directory. It validates the complete package
 before changing the vault, installs managed core and selected module files,
-creates missing instance seeds, and writes `.vault-os/lock.json` last.
+creates missing instance seeds and configured operational directories, and
+writes `.vault-os/lock.json` last. Operational directories comprise the inbox,
+the four PARA roots when `para` is enabled, and the journal root plus daily,
+weekly, and yearly directories when `journal` is enabled. They are user-owned
+and are not listed as managed release content.
 
 The vault name defaults to the target directory name. With no module option,
 only the core is installed. `--module` may be repeated; `--all-modules` selects
@@ -29,7 +33,9 @@ values.
 
 Installation stops without partial changes when a managed destination, the
 instance configuration, or the release lock already exists. Existing
-create-only instance files other than the configuration are preserved.
+create-only instance files other than the configuration are preserved. A file
+or symbolic link at any required operational directory is also a preflight
+conflict.
 
 There is no initial-install dry-run in version `0.1`. The installer preflights
 all targets before applying a successful installation, but users adopting an
@@ -44,9 +50,10 @@ irreplaceable existing vault should test against a copy first. See the
 
 `bootstrap` requires a healthy installation at the current package version. It
 creates the missing user-owned start files configured under `bootstrap` in
-`Vault-OS/config.yaml`: profile, root README, and root dashboard. When the
-`para` module is selected, it also creates one overview below each configured
-projects and areas root.
+`Vault-OS/config.yaml`: profile, root README, root dashboard, and a README in
+the configured inbox. With `para`, it creates overviews below projects, areas,
+resources, and archive. With `journal`, it creates READMEs below the journal
+root and configured daily, weekly, and yearly directories.
 
 Existing regular files are preserved byte-for-byte. An unsafe target or a
 directory where a file is expected stops the complete operation before any

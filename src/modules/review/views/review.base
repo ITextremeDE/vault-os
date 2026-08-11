@@ -2,17 +2,17 @@
 filters:
   and:
     - file.ext == "md"
-    - kind != "system"
+    - {{fields.kind}} != "{{values.kind.system}}"
 views:
   - type: table
     name: Review queue
     order:
       - file.name
-      - kind
-      - type
-      - status
-      - area
-      - reviewed
+      - {{fields.kind}}
+      - {{fields.type}}
+      - {{fields.status}}
+      - {{fields.area}}
+      - {{moduleFields.reviewed}}
     sort:
-      - property: reviewed
+      - property: {{moduleFields.reviewed}}
         direction: ASC

@@ -139,9 +139,9 @@ Some optional Vault-OS modules benefit from additional core plugins:
 | Vault-OS module | Core plugin | Level | Configuration |
 | --- | --- | --- | --- |
 | `review` | Bases | Required for the installed `.base` view | Enable Bases; the view itself is supplied by the module. |
-| `journal` | Daily notes | Optional | Point it to the installed instance's journal location and filename policy. Its template may point to `<system-root>/04 Assets/Templates/Journal/Daily Note.md`. Do not invent a second journal structure. |
+| `journal` | Daily notes | Optional | Point it to configured `paths.journalDaily` and the installed filename policy. Its template may point to `<system-root>/04 Assets/Templates/Journal/Daily Note.md`. Do not invent a second journal structure. |
 | `navigation` | Daily notes | Required for its `obsidian://daily` action | Enable it when the navigation skill should open or create today's journal note. |
-| `templates` | Templates | Optional | Point the template folder to `<system-root>/04 Assets/Templates` when templates should be inserted manually. Treat those template files as managed. |
+| `templates` | Templates | Optional | Point the template folder to `<system-root>/04 Assets/Templates` when templates should be inserted manually. Lifecycle commands materialize configured fields, values, and paths first; Obsidian resolves its remaining native placeholders. Treat those template files as managed. |
 
 The journal and template workflows remain usable through installed Vault-OS
 workflows, prompts, and agent skills. Their corresponding Obsidian core plugins

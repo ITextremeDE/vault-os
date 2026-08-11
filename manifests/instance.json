@@ -8,7 +8,7 @@
     {
       "source": "instance-template/vault-os.yaml",
       "target": "Vault-OS/config.yaml",
-      "sha256": "d0b43790a48055e3095cbfdf777bf90d96de40c52144f44e472ede699aaaa234",
+      "sha256": "77168b10d1d477023267dc0e19506539a46cabc1570e466c97d265ca4b07860a",
       "installMode": "create-only"
     },
     {
@@ -17,7 +17,7 @@
       ],
       "source": "instance-template/schema/fields.yaml",
       "target": "Vault-OS/schema/fields.yaml",
-      "sha256": "4eb9a5c3baeca50c7e558e96998fd290801dada77edca12b17f064d1bf0de4ab",
+      "sha256": "c8d2a775fbd149a354b0a2e603f248d0320df1f3e4a8de2ed592abc3c307244d",
       "installMode": "create-only"
     },
     {
@@ -90,7 +90,7 @@
       ],
       "source": "instance-template/modules/contacts/registers/relationships.yaml",
       "target": "Vault-OS/modules/contacts/registers/relationships.yaml",
-      "sha256": "c48be8da84d8e946025fa4cf503e97f54b3201c2d756cc004f7453b3f9344e0a",
+      "sha256": "dd4a52d3db6c3cc34e53563955254544a89b750eea28b49cf599e1b2f6fd8052",
       "installMode": "create-only"
     },
     {
@@ -99,7 +99,7 @@
       ],
       "source": "instance-template/modules/contacts/registers/relevance.yaml",
       "target": "Vault-OS/modules/contacts/registers/relevance.yaml",
-      "sha256": "0d913eb941bac556d3de4a4edb8e78731c1401120e63f6382e3c82d0d661ff10",
+      "sha256": "1354cce56e7109c84895f278e74609ce8f4abe11caa9c3b3c368f2209ffd3ab2",
       "installMode": "create-only"
     }
   ]

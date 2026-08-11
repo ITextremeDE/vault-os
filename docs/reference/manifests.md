@@ -25,10 +25,17 @@ Each managed entry in `core.json` or a module manifest contains:
 - `target`: destination relative to the configured system root;
 - `sha256`: lowercase SHA-256 digest of the source file.
 
+An entry may additionally declare `materialize: instance`. The lifecycle then
+resolves reserved `fields`, `moduleFields`, `values`, and `paths` tokens from the
+visible instance configuration before installing the managed artifact. Ordinary
+Obsidian placeholders such as `{{title}}` and `{{date:YYYY-MM-DD}}` remain intact.
+Materialization is valid only for managed entries.
+
 Managed files use `installMode: managed`. The updater replaces or removes an
-installed managed file only when it still matches the checksum recorded in the
-local release lock. Any mismatch stops the complete update before files are
-changed.
+installed managed file only when it still matches the installed checksum
+recorded in the local release lock. For an ordinary managed file this equals the
+source checksum; for a materialized file it is the checksum of the rendered
+artifact. Any mismatch stops the complete update before files are changed.
 
 `modules.json` lists optional module manifests. Every module owns a disjoint
 source tree and installation targets that do not collide with core or another
@@ -48,11 +55,20 @@ vault name, language, system root, and selected modules.
 The instance-owned field profile under `Vault-OS/schema/fields.yaml` maps
 semantic field roles. Its optional `values.kind`, `values.type`, and
 `values.status` objects map stored localized values to the stable identifiers
-declared by managed models. Empty maps use model identifiers directly. Module
-models may additionally declare typed fields, instance registers,
-type-specific required fields, and machine-readable filename patterns. The
-external-reference policy requires matching URL and ID/UID fields and rejects
-credentials or secret query parameters in URLs by default.
+declared by managed models. When more than one stored value maps to the same
+stable identifier, `preferredValues` selects the intended reverse mapping for a
+materialization token such as `type.contact.person`. `moduleFields` maps stable
+module-field identifiers to locally stored field names. `filenamePatterns` may override a managed
+kind's filename rule for an established instance convention. Empty maps use
+the managed identifiers and patterns directly. Module models may additionally
+declare typed fields, instance registers, and type-specific requirements. The
+register rule `allowScalar` permits a multi-value register to retain the common
+single-value scalar form while still accepting YAML lists. Optional register
+`description` and per-value `descriptions` preserve the meaning and boundary of
+local controlled values. The external-reference policy requires matching URL
+and ID/UID fields and rejects credentials or secret query parameters in URLs by
+default. Explicit `pairs` support established field names that do not share the
+configured suffix-derived base.
 
 `agent-init` separately generates device-local integration state at
 `.vault-os/integrations/agents.yaml`. It records selected providers, QMD
@@ -94,7 +110,7 @@ The lock records only release-managed state. It does not claim ownership of
 instance files. The lock is generated locally and written last in the same
 transaction as managed file changes. On a secondary synchronized device,
 `device-sync` recreates the lock only after verifying the complete delivered
-file set against the selected package.
+file set against the selected package and current synchronized instance profile.
 
 The lifecycle behavior and exit codes are defined in the
 [CLI reference](cli.md).

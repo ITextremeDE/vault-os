@@ -1,8 +1,8 @@
 ---
-kind: journal
-type: daily
-status: open
-area:
+{{fields.kind}}: "{{values.kind.journal}}"
+{{fields.type}}: "{{values.type.daily}}"
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []

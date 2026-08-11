@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 
 ---
-kind: conversation-note
-type:
-status: open
-area:
+{{fields.kind}}: "{{values.kind.conversation-note}}"
+{{fields.type}}:
+{{fields.status}}: "{{values.status.open}}"
+{{fields.area}}:
 aliases: []
 tags: []
 cssclasses: []
