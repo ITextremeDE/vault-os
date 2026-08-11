@@ -30,7 +30,7 @@
       ],
       "source": "src/modules/search/skills/vault-search/SKILL.md",
       "target": "04 Assets/Skills/Vault Search/SKILL.md",
-      "sha256": "8071eab408ed2301d9a5a04b69a67ef2589d31cc642e7cd33d21c08017a553c2",
+      "sha256": "90bcdced151ff5e2b596e949f8769f2a15078dfe83a7c61a3bf7eab6df3e0adf",
       "installMode": "managed"
     }
   ]

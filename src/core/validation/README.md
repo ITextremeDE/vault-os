@@ -19,8 +19,11 @@ authorized.
 
 `validate_vault.py` is the portable engine. It reads the instance validation
 profile, selected module models, and instance registers instead of embedding a
-vault-specific content model. It requires PyYAML as declared by the repository
-requirements.
+vault-specific content model. Module models can declare string, date, register,
+and Wiki-link-list fields, type-specific requirements, and filename patterns.
+The instance field profile also defines the pairing and secret-handling policy
+for external reference URLs. Runtime dependencies are declared by the
+repository requirements.
 
 From an installed vault root:
 

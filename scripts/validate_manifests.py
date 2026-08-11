@@ -21,6 +21,7 @@ SCHEMA_VERSION = 1
 MANIFEST_KEYS = {"core", "modules", "instance", "runtime"}
 TARGET_ROOTS = {"system", "vault"}
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+RUNTIME_LOCK_TARGET = ".vault-os/lock.json"
 
 
 @dataclass(frozen=True)
@@ -276,6 +277,16 @@ def validate_instance(value: dict[str, Any], root: Path) -> tuple[int, set[str]]
     require(value, "owner", "instance", label)
     require(value, "targetRoot", "vault", label)
     sources, _ = validate_files(value, root, "instance")
+    for index, entry in enumerate(value["files"]):
+        target = PurePosixPath(entry["target"])
+        if target.parts[0].startswith("."):
+            raise ValueError(
+                f"instance.files[{index}].target: instance targets must be visible for synchronization"
+            )
+        if target.parts[0] != "Vault-OS":
+            raise ValueError(
+                f"instance.files[{index}].target: instance targets must use the Vault-OS/ root"
+            )
     if any(not source.startswith("instance-template/") for source in sources):
         raise ValueError("instance: every seed must be below instance-template")
     actual_sources = source_tree_files(root / "instance-template", root)
@@ -299,8 +310,8 @@ def validate_runtime(value: dict[str, Any]) -> int:
     require(value, "owner", "runtime", label)
     require(value, "targetRoot", "vault", label)
     files = value.get("files")
-    if not isinstance(files, list) or not files:
-        raise ValueError("runtime: files must be a non-empty array")
+    if not isinstance(files, list) or len(files) != 1:
+        raise ValueError("runtime: exactly one lock artifact is required")
 
     targets: set[str] = set()
     for index, entry in enumerate(files):
@@ -314,10 +325,14 @@ def validate_runtime(value: dict[str, Any]) -> int:
         if not isinstance(entry.get("generator"), str) or not entry["generator"]:
             raise ValueError(f"{item_label}: generator must be a non-empty string")
         target = safe_relative_path(entry.get("target"), f"{item_label}.target")
+        if target != RUNTIME_LOCK_TARGET:
+            raise ValueError(
+                f"{item_label}: target must be {RUNTIME_LOCK_TARGET!r}"
+            )
         if target in targets:
             raise ValueError(f"{item_label}: duplicate target {target}")
         targets.add(target)
-    return len(files)
+    return 1
 
 
 def validate_origin_coverage(

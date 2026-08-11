@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "product": "vault-os",
-  "version": "0.1.0-dev.3",
+  "version": "0.1.0-dev.6",
   "manifests": {
     "core": "manifests/core.json",
     "modules": "manifests/modules.json",

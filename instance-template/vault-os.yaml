@@ -18,4 +18,10 @@ paths:
   insights: 03 Resources/Insights
   knowledge: 03 Resources/Knowledge
 
+bootstrap:
+  profileFile: Profile.md
+  readmeFile: README.md
+  dashboardFile: Dashboard.md
+  overviewFile: README.md
+
 modules: []

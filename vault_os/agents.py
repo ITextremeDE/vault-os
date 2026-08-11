@@ -28,6 +28,8 @@ from .providers.base import existing_bytes
 
 
 AGENT_STATE_TARGET = ".vault-os/integrations/agents.yaml"
+AGENT_CONTEXT_TARGET = "Vault-OS/runtime/agent-context.yaml"
+INSTANCE_CONFIG_TARGET = "Vault-OS/config.yaml"
 AGENT_STATE_SCHEMA = 1
 SKILL_NAME = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
@@ -46,7 +48,20 @@ def _load_yaml(vault: Path, target: str, label: str) -> dict[str, Any]:
 def _load_agent_state(
     vault: Path, registry: ProviderRegistry = PROVIDER_REGISTRY
 ) -> dict[str, Any]:
-    value = _load_yaml(vault, AGENT_STATE_TARGET, "agent integration state")
+    content = existing_bytes(vault, AGENT_STATE_TARGET)
+    if content is None:
+        return {
+            "schema": AGENT_STATE_SCHEMA,
+            "providers": [],
+            "qmd": {"enabled": False, "command": "qmd"},
+            "generatedArtifacts": {},
+        }
+    try:
+        value = yaml.safe_load(content.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as error:
+        raise VaultOSError(f"agent integration state is invalid YAML: {error}") from error
+    if not isinstance(value, dict):
+        raise VaultOSError("agent integration state must be a YAML object")
     if value.get("schema") != AGENT_STATE_SCHEMA:
         raise VaultOSError("agent integration state must use schema 1")
     providers = value.get("providers")
@@ -81,7 +96,7 @@ def _load_agent_state(
 def _runtime_profile(vault: Path) -> dict[str, Any]:
     value = _load_yaml(
         vault,
-        ".vault-os/runtime/agent-context.yaml",
+        AGENT_CONTEXT_TARGET,
         "agent runtime profile",
     )
     if value.get("schema") != 1:
@@ -134,16 +149,14 @@ def _installed_skills(
     return result
 
 
-def _agent_instructions(
-    config: InstanceConfig, runtime: dict[str, Any], qmd_enabled: bool
-) -> bytes:
+def _agent_instructions(config: InstanceConfig, runtime: dict[str, Any]) -> bytes:
     vault = config.data["vault"]
     system_root = config.system_root
     read_order = [
         f"{system_root}/06 Runtime/Agent Context.md",
         f"{system_root}/06 Runtime/Operating Rules.md",
-        ".vault-os/config.yaml",
-        ".vault-os/runtime/agent-context.yaml",
+        INSTANCE_CONFIG_TARGET,
+        AGENT_CONTEXT_TARGET,
     ]
     for item in runtime["readOrder"]:
         if item not in read_order:
@@ -173,7 +186,7 @@ def _agent_instructions(
             "",
             "Then read the relevant installed schema, register, workflow, template, or skill",
             "for the concrete task. Resolve paths and enabled modules from",
-            "`.vault-os/config.yaml`; do not hard-code the example vault name or folder names.",
+            f"`{INSTANCE_CONFIG_TARGET}`; do not hard-code the example vault name or folder names.",
             "",
             "## Content work",
             "",
@@ -187,22 +200,13 @@ def _agent_instructions(
             "",
         ]
     )
-    if qmd_enabled:
-        lines.extend(
-            [
-                "- Prefer the configured QMD MCP tools or QMD CLI for vault-wide orientation.",
-                "- Treat search hits as candidates and read the original Markdown file before",
-                "  using it as evidence or changing it.",
-            ]
-        )
-    else:
-        lines.extend(
-            [
-                "- Use available local search tools for orientation.",
-                "- Treat search hits as candidates and read the original Markdown file before",
-                "  using it as evidence or changing it.",
-            ]
-        )
+    lines.extend(
+        [
+            "- Use available local search tools, including QMD when configured on this device.",
+            "- Treat search hits as candidates and read the original Markdown file before",
+            "  using it as evidence or changing it.",
+        ]
+    )
     lines.extend(
         [
             "",
@@ -272,8 +276,7 @@ def initialize_agents(
                 "agent initialization requires a healthy installation:\n- "
                 + "\n- ".join(lifecycle.conflicts)
             )
-        counts = lifecycle.counts()
-        if any(counts[key] for key in ("add", "update", "remove", "seed")):
+        if lifecycle.changes:
             raise VaultOSError("agent initialization requires the current package; run update")
 
         state = _load_agent_state(vault, registry)
@@ -290,7 +293,7 @@ def initialize_agents(
 
         skills = _installed_skills(package, vault, config)
         desired: dict[str, bytes] = {
-            "AGENTS.md": _agent_instructions(config, runtime, qmd_enabled),
+            "AGENTS.md": _agent_instructions(config, runtime),
         }
         for adapter in adapters:
             for target, content in adapter.generated_artifacts(skills).items():
@@ -373,7 +376,7 @@ def initialize_agents(
         state_content = yaml.safe_dump(
             state, allow_unicode=True, sort_keys=False
         ).encode("utf-8")
-        current_state = read_bytes_secure(vault, AGENT_STATE_TARGET, "agent integration state")
+        current_state = existing_bytes(vault, AGENT_STATE_TARGET)
         if current_state != state_content:
             changes.extend(shared_changes)
             changes.append(Change("write", AGENT_STATE_TARGET, state_content, "agent"))

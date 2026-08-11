@@ -18,6 +18,13 @@ import yaml
 
 SCHEMA_VERSION = 1
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+RUNTIME_LOCK_TARGET = ".vault-os/lock.json"
+BOOTSTRAP_DEFAULTS = {
+    "profileFile": "Profile.md",
+    "readmeFile": "README.md",
+    "dashboardFile": "Dashboard.md",
+    "overviewFile": "README.md",
+}
 
 
 class VaultOSError(Exception):
@@ -167,14 +174,33 @@ class Package:
             module_order.append(identifier)
 
         runtime_files = runtime_manifest.get("files")
+        if (
+            runtime_manifest.get("schemaVersion") != SCHEMA_VERSION
+            or runtime_manifest.get("id") != "runtime"
+            or runtime_manifest.get("kind") != "runtime"
+            or runtime_manifest.get("owner") != "runtime"
+            or runtime_manifest.get("targetRoot") != "vault"
+        ):
+            raise VaultOSError("runtime: invalid manifest contract")
         if not isinstance(runtime_files, list) or len(runtime_files) != 1:
             raise VaultOSError("runtime: exactly one lock artifact is required")
         runtime_entry = runtime_files[0]
-        if not isinstance(runtime_entry, dict) or runtime_entry.get("installMode") != "generated":
+        if (
+            not isinstance(runtime_entry, dict)
+            or runtime_entry.get("installMode") != "generated"
+            or not isinstance(runtime_entry.get("generator"), str)
+            or not runtime_entry["generator"]
+            or "source" in runtime_entry
+            or "sha256" in runtime_entry
+        ):
             raise VaultOSError("runtime: lock artifact must be generated")
         runtime_target = safe_relative(
             runtime_entry.get("target"), "runtime target", protect_obsidian=True
         )
+        if runtime_target != RUNTIME_LOCK_TARGET:
+            raise VaultOSError(
+                f"runtime: lock artifact target must be {RUNTIME_LOCK_TARGET}"
+            )
 
         fingerprint_data = {
             "repository": repository,
@@ -223,6 +249,14 @@ class Package:
             target = safe_relative(
                 entry.get("target"), f"{label}.target", protect_obsidian=True
             )
+            if owner == "instance" and PurePosixPath(target).parts[0].startswith("."):
+                raise VaultOSError(
+                    f"{label}: instance targets must be visible for synchronization"
+                )
+            if owner == "instance" and PurePosixPath(target).parts[0] != "Vault-OS":
+                raise VaultOSError(
+                    f"{label}: instance targets must use the Vault-OS/ root"
+                )
             if target in targets:
                 raise VaultOSError(f"{label}: duplicate target {target}")
             targets.add(target)
@@ -274,6 +308,45 @@ class Package:
         system_root = paths.get("system")
         if not isinstance(system_root, str):
             raise VaultOSError("configuration: paths.system is required")
+        bootstrap = value.get("bootstrap", {})
+        if not isinstance(bootstrap, dict):
+            raise VaultOSError("configuration: bootstrap must be an object")
+        unknown_bootstrap = sorted(set(bootstrap) - set(BOOTSTRAP_DEFAULTS))
+        if unknown_bootstrap:
+            raise VaultOSError(
+                "configuration: unknown bootstrap fields: "
+                + ", ".join(unknown_bootstrap)
+            )
+        normalized_bootstrap: dict[str, str] = {}
+        for field, default in BOOTSTRAP_DEFAULTS.items():
+            filename = bootstrap.get(field, default)
+            safe_relative(
+                filename,
+                f"configuration.bootstrap.{field}",
+                protect_obsidian=True,
+            )
+            candidate = PurePosixPath(filename)
+            if len(candidate.parts) != 1 or candidate.suffix.casefold() != ".md":
+                raise VaultOSError(
+                    f"configuration.bootstrap.{field} must be one Markdown filename"
+                )
+            if any(character in candidate.name for character in "[]#|"):
+                raise VaultOSError(
+                    f"configuration.bootstrap.{field} contains unsafe link syntax"
+                )
+            if candidate.name.casefold() in {"agents.md", "claude.md"}:
+                raise VaultOSError(
+                    f"configuration.bootstrap.{field} is reserved for agent integration"
+                )
+            normalized_bootstrap[field] = candidate.name
+        root_files = (
+            normalized_bootstrap["profileFile"],
+            normalized_bootstrap["readmeFile"],
+            normalized_bootstrap["dashboardFile"],
+        )
+        if len({item.casefold() for item in root_files}) != len(root_files):
+            raise VaultOSError("configuration: bootstrap root filenames must be unique")
+        value["bootstrap"] = normalized_bootstrap
         modules = value.get("modules")
         if not isinstance(modules, list) or any(not isinstance(item, str) for item in modules):
             raise VaultOSError("configuration: modules must be a string array")

@@ -1,5 +1,9 @@
 # Real-vault lifecycle validation
 
+> Historical note: this run predates the synchronized instance layout in
+> ADR 0007. Its `.vault-os` path assertions document the tested development
+> build, not the current `Vault-OS/` instance boundary.
+
 - Date: 2026-08-11
 - Verdict: Passed
 - Packages: `0.1.0-dev.1` to `0.1.0-dev.2`

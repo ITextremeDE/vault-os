@@ -54,7 +54,8 @@
       ],
       "statuses": ["open", "completed", "archived"],
       "areaRequired": true,
-      "filename": "YYYY-MM-DD-HHmm Title"
+      "filename": "YYYY-MM-DD-HHmm Title",
+      "filenamePattern": "^\\d{4}-\\d{2}-\\d{2}-\\d{4} .+$"
     },
     "working-note": {
       "types": ["analysis", "distillation", "comparison", "intermediate", "structuring"],

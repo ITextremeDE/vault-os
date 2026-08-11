@@ -1,6 +1,6 @@
 # ADR 0003: Manifests and installation roots
 
-- Status: Accepted
+- Status: Superseded in part by ADR 0007
 - Date: 2026-08-11
 
 ## Context
@@ -25,6 +25,9 @@ root `system`, resolved from `paths.system` in the instance configuration.
 Instance seeds and runtime state use the logical root `vault`; the configuration
 seed is installed at `.vault-os/config.yaml` and runtime lock data is generated
 at `.vault-os/lock.json`.
+
+ADR 0007 replaces the hidden instance destination with the visible `Vault-OS/`
+root. The logical manifest roots and hidden runtime-lock decision remain valid.
 
 Source checksums protect package integrity. The installed lock file will record
 release checksums used by the updater to detect local changes to managed files.

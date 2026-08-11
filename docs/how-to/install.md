@@ -12,10 +12,6 @@ does not modify `.obsidian`.
 - a current backup or version-control checkpoint before changing an existing
   vault.
 
-The command-line lifecycle is currently release-validated on macOS. Linux and
-Windows have not yet completed the release acceptance matrix. On any platform,
-prefer `python -m vault_os` over relying on the executable wrapper.
-
 Codex, Claude Code, and QMD are optional and are covered by the
 [AI setup guide](ai-setup.md).
 
@@ -45,8 +41,8 @@ python3 -m venv .venv
 .venv/bin/python -m vault_os --help
 ```
 
-The only Python runtime dependency is PyYAML. Keep the virtual environment in
-the Vault-OS checkout, not in the target vault.
+Runtime dependencies are declared in `requirements.txt`. Keep the virtual
+environment in the Vault-OS checkout, not in the target vault.
 
 ## Let an AI agent install Vault-OS
 
@@ -105,6 +101,43 @@ The example installs a practical personal-knowledge profile. See the
 module option, Vault-OS installs only its portable core. `--all-modules`
 installs the complete catalog.
 
+## Create the user-owned start files
+
+After a successful installation, optionally bootstrap the vault's entry points:
+
+```bash
+.venv/bin/python -m vault_os bootstrap "/path/to/My Vault"
+```
+
+The command creates missing files only:
+
+- `Profile.md` as stable personal or team context;
+- root `README.md` as the vault entry point;
+- root `Dashboard.md` as the compact orientation page; and
+- with the `para` module, `README.md` overviews below the configured projects
+  and areas roots.
+
+These are ordinary user-owned notes, not release-managed files. Existing files
+are reported as preserved and never read as templates, adopted, merged, or
+overwritten. If any target is a directory, symbolic link, or otherwise unsafe,
+the complete bootstrap stops without creating partial files. Repeating the
+command is safe and creates only files that are still missing.
+
+Configure filenames in `Vault-OS/config.yaml` before bootstrapping:
+
+```yaml
+bootstrap:
+  profileFile: Ich.md
+  readmeFile: README.md
+  dashboardFile: Dashboard.md
+  overviewFile: README.md
+```
+
+Each value is one Markdown filename. `profileFile` defaults to the neutral
+`Profile.md`; names such as `Ich.md` therefore remain an instance choice.
+`AGENTS.md` is not a bootstrap file: it is generated separately by `agent-init`
+because its content depends on the installed Vault-OS and provider adapters.
+
 ## Install into an existing vault
 
 1. Make a backup or clean version-control checkpoint of the vault.
@@ -124,7 +157,7 @@ For side-by-side adoption, use an unused system root:
 ```
 
 Installation preflights the complete package before writing. If a managed
-target, `.vault-os/config.yaml`, or `.vault-os/lock.json` already exists, the
+target, `Vault-OS/config.yaml`, or `.vault-os/lock.json` already exists, the
 operation stops without a partial installation. Existing instance-owned seed
 files are preserved.
 
@@ -153,7 +186,7 @@ then install with:
 Paths are relative to the vault root. Absolute paths, `..`, `.obsidian`, the
 filesystem root, and the user's home directory are rejected as targets.
 
-After installation, `.vault-os/config.yaml` is the instance-owned canonical
+After installation, `Vault-OS/config.yaml` is the instance-owned canonical
 configuration. Edit that installed file for later module or path changes; do
 not keep two competing configuration sources.
 
@@ -161,10 +194,14 @@ not keep two competing configuration sources.
 
 - the configured system root, normally `99 System`, containing managed core and
   selected-module files;
-- `.vault-os/config.yaml` and other instance-owned seeds;
-- `.vault-os/runtime` for instance runtime profiles and generated local state;
-  and
+- visible `Vault-OS/` instance configuration, registers, policies, integration
+  choices, validation settings, and agent context;
 - `.vault-os/lock.json`, which records the installed release and checksums.
+
+The visible `Vault-OS/` directory is intended to synchronize with ordinary
+vault files. Hidden `.vault-os`, `.agents`, `.claude`, `.codex`, `.qmd`, and
+`.mcp.json` paths contain device-local state. Do not copy or synchronize those
+paths as a substitute for initializing each device.
 
 Managed files must not be edited directly. Put vault-specific values and
 customizations in instance-owned files or ordinary vault content. The updater
@@ -173,6 +210,8 @@ uses the lock to reject missing or locally modified managed files.
 ## Next steps
 
 - Apply the optional [recommended Obsidian profile](obsidian-setup.md).
+- When using Obsidian Sync on multiple devices, follow the
+  [multi-device procedure](obsidian-setup.md#use-obsidian-sync-on-more-than-one-device).
 - Set up a local AI client with the [AI setup guide](ai-setup.md).
 - Learn safe upgrades and recovery in
   [Upgrade, recover, and remove](upgrade-recover-remove.md).

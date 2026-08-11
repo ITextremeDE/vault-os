@@ -35,6 +35,21 @@ such files.
 - Preserve and deliberately migrate legacy files; do not rename or delete them
   merely to make the error disappear.
 
+## `bootstrap conflicts`
+
+A configured bootstrap target is not a safe regular-file destination. The
+command preflights every target and creates nothing when one target conflicts.
+
+- If the target is an existing regular file, Vault-OS preserves it and does not
+  report a conflict.
+- If the target is a directory or symbolic link, choose another filename in
+  `Vault-OS/config.yaml` or resolve the target manually after making a backup.
+- If bootstrap requires the current package, run `doctor`, `diff`, and
+  `update` before trying again.
+
+Do not move existing content merely to make Vault-OS replace it; bootstrap does
+not merge or adopt user files.
+
 ## `managed file was changed locally`
 
 The installed file no longer matches its recorded checksum. Preserve the local
@@ -59,11 +74,28 @@ that possibility has been excluded. If it is stale, follow
 Generated `AGENTS.md`, `CLAUDE.md`, or a provider skill wrapper was edited after
 initialization. The refresh stops to avoid data loss. Preserve the changes,
 move durable vault-specific context into an instance-owned note referenced by
-`.vault-os/runtime/agent-context.yaml`, restore the generated artifact, and run
+`Vault-OS/runtime/agent-context.yaml`, restore the generated artifact, and run
 `agent-init` again.
 
 There is no automatic merge for pre-existing or locally changed agent
 instruction files.
+
+## `device sync conflicts`
+
+`device-sync` found an incomplete or inconsistent synchronized file set and did
+not create or refresh the local release lock.
+
+- **Managed file is missing or does not match:** wait for synchronization to
+  finish and confirm that the local checkout is the exact package version used
+  on the primary device.
+- **Synchronized instance file is missing:** enable Obsidian Sync's **Sync all
+  other types** setting and ensure `Vault-OS/` is not excluded.
+- **Unselected managed file is still present:** wait until synchronization has
+  delivered the deletion from the primary device.
+
+Do not copy `.vault-os/lock.json` from another device and do not edit it by
+hand. Rerun `device-sync`, then `doctor`, only after the synchronized state is
+complete.
 
 ## QMD command is not available
 
@@ -88,10 +120,11 @@ repeating `doctor --ai`.
 ## Existing QMD or MCP configuration conflicts
 
 Vault-OS preserves unrelated provider configuration but refuses to replace an
-existing server named `qmd` with a different definition. Compare the existing
-`.codex/config.toml` or `.mcp.json` entry with the project-local adapter. Keep
-one explicit owner for the `qmd` definition; do not maintain two competing
-configurations.
+existing server named `qmd` with a different definition. A semantically
+identical definition is preserved as-is. Invalid TOML or JSON is also rejected
+instead of being rewritten. Compare the existing `.codex/config.toml` or
+`.mcp.json` entry with the project-local adapter. Keep one explicit owner for
+the `qmd` definition; do not maintain two competing configurations.
 
 ## `doctor` reports an unapplied configuration change
 

@@ -54,7 +54,7 @@ persistent in version `0.1`; there is no automated de-initialize command.
 
 ## Add or remove modules
 
-Edit only the `modules` array in `.vault-os/config.yaml`, using identifiers from
+Edit only the `modules` array in `Vault-OS/config.yaml`, using identifiers from
 the [module catalog](../reference/modules.md). Then run:
 
 ```bash
@@ -69,6 +69,55 @@ checksums. Ordinary content and existing instance files remain untouched.
 Changing the configured system root is also performed through configuration,
 `diff`, and `update`. Treat it as a migration: back up first and inspect the full
 plan because every managed target moves.
+
+## Add bootstrap files to an existing installation
+
+After upgrading to `0.1.0-dev.6` or newer, review the `bootstrap` filenames in
+`Vault-OS/config.yaml` and run:
+
+```bash
+.venv/bin/python -m vault_os bootstrap "/path/to/My Vault"
+```
+
+Older configurations may omit the `bootstrap` object; Vault-OS then uses the
+documented neutral defaults in memory without rewriting the configuration.
+Existing profile, README, dashboard, or overview files are preserved. Review
+the newly created notes as user content; later package updates never change
+them.
+
+## Update synchronized secondary devices
+
+Apply `update` on one primary device only. After the approved synchronization
+service has delivered the complete result to another device, use the same
+Vault-OS package version there and run:
+
+```bash
+.venv/bin/python -m vault_os device-sync "/path/to/My Vault"
+.venv/bin/python -m vault_os agent-init "/path/to/My Vault" --provider codex
+.venv/bin/python -m vault_os doctor "/path/to/My Vault" --ai
+```
+
+`device-sync` verifies synchronized managed checksums, the selected module set,
+and all visible instance files before rebuilding only the local
+`.vault-os/lock.json`. It never starts synchronization and never writes the
+synchronized file set. Use `doctor` without `--ai` when no local provider was
+initialized. The complete Obsidian Sync procedure is in the
+[Obsidian setup guide](obsidian-setup.md#use-obsidian-sync-on-more-than-one-device).
+
+## Migrate the pre-`0.1.0-dev.5` hidden instance layout
+
+Earlier development builds stored both instance files and runtime state below
+`.vault-os`, which prevented Obsidian Sync from carrying the instance between
+devices. Running `update` with `0.1.0-dev.5` or newer reads the legacy
+configuration, creates the canonical visible `Vault-OS/` files, updates
+references between those files, and preserves user customizations.
+
+Legacy hidden instance files are intentionally not deleted. They cease to be
+canonical after a successful `update` and `doctor`. Keep the complete backup
+until the migrated vault and a synchronized second-device copy have both been
+validated. If cleaning up later, remove only reviewed legacy instance copies;
+retain `.vault-os/lock.json`, `.vault-os/integrations/agents.yaml`, operation
+locks, and transaction state because those remain device-local runtime data.
 
 ## Resolve a managed-file conflict
 

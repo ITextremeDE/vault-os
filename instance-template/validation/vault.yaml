@@ -5,6 +5,10 @@ excludePathParts:
   - .obsidian
   - .trash
   - .vault-os
+  - .agents
+  - .claude
+  - .codex
+  - .qmd
 
 frontmatter:
   enabled: true
@@ -12,11 +16,15 @@ frontmatter:
     - "**/*.md"
   exclude:
     - "{system}/**"
-  fields: .vault-os/schema/fields.yaml
+    - "AGENTS.md"
+    - "CLAUDE.md"
+  fields: Vault-OS/schema/fields.yaml
   models:
     - "{system}/01 Schema/Models/*.json"
   registers:
-    areas: .vault-os/registers/areas.yaml
+    areas: Vault-OS/registers/areas.yaml
+    relationships: Vault-OS/modules/contacts/registers/relationships.yaml
+    relevance: Vault-OS/modules/contacts/registers/relevance.yaml
 
 links:
   enabled: true

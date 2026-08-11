@@ -13,7 +13,8 @@ and durable record of the installed release.
 
 ## Decision
 
-- Vault-OS provides `install`, `update`, `diff`, and `doctor` commands.
+- Vault-OS provides `install`, `bootstrap`, `update`, `diff`, `device-sync`, and
+  `doctor` lifecycle commands.
 - Instance configuration selects the system root and optional modules.
 - A local release lock records the package version, manifest fingerprint, and
   installed checksums of managed files only.
@@ -27,6 +28,10 @@ and durable record of the installed release.
   The release lock is written last.
 - `diff` and `doctor` are read-only. Lifecycle writes use an exclusive local
   operation lock.
+- `device-sync` verifies files delivered by an external synchronization service
+  and writes only the device-local release lock.
+- `bootstrap` creates missing user-owned start files transactionally without
+  adding them to release ownership or overwriting existing files.
 - Path escape, symbolic-link traversal, broad targets, and any `.obsidian`
   target are rejected.
 

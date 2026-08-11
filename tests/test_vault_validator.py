@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import shutil
 import subprocess
 import sys
@@ -23,25 +24,33 @@ YAML_AVAILABLE = importlib.util.find_spec("yaml") is not None
 @unittest.skipUnless(YAML_AVAILABLE, "PyYAML is required for vault validation tests")
 class VaultValidatorTests(unittest.TestCase):
     def create_vault(self, root: Path, content_type: str = "planning") -> None:
-        runtime = root / ".vault-os"
-        (runtime / "schema").mkdir(parents=True)
-        (runtime / "registers").mkdir(parents=True)
+        instance = root / "Vault-OS"
+        (instance / "schema").mkdir(parents=True)
+        (instance / "registers").mkdir(parents=True)
         shutil.copy(
             REPOSITORY_ROOT / "instance-template/vault-os.yaml",
-            runtime / "config.yaml",
+            instance / "config.yaml",
         )
         shutil.copy(
             REPOSITORY_ROOT / "instance-template/validation/vault.yaml",
-            runtime / "validation.yaml",
+            instance / "validation.yaml",
         )
         shutil.copy(
             REPOSITORY_ROOT / "instance-template/schema/fields.yaml",
-            runtime / "schema/fields.yaml",
+            instance / "schema/fields.yaml",
         )
-        (runtime / "registers/areas.yaml").write_text(
+        (instance / "registers/areas.yaml").write_text(
             "schema: 1\nregister: areas\nvalues:\n  - Example\n",
             encoding="utf-8",
         )
+        contact_registers = instance / "modules/contacts/registers"
+        contact_registers.mkdir(parents=True)
+        for register in ("relationships", "relevance"):
+            shutil.copy(
+                REPOSITORY_ROOT
+                / f"instance-template/modules/contacts/registers/{register}.yaml",
+                contact_registers / f"{register}.yaml",
+            )
 
         models = root / "99 System/01 Schema/Models"
         models.mkdir(parents=True)
@@ -55,7 +64,7 @@ class VaultValidatorTests(unittest.TestCase):
                 models / f"{module}.json",
             )
 
-        content = root / "Projects/example.md"
+        content = root / "Projects/2026-08-11 Example.md"
         content.parent.mkdir()
         content.write_text(
             "\n".join(
@@ -108,7 +117,7 @@ class VaultValidatorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             self.create_vault(root)
-            root.joinpath(".vault-os/schema/fields.yaml").write_text(
+            root.joinpath("Vault-OS/schema/fields.yaml").write_text(
                 """schema: 1
 fields:
   kind: art
@@ -129,7 +138,7 @@ order: [art, typ, status, bereich, aliases, tags, cssclasses, created, modified]
 """,
                 encoding="utf-8",
             )
-            root.joinpath("Projects/example.md").write_text(
+            root.joinpath("Projects/2026-08-11 Example.md").write_text(
                 """---
 art: Projekt
 typ: Planung
@@ -150,6 +159,83 @@ created: 2026-08-11
 
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("RESULT errors=0 warnings=0", result.stdout)
+
+    def test_module_fields_filename_and_external_references_are_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            note = root / "Contacts/Wrong.md"
+            note.parent.mkdir()
+            note.write_text(
+                """---
+kind: contact
+type: representative
+status: active
+area: Example
+aliases: []
+tags: []
+cssclasses: []
+created: 2026-08-11
+job: [Manager]
+relationship: invented
+relevance: urgent
+last_contact: yesterday
+organizations:
+  - Not a wiki link
+service_url: https://example.invalid/account?token=redacted-secret
+archive_id: [invalid]
+archive_url: https://example.invalid/archive
+---
+
+# Wrong
+""",
+                encoding="utf-8",
+            )
+
+            result = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        for rule in (
+            "frontmatter.string",
+            "frontmatter.register",
+            "frontmatter.date",
+            "frontmatter.wiki_link_list",
+            "frontmatter.filename",
+            "frontmatter.external_reference_pair",
+            "frontmatter.external_reference_id",
+            "frontmatter.external_reference_secret",
+        ):
+            self.assertIn(rule, result.stdout)
+        self.assertNotIn("redacted-secret", result.stdout)
+
+    def test_type_specific_required_field_must_not_be_empty(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            note = root / "Contacts/Doe, Jane.md"
+            note.parent.mkdir()
+            note.write_text(
+                """---
+kind: contact
+type: representative
+status: active
+area: Example
+aliases: []
+tags: []
+cssclasses: []
+created: 2026-08-11
+organizations: []
+---
+
+# Jane Doe
+""",
+                encoding="utf-8",
+            )
+
+            result = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn("frontmatter.required", result.stdout)
 
 
 if __name__ == "__main__":

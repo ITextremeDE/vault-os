@@ -21,8 +21,9 @@ import yaml
 
 from vault_os.agents import doctor_agents, initialize_agents
 from vault_os.operations import Change, apply_changes
-from vault_os.package import Package
+from vault_os.package import ConflictError, Package, VaultOSError
 from vault_os.providers import ProviderAdapter, ProviderRegistry
+from vault_os.providers.codex import _merge_qmd
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -67,7 +68,7 @@ class VaultOSCliTests(unittest.TestCase):
         self.copy_package(destination)
         repository_path = destination / "manifests/repository.json"
         repository = json.loads(repository_path.read_text(encoding="utf-8"))
-        repository["version"] = "0.1.0-dev.4"
+        repository["version"] = "0.1.0-dev.7"
         repository_path.write_text(
             json.dumps(repository, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -95,7 +96,7 @@ class VaultOSCliTests(unittest.TestCase):
             output = json.loads(result.stdout)
             self.assertEqual(output["modules"]["to"], ["para"])
             config = yaml.safe_load(
-                (vault / ".vault-os/config.yaml").read_text(encoding="utf-8")
+                (vault / "Vault-OS/config.yaml").read_text(encoding="utf-8")
             )
             self.assertEqual(config["vault"]["name"], "My Vault")
             self.assertEqual(config["modules"], ["para"])
@@ -105,8 +106,17 @@ class VaultOSCliTests(unittest.TestCase):
             )
             self.assertFalse(
                 vault.joinpath(
-                    ".vault-os/modules/contacts/registers/relationships.yaml"
+                    "Vault-OS/modules/contacts/registers/relationships.yaml"
                 ).exists()
+            )
+            self.assertTrue(vault.joinpath("Vault-OS/schema/fields.yaml").is_file())
+            self.assertEqual(
+                sorted(
+                    path.relative_to(vault / ".vault-os").as_posix()
+                    for path in (vault / ".vault-os").rglob("*")
+                    if path.is_file()
+                ),
+                ["lock.json"],
             )
             self.assertFalse(vault.joinpath(".obsidian").exists())
 
@@ -116,6 +126,17 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertTrue(json.loads(doctor.stdout)["healthy"])
             self.assertEqual(difference.returncode, 0, difference.stdout + difference.stderr)
             self.assertEqual(json.loads(difference.stdout)["changes"], [])
+
+            validator = vault / "99 System/05 Automation/Validators/validate_vault.py"
+            validation = subprocess.run(
+                [sys.executable, str(validator), str(vault), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                validation.returncode, 0, validation.stdout + validation.stderr
+            )
 
     def test_install_conflict_is_preflighted_without_partial_install(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -128,9 +149,33 @@ class VaultOSCliTests(unittest.TestCase):
 
             self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
             self.assertEqual(collision.read_text(encoding="utf-8"), "user-owned\n")
-            self.assertFalse(vault.joinpath(".vault-os/config.yaml").exists())
+            self.assertFalse(vault.joinpath("Vault-OS/config.yaml").exists())
             self.assertFalse(vault.joinpath(".vault-os/lock.json").exists())
             self.assertFalse(vault.joinpath(".vault-os").exists())
+
+    def test_install_rejects_bootstrap_filename_reserved_for_agents(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            config_path = base / "config.yaml"
+            config = yaml.safe_load(
+                REPOSITORY_ROOT.joinpath("instance-template/vault-os.yaml").read_text(
+                    encoding="utf-8"
+                )
+            )
+            config["bootstrap"]["profileFile"] = "AGENTS.md"
+            config_path.write_text(
+                yaml.safe_dump(config, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            vault = base / "vault"
+
+            install = self.run_cli(
+                REPOSITORY_ROOT, "install", vault, "--config", str(config_path)
+            )
+
+            self.assertEqual(install.returncode, 1, install.stdout + install.stderr)
+            self.assertIn("reserved for agent integration", install.stderr)
+            self.assertFalse(vault.joinpath(".vault-os/lock.json").exists())
 
     def test_all_module_install_passes_installed_vault_validator(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -151,6 +196,184 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             self.assertEqual(json.loads(result.stdout)["summary"]["errors"], 0)
 
+    def test_bootstrap_creates_configured_user_owned_start_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault, "--module", "para")
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            config_path = vault / "Vault-OS/config.yaml"
+            config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+            config["bootstrap"]["profileFile"] = "Ich.md"
+            config_path.write_text(
+                yaml.safe_dump(config, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            lock_before = vault.joinpath(".vault-os/lock.json").read_bytes()
+
+            bootstrapped = self.run_cli(REPOSITORY_ROOT, "bootstrap", vault)
+
+            self.assertEqual(
+                bootstrapped.returncode,
+                0,
+                bootstrapped.stdout + bootstrapped.stderr,
+            )
+            report = json.loads(bootstrapped.stdout)
+            self.assertEqual(report["counts"], {"created": 5, "preserved": 0, "skipped": 0})
+            self.assertEqual(
+                report["created"],
+                [
+                    "01 Projects/README.md",
+                    "02 Areas/README.md",
+                    "Dashboard.md",
+                    "Ich.md",
+                    "README.md",
+                ],
+            )
+            for target in report["created"]:
+                text = vault.joinpath(target).read_text(encoding="utf-8")
+                self.assertTrue(text.startswith("---\n"), target)
+                metadata = yaml.safe_load(text.split("---\n", 2)[1])
+                self.assertEqual(metadata["kind"], "system")
+                self.assertEqual(metadata["status"], "active")
+            self.assertIn(
+                "[[Ich|Ich]]",
+                vault.joinpath("Dashboard.md").read_text(encoding="utf-8"),
+            )
+            self.assertEqual(vault.joinpath(".vault-os/lock.json").read_bytes(), lock_before)
+
+            difference = self.run_cli(REPOSITORY_ROOT, "diff", vault)
+            self.assertEqual(difference.returncode, 0, difference.stdout + difference.stderr)
+            self.assertEqual(json.loads(difference.stdout)["changes"], [])
+            validator = vault / "99 System/05 Automation/Validators/validate_vault.py"
+            validation = subprocess.run(
+                [sys.executable, str(validator), str(vault), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                validation.returncode, 0, validation.stdout + validation.stderr
+            )
+
+    def test_bootstrap_is_idempotent_and_preserves_existing_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            readme = vault / "README.md"
+            readme.write_text("user-owned\n", encoding="utf-8")
+
+            first = self.run_cli(REPOSITORY_ROOT, "bootstrap", vault)
+            second = self.run_cli(REPOSITORY_ROOT, "bootstrap", vault)
+
+            self.assertEqual(first.returncode, 0, first.stdout + first.stderr)
+            self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
+            first_report = json.loads(first.stdout)
+            second_report = json.loads(second.stdout)
+            self.assertEqual(
+                first_report["counts"],
+                {"created": 2, "preserved": 1, "skipped": 2},
+            )
+            self.assertEqual(
+                second_report["counts"],
+                {"created": 0, "preserved": 3, "skipped": 2},
+            )
+            self.assertEqual(readme.read_text(encoding="utf-8"), "user-owned\n")
+            self.assertTrue(vault.joinpath("Profile.md").is_file())
+            self.assertTrue(vault.joinpath("Dashboard.md").is_file())
+            self.assertFalse(vault.joinpath("01 Projects/README.md").exists())
+            self.assertFalse(vault.joinpath("02 Areas/README.md").exists())
+
+    def test_bootstrap_conflict_does_not_create_partial_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault, "--module", "para")
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            vault.joinpath("Dashboard.md").mkdir()
+
+            bootstrapped = self.run_cli(REPOSITORY_ROOT, "bootstrap", vault)
+
+            self.assertEqual(
+                bootstrapped.returncode,
+                2,
+                bootstrapped.stdout + bootstrapped.stderr,
+            )
+            self.assertIn("not a regular file", bootstrapped.stderr)
+            self.assertFalse(vault.joinpath("Profile.md").exists())
+            self.assertFalse(vault.joinpath("README.md").exists())
+            self.assertFalse(vault.joinpath("01 Projects/README.md").exists())
+            self.assertFalse(vault.joinpath("02 Areas/README.md").exists())
+
+    def test_bootstrap_honors_instance_field_and_value_mappings(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            fields_path = vault / "Vault-OS/schema/fields.yaml"
+            fields = yaml.safe_load(fields_path.read_text(encoding="utf-8"))
+            fields["fields"] = {
+                "kind": "art",
+                "type": "typ",
+                "status": "zustand",
+                "area": "bereich",
+            }
+            fields["values"] = {
+                "kind": {"System": "system"},
+                "type": {
+                    "Übersicht": "dashboard",
+                    "Liesmich": "readme",
+                    "Betriebsdokument": "operating-document",
+                },
+                "status": {"Aktiv": "active"},
+            }
+            fields["required"] = [
+                "art",
+                "typ",
+                "zustand",
+                "aliases",
+                "tags",
+                "cssclasses",
+                "created",
+            ]
+            fields["order"] = [
+                "art",
+                "typ",
+                "zustand",
+                "bereich",
+                "aliases",
+                "tags",
+                "cssclasses",
+                "created",
+            ]
+            fields_path.write_text(
+                yaml.safe_dump(fields, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+
+            bootstrapped = self.run_cli(REPOSITORY_ROOT, "bootstrap", vault)
+
+            self.assertEqual(
+                bootstrapped.returncode,
+                0,
+                bootstrapped.stdout + bootstrapped.stderr,
+            )
+            dashboard = vault.joinpath("Dashboard.md").read_text(encoding="utf-8")
+            metadata = yaml.safe_load(dashboard.split("---\n", 2)[1])
+            self.assertEqual(
+                (metadata["art"], metadata["typ"], metadata["zustand"]),
+                ("System", "Übersicht", "Aktiv"),
+            )
+            validator = vault / "99 System/05 Automation/Validators/validate_vault.py"
+            validation = subprocess.run(
+                [sys.executable, str(validator), str(vault), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(
+                validation.returncode, 0, validation.stdout + validation.stderr
+            )
+
     def test_update_replaces_managed_file_and_preserves_instance_file(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             base = Path(temporary)
@@ -160,7 +383,7 @@ class VaultOSCliTests(unittest.TestCase):
             install = self.run_cli(REPOSITORY_ROOT, "install", vault, "--module", "para")
             self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
 
-            instance_file = vault / ".vault-os/registers/areas.yaml"
+            instance_file = vault / "Vault-OS/registers/areas.yaml"
             instance_file.write_text("schema: 1\nvalues: [custom]\n", encoding="utf-8")
             lock_before = (vault / ".vault-os/lock.json").read_bytes()
 
@@ -182,7 +405,41 @@ class VaultOSCliTests(unittest.TestCase):
             lock = json.loads(
                 (vault / ".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.4")
+            self.assertEqual(lock["packageVersion"], "0.1.0-dev.7")
+
+    def test_update_migrates_legacy_hidden_instance_files_without_deleting_them(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            vault = Path(temporary) / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault, "--module", "para")
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+
+            visible_root = vault / "Vault-OS"
+            legacy_root = vault / ".vault-os"
+            for source in sorted(path for path in visible_root.rglob("*") if path.is_file()):
+                target = legacy_root / source.relative_to(visible_root)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                source.replace(target)
+            shutil.rmtree(visible_root)
+            legacy_areas = legacy_root / "registers/areas.yaml"
+            legacy_areas.write_text(
+                "schema: 1\nvalues: [custom]\n", encoding="utf-8"
+            )
+
+            update = self.run_cli(REPOSITORY_ROOT, "update", vault)
+
+            self.assertEqual(update.returncode, 0, update.stdout + update.stderr)
+            self.assertEqual(
+                vault.joinpath("Vault-OS/registers/areas.yaml").read_text(
+                    encoding="utf-8"
+                ),
+                "schema: 1\nvalues: [custom]\n",
+            )
+            self.assertTrue(legacy_areas.is_file())
+            validation = vault.joinpath("Vault-OS/validation.yaml").read_text(
+                encoding="utf-8"
+            )
+            self.assertIn("fields: Vault-OS/schema/fields.yaml", validation)
+            self.assertNotIn("fields: .vault-os/schema/fields.yaml", validation)
 
     def test_update_conflict_does_not_partially_apply_release(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -215,7 +472,7 @@ class VaultOSCliTests(unittest.TestCase):
             vault = Path(temporary) / "vault"
             install = self.run_cli(REPOSITORY_ROOT, "install", vault, "--module", "para")
             self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
-            config_path = vault / ".vault-os/config.yaml"
+            config_path = vault / "Vault-OS/config.yaml"
             config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
             config["modules"] = ["knowledge"]
             config_path.write_text(
@@ -233,7 +490,7 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertTrue(
                 vault.joinpath("99 System/01 Schema/Models/knowledge.json").is_file()
             )
-            self.assertTrue(vault.joinpath(".vault-os/registers/areas.yaml").is_file())
+            self.assertTrue(vault.joinpath("Vault-OS/registers/areas.yaml").is_file())
 
     def test_doctor_reports_local_managed_change(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -266,7 +523,7 @@ class VaultOSCliTests(unittest.TestCase):
                 "search",
             )
             self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
-            runtime_path = vault / ".vault-os/runtime/agent-context.yaml"
+            runtime_path = vault / "Vault-OS/runtime/agent-context.yaml"
             runtime = yaml.safe_load(runtime_path.read_text(encoding="utf-8"))
             runtime["readOrder"] = ["03 Resources/Start Here.md"]
             runtime_path.write_text(
@@ -283,7 +540,7 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(report["skills"], 6)
             agents = vault.joinpath("AGENTS.md").read_text(encoding="utf-8")
             self.assertIn("99 System/06 Runtime/Agent Context.md", agents)
-            self.assertIn(".vault-os/runtime/agent-context.yaml", agents)
+            self.assertIn("Vault-OS/runtime/agent-context.yaml", agents)
             self.assertIn("03 Resources/Start Here.md", agents)
             self.assertTrue(
                 vault.joinpath("CLAUDE.md")
@@ -300,10 +557,20 @@ class VaultOSCliTests(unittest.TestCase):
 
             second = self.run_cli(REPOSITORY_ROOT, "agent-init", vault)
             health = self.run_cli(REPOSITORY_ROOT, "doctor", vault, "--ai")
+            validator = vault / "99 System/05 Automation/Validators/validate_vault.py"
+            validation = subprocess.run(
+                [sys.executable, str(validator), str(vault), "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+            )
             self.assertEqual(second.returncode, 0, second.stdout + second.stderr)
             self.assertEqual(json.loads(second.stdout)["counts"]["created"], 0)
             self.assertEqual(health.returncode, 0, health.stdout + health.stderr)
             self.assertTrue(json.loads(health.stdout)["healthy"])
+            self.assertEqual(
+                validation.returncode, 0, validation.stdout + validation.stderr
+            )
 
     def test_agent_init_preserves_preexisting_agents_file_and_stops_atomically(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -312,9 +579,8 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
             agents = vault / "AGENTS.md"
             agents.write_text("user instructions\n", encoding="utf-8")
-            state_before = vault.joinpath(
-                ".vault-os/integrations/agents.yaml"
-            ).read_bytes()
+            state = vault / ".vault-os/integrations/agents.yaml"
+            self.assertFalse(state.exists())
 
             initialized = self.run_cli(REPOSITORY_ROOT, "agent-init", vault)
 
@@ -323,10 +589,24 @@ class VaultOSCliTests(unittest.TestCase):
             )
             self.assertEqual(agents.read_text(encoding="utf-8"), "user instructions\n")
             self.assertFalse(vault.joinpath("CLAUDE.md").exists())
+            self.assertFalse(state.exists())
+
+    def test_agent_init_rejects_package_metadata_update(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            next_package = base / "package-next"
+            self.create_next_package(next_package, [])
+            vault = base / "vault"
+            install = self.run_cli(REPOSITORY_ROOT, "install", vault)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+
+            initialized = self.run_cli(next_package, "agent-init", vault)
+
             self.assertEqual(
-                vault.joinpath(".vault-os/integrations/agents.yaml").read_bytes(),
-                state_before,
+                initialized.returncode, 1, initialized.stdout + initialized.stderr
             )
+            self.assertIn("requires the current package", initialized.stderr)
+            self.assertFalse(vault.joinpath("AGENTS.md").exists())
 
     def test_agent_runtime_accepts_a_provider_without_core_changes(self) -> None:
         class ExampleProviderAdapter(ProviderAdapter):
@@ -393,6 +673,15 @@ class VaultOSCliTests(unittest.TestCase):
             environment = os.environ.copy()
             environment["PATH"] = str(executable_root) + os.pathsep + environment["PATH"]
 
+            initial = self.run_cli(
+                REPOSITORY_ROOT,
+                "agent-init",
+                vault,
+                environment=environment,
+            )
+            self.assertEqual(initial.returncode, 0, initial.stdout + initial.stderr)
+            agents_before_qmd = vault.joinpath("AGENTS.md").read_bytes()
+
             initialized = self.run_cli(
                 REPOSITORY_ROOT,
                 "agent-init",
@@ -407,6 +696,7 @@ class VaultOSCliTests(unittest.TestCase):
             report = json.loads(initialized.stdout)
             self.assertTrue(report["qmd"]["enabled"])
             self.assertTrue(report["qmd"]["available"])
+            self.assertEqual(vault.joinpath("AGENTS.md").read_bytes(), agents_before_qmd)
             index = yaml.safe_load(vault.joinpath(".qmd/index.yml").read_text())
             self.assertEqual(
                 index["collections"]["vault"]["path"], str(vault.resolve())
@@ -448,6 +738,27 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(health.returncode, 0, health.stdout + health.stderr)
             self.assertTrue(json.loads(health.stdout)["healthy"])
 
+    def test_codex_qmd_preserves_compatible_inline_definition(self) -> None:
+        existing = b'''model_verbosity = "low"
+
+[mcp_servers]
+qmd = { command = "qmd", args = ["mcp"], cwd = "..", required = false }
+'''
+
+        self.assertEqual(_merge_qmd(existing, "qmd"), existing)
+
+    def test_codex_qmd_rejects_conflicting_inline_definition(self) -> None:
+        existing = b'''[mcp_servers]
+qmd = { command = "existing-qmd", args = ["mcp"] }
+'''
+
+        with self.assertRaisesRegex(ConflictError, "already defines"):
+            _merge_qmd(existing, "qmd")
+
+    def test_codex_qmd_rejects_invalid_toml(self) -> None:
+        with self.assertRaisesRegex(ConflictError, "invalid TOML"):
+            _merge_qmd(b"[mcp_servers\n", "qmd")
+
     @unittest.skipIf(os.name == "nt", "symbolic-link behavior differs on Windows")
     def test_install_rejects_symlinked_system_root(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -479,6 +790,176 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
             self.assertIn("package checksum mismatch", result.stderr)
             self.assertFalse(vault.joinpath(".vault-os/lock.json").exists())
+
+    def test_package_requires_fixed_runtime_lock_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            package = Path(temporary) / "package"
+            self.copy_package(package)
+            manifest_path = package / "manifests/runtime.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "User Content/release-lock.json"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(VaultOSError, ".vault-os/lock.json"):
+                Package.load(package)
+
+    def test_package_rejects_hidden_instance_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            package = Path(temporary) / "package"
+            self.copy_package(package)
+            manifest_path = package / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = ".vault-os/config.yaml"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(VaultOSError, "visible for synchronization"):
+                Package.load(package)
+
+    def test_package_rejects_instance_target_outside_canonical_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            package = Path(temporary) / "package"
+            self.copy_package(package)
+            manifest_path = package / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "Instance/config.yaml"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(VaultOSError, "Vault-OS/ root"):
+                Package.load(package)
+
+    def test_device_sync_rebuilds_and_refreshes_only_local_release_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            primary = base / "primary"
+            install = self.run_cli(
+                REPOSITORY_ROOT, "install", primary, "--module", "para"
+            )
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+
+            secondary = base / "secondary"
+            shutil.copytree(
+                primary,
+                secondary,
+                ignore=shutil.ignore_patterns(
+                    ".vault-os", ".agents", ".claude", ".codex", ".qmd"
+                ),
+            )
+            synchronized = self.run_cli(REPOSITORY_ROOT, "device-sync", secondary)
+
+            self.assertEqual(
+                synchronized.returncode,
+                0,
+                synchronized.stdout + synchronized.stderr,
+            )
+            report = json.loads(synchronized.stdout)
+            self.assertEqual(report["operation"], "device-sync")
+            self.assertEqual(report["counts"]["lock"], 1)
+            self.assertTrue(secondary.joinpath(".vault-os/lock.json").is_file())
+            health = self.run_cli(REPOSITORY_ROOT, "doctor", secondary)
+            self.assertEqual(health.returncode, 0, health.stdout + health.stderr)
+
+            old_lock = secondary.joinpath(".vault-os/lock.json").read_bytes()
+            config_path = primary / "Vault-OS/config.yaml"
+            config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
+            config["modules"] = ["knowledge"]
+            config_path.write_text(
+                yaml.safe_dump(config, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            updated = self.run_cli(REPOSITORY_ROOT, "update", primary)
+            self.assertEqual(updated.returncode, 0, updated.stdout + updated.stderr)
+
+            shutil.rmtree(secondary)
+            shutil.copytree(
+                primary,
+                secondary,
+                ignore=shutil.ignore_patterns(
+                    ".vault-os", ".agents", ".claude", ".codex", ".qmd"
+                ),
+            )
+            secondary.joinpath(".vault-os").mkdir()
+            secondary.joinpath(".vault-os/lock.json").write_bytes(old_lock)
+
+            refreshed = self.run_cli(REPOSITORY_ROOT, "device-sync", secondary)
+
+            self.assertEqual(refreshed.returncode, 0, refreshed.stdout + refreshed.stderr)
+            refreshed_lock = json.loads(
+                secondary.joinpath(".vault-os/lock.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(refreshed_lock["modules"], ["knowledge"])
+            self.assertEqual(
+                refreshed_lock["packageFingerprint"],
+                Package.load(REPOSITORY_ROOT).fingerprint,
+            )
+
+    def test_device_sync_rejects_incomplete_or_modified_synced_state(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            primary = base / "primary"
+            install = self.run_cli(REPOSITORY_ROOT, "install", primary)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            secondary = base / "secondary"
+            shutil.copytree(
+                primary,
+                secondary,
+                ignore=shutil.ignore_patterns(".vault-os"),
+            )
+            secondary.joinpath("99 System/README.md").write_text(
+                "not synchronized\n", encoding="utf-8"
+            )
+
+            synchronized = self.run_cli(REPOSITORY_ROOT, "device-sync", secondary)
+
+            self.assertEqual(
+                synchronized.returncode,
+                2,
+                synchronized.stdout + synchronized.stderr,
+            )
+            self.assertIn("does not match", synchronized.stderr)
+            self.assertFalse(secondary.joinpath(".vault-os/lock.json").exists())
+
+    def test_device_sync_recovers_invalid_local_lock_after_full_verification(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            primary = base / "primary"
+            install = self.run_cli(REPOSITORY_ROOT, "install", primary)
+            self.assertEqual(install.returncode, 0, install.stdout + install.stderr)
+            secondary = base / "secondary"
+            shutil.copytree(
+                primary,
+                secondary,
+                ignore=shutil.ignore_patterns(".vault-os"),
+            )
+            secondary.joinpath(".vault-os").mkdir()
+            secondary.joinpath(".vault-os/lock.json").write_text(
+                "not json\n", encoding="utf-8"
+            )
+            config_before = secondary.joinpath("Vault-OS/config.yaml").read_bytes()
+
+            synchronized = self.run_cli(REPOSITORY_ROOT, "device-sync", secondary)
+
+            self.assertEqual(
+                synchronized.returncode,
+                0,
+                synchronized.stdout + synchronized.stderr,
+            )
+            lock = json.loads(
+                secondary.joinpath(".vault-os/lock.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual(lock["packageVersion"], "0.1.0-dev.6")
+            self.assertEqual(
+                secondary.joinpath("Vault-OS/config.yaml").read_bytes(),
+                config_before,
+            )
 
     def test_transaction_rolls_back_replaced_files_after_write_failure(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

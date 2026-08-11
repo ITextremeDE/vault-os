@@ -62,6 +62,62 @@ must still be changed only through Vault-OS lifecycle commands.
 - Back up the vault independently before Vault-OS lifecycle changes, plugin
   installations, or bulk edits.
 
+## Use Obsidian Sync on more than one device
+
+Obsidian Sync is compatible with Vault-OS, but it does not synchronize hidden
+dot-folders other than `.obsidian`. Vault-OS therefore keeps the canonical
+instance files in the visible `Vault-OS/` directory and reserves hidden folders
+for device-local runtime state.
+
+On every device:
+
+1. Enable **Sync all other types** in Obsidian Sync. Vault-OS includes YAML,
+   JSON, Python, and other non-Markdown files that are otherwise not all
+   transferred.
+2. Do not exclude the configured system root, `Vault-OS/`, `AGENTS.md`, or
+   `CLAUDE.md` from synchronization.
+3. Wait until Obsidian reports synchronization complete before running a
+   Vault-OS lifecycle command.
+4. Use a local checkout of the exact Vault-OS package version applied on the
+   primary device.
+5. From that checkout, verify the delivered files and create the local release
+   record:
+
+   ```bash
+   .venv/bin/python -m vault_os device-sync "/path/to/My Vault"
+   ```
+
+6. Initialize the locally installed AI client and optional QMD integration on
+   that device, then validate it:
+
+   ```bash
+   .venv/bin/python -m vault_os agent-init "/path/to/My Vault" --provider codex
+   .venv/bin/python -m vault_os doctor "/path/to/My Vault" --ai
+   ```
+
+Use `--provider claude` instead when appropriate. `device-sync` neither starts
+nor controls Obsidian Sync and never changes synchronized files. It refuses to
+create `.vault-os/lock.json` until every expected managed and instance file is
+present, every managed checksum matches the selected package, and files from
+deselected modules have disappeared.
+
+The hidden `.vault-os`, `.agents`, `.claude`, `.codex`, and `.qmd` directories,
+plus `.mcp.json`, are deliberately device-local. `AGENTS.md` and `CLAUDE.md`
+may synchronize because their content is provider-neutral and independent of
+whether QMD is active on a particular device. Re-run `agent-init` after agent
+modules or shared context change.
+
+Files created by `bootstrap` are ordinary visible user notes. They synchronize
+like other Markdown content and must not be bootstrapped independently on
+multiple devices while the first result is still being transferred.
+
+After an update on the primary device, let the changed files finish
+synchronizing and repeat steps 4–6 on every other device. Do not run `update`
+concurrently on multiple devices.
+
+See Obsidian's official [Sync settings](https://obsidian.md/help/sync/settings)
+for the current file-type and excluded-folder behavior.
+
 ## Enable core plugins
 
 These official core plugins form the recommended baseline:
@@ -112,7 +168,9 @@ it off is a vault-owner decision, not a Vault-OS installation step.
 When using Linter or any similar bulk formatter, exclude at least:
 
 - the configured Vault-OS system root;
-- `.vault-os`, `.agents`, `.claude`, and `.qmd`;
+- the visible `Vault-OS` instance directory;
+- `.vault-os`, `.agents`, `.claude`, `.codex`, and `.qmd`;
+- `.mcp.json`;
 - generated root files such as `AGENTS.md` and `CLAUDE.md`; and
 - any other path owned by an installer, indexer, or provider adapter.
 

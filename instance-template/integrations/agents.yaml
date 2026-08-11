@@ -1,9 +1,0 @@
-schema: 1
-
-providers: []
-
-qmd:
-  enabled: false
-  command: qmd
-
-generatedArtifacts: {}

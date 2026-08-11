@@ -10,7 +10,7 @@ tags: []
 cssclasses: []
 created:
 job:
-relationship:
+relationship: []
 relevance:
 last_contact:
 ---

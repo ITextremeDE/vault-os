@@ -1,4 +1,4 @@
-"""Install, update, diff, and diagnose Vault-OS installations."""
+"""Install, update, synchronize, diff, and diagnose Vault-OS installations."""
 
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,6 +30,8 @@ from .package import (
 
 LOCK_SCHEMA_VERSION = 1
 CONFIG_SOURCE = "instance-template/vault-os.yaml"
+SYNCED_INSTANCE_ROOT = "Vault-OS"
+LEGACY_INSTANCE_ROOT = ".vault-os"
 OPERATION_LOCK = ".vault-os/operation.lock"
 TRANSACTION_ROOT = ".vault-os/.transactions"
 
@@ -185,9 +187,43 @@ def config_target(package: Package) -> str:
     )
 
 
-def load_installed_config(package: Package, vault: Path) -> InstanceConfig:
+def legacy_instance_target(target: str) -> str | None:
+    prefix = SYNCED_INSTANCE_ROOT + "/"
+    if not target.startswith(prefix):
+        return None
+    return LEGACY_INSTANCE_ROOT + "/" + target[len(prefix) :]
+
+
+def migrate_legacy_instance_content(
+    package: Package, config: InstanceConfig, content: bytes
+) -> bytes:
+    """Update references between instance files while preserving their content."""
+    migrated = content
+    for target in package.instance_files(config):
+        legacy_target = legacy_instance_target(target)
+        if legacy_target is not None:
+            migrated = migrated.replace(
+                legacy_target.encode("utf-8"), target.encode("utf-8")
+            )
+    return migrated
+
+
+def load_synced_config(package: Package, vault: Path) -> InstanceConfig:
     return package.parse_config(
-        read_bytes_secure(vault, config_target(package), "configuration")
+        read_bytes_secure(vault, config_target(package), "synchronized configuration")
+    )
+
+
+def load_installed_config(package: Package, vault: Path) -> InstanceConfig:
+    target = config_target(package)
+    path = secure_target(vault, target)
+    if path.exists():
+        return package.parse_config(read_bytes_secure(vault, target, "configuration"))
+    legacy_target = legacy_instance_target(target)
+    if legacy_target is None:
+        raise VaultOSError(f"configuration is missing: {target}")
+    return package.parse_config(
+        read_bytes_secure(vault, legacy_target, "legacy configuration")
     )
 
 
@@ -258,16 +294,20 @@ def lock_bytes(
         "updatedAt": now,
         "systemRoot": config.system_root,
         "modules": list(config.modules),
-        "managedFiles": [
-            {
-                "owner": spec.owner,
-                "target": target,
-                "sha256": spec.sha256,
-            }
-            for target, spec in sorted(managed.items())
-        ],
+        "managedFiles": managed_lock_entries(managed),
     }
     return (json.dumps(value, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def managed_lock_entries(managed: dict[str, FileSpec]) -> list[dict[str, str]]:
+    return [
+        {
+            "owner": spec.owner,
+            "target": target,
+            "sha256": spec.sha256,
+        }
+        for target, spec in sorted(managed.items())
+    ]
 
 
 def _path_state(root: Path, target: str) -> tuple[Path, bool]:
@@ -363,8 +403,6 @@ def build_update_plan(
         plan.changes.append(Change("delete", target, None, "remove"))
 
     for target, spec in sorted(package.instance_files(config).items()):
-        if target == config_target(package):
-            continue
         try:
             _, exists = _path_state(vault, target)
         except ConflictError as error:
@@ -373,7 +411,26 @@ def build_update_plan(
         if exists:
             plan.instance_preserved += 1
         else:
-            plan.changes.append(Change("write", target, source_bytes(package, spec), "seed"))
+            if target == config_target(package):
+                content = config.to_yaml()
+            else:
+                legacy_target = legacy_instance_target(target)
+                legacy_path = (
+                    secure_target(vault, legacy_target)
+                    if legacy_target is not None
+                    else None
+                )
+                if legacy_path is not None and legacy_path.is_file():
+                    content = migrate_legacy_instance_content(
+                        package,
+                        config,
+                        read_bytes_secure(
+                            vault, legacy_target, "legacy instance file"
+                        ),
+                    )
+                else:
+                    content = source_bytes(package, spec)
+            plan.changes.append(Change("write", target, content, "seed"))
 
     metadata_changed = any(
         (
@@ -390,6 +447,109 @@ def build_update_plan(
                 "write",
                 package.runtime_target,
                 lock_bytes(package, config, desired, lock["installedAt"]),
+                "lock",
+            )
+        )
+    return plan
+
+
+def _lock_matches(
+    package: Package,
+    config: InstanceConfig,
+    managed: dict[str, FileSpec],
+    lock: dict[str, Any] | None,
+) -> bool:
+    if lock is None:
+        return False
+    return all(
+        (
+            lock["packageVersion"] == package.version,
+            lock["packageFingerprint"] == package.fingerprint,
+            lock["systemRoot"] == config.system_root,
+            tuple(sorted(lock["modules"])) == config.modules,
+            lock["managedFiles"] == managed_lock_entries(managed),
+        )
+    )
+
+
+def build_device_sync_plan(
+    package: Package, vault: Path, config: InstanceConfig
+) -> Plan:
+    lock_path, lock_exists = _path_state(vault, package.runtime_target)
+    del lock_path
+    current_lock: dict[str, Any] | None = None
+    if lock_exists:
+        try:
+            current_lock = load_lock(package, vault)
+        except VaultOSError:
+            current_lock = None
+
+    plan = Plan(
+        "device-sync",
+        current_lock["packageVersion"] if current_lock is not None else None,
+        package.version,
+        tuple(sorted(current_lock["modules"])) if current_lock is not None else (),
+        config.modules,
+        [],
+        [],
+    )
+    desired = package.managed_files(config)
+    for target, spec in sorted(desired.items()):
+        try:
+            path, exists = _path_state(vault, target)
+        except ConflictError as error:
+            plan.conflicts.append(str(error))
+            continue
+        if not exists:
+            plan.conflicts.append(f"synchronized managed file is missing: {target}")
+        elif sha256_file(path) != spec.sha256:
+            plan.conflicts.append(
+                f"synchronized managed file does not match the package: {target}"
+            )
+        else:
+            plan.unchanged += 1
+
+    stale_targets: set[str] = set()
+    if current_lock is not None:
+        stale_targets.update(set(_old_managed(current_lock)) - set(desired))
+    for identifier in set(package.modules) - set(config.modules):
+        for spec in package.modules[identifier]:
+            target = package.resolve_target(spec, config)
+            if target not in desired:
+                stale_targets.add(target)
+    for target in sorted(stale_targets):
+        try:
+            _, exists = _path_state(vault, target)
+        except ConflictError as error:
+            plan.conflicts.append(str(error))
+            continue
+        if exists:
+            plan.conflicts.append(
+                f"unselected managed file is still present; wait for synchronization: {target}"
+            )
+
+    for target in sorted(package.instance_files(config)):
+        try:
+            _, exists = _path_state(vault, target)
+        except ConflictError as error:
+            plan.conflicts.append(str(error))
+            continue
+        if not exists:
+            plan.conflicts.append(f"synchronized instance file is missing: {target}")
+        else:
+            plan.instance_preserved += 1
+
+    if not plan.conflicts and not _lock_matches(
+        package, config, desired, current_lock
+    ):
+        installed_at = (
+            current_lock["installedAt"] if current_lock is not None else None
+        )
+        plan.changes.append(
+            Change(
+                "write",
+                package.runtime_target,
+                lock_bytes(package, config, desired, installed_at),
                 "lock",
             )
         )
@@ -510,6 +670,19 @@ def execute_update(package: Package, vault: Path) -> Plan:
         plan = build_update_plan(package, vault, config, lock)
         if plan.conflicts:
             raise ConflictError("update conflicts:\n- " + "\n- ".join(plan.conflicts))
+        apply_changes(vault, plan.changes)
+        return plan
+
+
+def execute_device_sync(package: Package, vault: Path) -> Plan:
+    """Verify synchronized files and rebuild only device-local release state."""
+    with operation_lock(vault):
+        config = load_synced_config(package, vault)
+        plan = build_device_sync_plan(package, vault, config)
+        if plan.conflicts:
+            raise ConflictError(
+                "device sync conflicts:\n- " + "\n- ".join(plan.conflicts)
+            )
         apply_changes(vault, plan.changes)
         return plan
 

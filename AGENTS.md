@@ -9,7 +9,7 @@ target vault.
 
 ## Project boundaries
 
-- Keep Vault-OS provider-neutral, local-first, and independent of any source
+- Keep Vault-OS provider-neutral, AI-first, local-first, and independent of any source
   vault, user, organization, language, or fixed system-root name.
 - Do not read from or modify a source or other real vault unless the user
   explicitly places that vault in scope.

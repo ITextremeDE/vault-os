@@ -9,7 +9,7 @@ aliases: []
 tags: []
 cssclasses: []
 created:
-relationship:
+relationship: []
 relevance:
 last_contact:
 organizations: []

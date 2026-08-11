@@ -16,7 +16,7 @@
       ],
       "source": "src/modules/para/schema/model.json",
       "target": "01 Schema/Models/para.json",
-      "sha256": "f2a3f130fee9ee679e38042f4048aa3638decf395e794bff289fd2db1022bd83",
+      "sha256": "873758553140830ac8820cf0c150b15b8acf21bdaca50887cf81680e05c93615",
       "installMode": "managed"
     },
     {

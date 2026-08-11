@@ -40,23 +40,44 @@ Instance seeds have a release source and checksum but use
 `installMode: create-only`. Installation creates a missing target. Updates never
 replace an existing target, regardless of whether it still resembles the seed.
 
-The agent integration seed remains instance-owned but may be updated explicitly
-by `agent-init`. It records selected providers, QMD activation, and checksums of
-generated provider artifacts; ordinary release updates still leave it untouched.
-
-The initial configuration seed becomes `.vault-os/config.yaml` and defines the
+Instance targets must be visible paths so ordinary vault synchronization can
+carry them between devices. A dot-prefixed first path component is invalid.
+The initial configuration seed becomes `Vault-OS/config.yaml` and defines the
 vault name, language, system root, and selected modules.
 
-The instance-owned field profile under `.vault-os/schema/fields.yaml` maps
+The instance-owned field profile under `Vault-OS/schema/fields.yaml` maps
 semantic field roles. Its optional `values.kind`, `values.type`, and
 `values.status` objects map stored localized values to the stable identifiers
-declared by managed models. Empty maps use model identifiers directly.
+declared by managed models. Empty maps use model identifiers directly. Module
+models may additionally declare typed fields, instance registers,
+type-specific required fields, and machine-readable filename patterns. The
+external-reference policy requires matching URL and ID/UID fields and rejects
+credentials or secret query parameters in URLs by default.
+
+`agent-init` separately generates device-local integration state at
+`.vault-os/integrations/agents.yaml`. It records selected providers, QMD
+activation, and checksums of generated provider artifacts. It is not an
+instance seed and is not synchronized as canonical instance configuration.
+
+## Bootstrap artifacts
+
+`bootstrap` renders profile, README, dashboard, and optional PARA overview notes
+from the installed configuration and field profile. These files are ordinary
+user content and intentionally have no manifest entries or release checksums.
+The command creates a missing target once, preserves every existing regular
+file, and never lets `update` adopt the result.
+
+Bootstrap filenames are instance configuration. The root filenames must be
+unique, use the `.md` suffix, and cannot reuse provider instruction names such
+as `AGENTS.md` or `CLAUDE.md`.
 
 ## Runtime artifacts
 
 Runtime entries declare a target and generator but no release source or
-checksum. They use `installMode: generated` and remain local to the installed
-vault.
+checksum. The runtime manifest declares exactly one generated artifact at the
+fixed target `.vault-os/lock.json`; another target is invalid. Runtime state
+remains local to the device. Provider wrappers, client configuration, and QMD
+indexes are also device-local even though they are not release-manifest entries.
 
 ## Release metadata and lock
 
@@ -71,7 +92,9 @@ successful installation creates `.vault-os/lock.json` with:
 
 The lock records only release-managed state. It does not claim ownership of
 instance files. The lock is generated locally and written last in the same
-transaction as managed file changes.
+transaction as managed file changes. On a secondary synchronized device,
+`device-sync` recreates the lock only after verifying the complete delivered
+file set against the selected package.
 
 The lifecycle behavior and exit codes are defined in the
 [CLI reference](cli.md).

@@ -6,7 +6,8 @@
       "types": ["introduction", "optimization", "planning", "research", "implementation"],
       "statuses": ["idea", "open", "in-progress", "waiting", "completed", "archived"],
       "areaRequired": true,
-      "filename": "YYYY-MM-DD Title"
+      "filename": "YYYY-MM-DD Title",
+      "filenamePattern": "^\\d{4}-\\d{2}-\\d{2} .+$"
     },
     "area": {
       "types": ["area", "documentation", "article", "website", "video"],

@@ -38,9 +38,13 @@ and diagnostics from the registry. It contains no provider-specific branch.
 ## Ownership and safety
 
 - `AGENTS.md` is the shared generated instruction source.
+- `AGENTS.md` and thin visible instruction imports may synchronize between
+  devices; their content must not depend on device-local QMD activation.
 - Installed system-root skills are the canonical operational copies.
 - Generated provider artifacts are checksum-protected and refreshed only while
   unchanged.
+- Provider wrappers, integration state, client configuration, and indexes in
+  dot-prefixed paths are initialized independently on every device.
 - Existing client configuration is merged only by the owning adapter.
 - Global client settings and `.obsidian` remain outside Vault-OS ownership.
 

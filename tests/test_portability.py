@@ -106,6 +106,57 @@ class PortabilityCheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("cannot traverse parents", result.stdout)
 
+    def test_manifest_requires_fixed_runtime_lock_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/runtime.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "User Content/release-lock.json"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(".vault-os/lock.json", result.stdout)
+
+    def test_manifest_rejects_hidden_instance_target(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = ".vault-os/config.yaml"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("visible for synchronization", result.stdout)
+
+    def test_manifest_requires_canonical_visible_instance_root(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "Instance/config.yaml"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("Vault-OS/ root", result.stdout)
+
     def test_manifest_requires_every_split_domain(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

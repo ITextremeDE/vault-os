@@ -7,8 +7,8 @@
   "files": [
     {
       "source": "instance-template/vault-os.yaml",
-      "target": ".vault-os/config.yaml",
-      "sha256": "37530e7e7f085a17358806d392d055e353a3bd5a860f8cd397cdcb8ddbd2fc35",
+      "target": "Vault-OS/config.yaml",
+      "sha256": "d0b43790a48055e3095cbfdf777bf90d96de40c52144f44e472ede699aaaa234",
       "installMode": "create-only"
     },
     {
@@ -16,7 +16,7 @@
         "99 System/01 Schema/Frontmatter-Schema.md"
       ],
       "source": "instance-template/schema/fields.yaml",
-      "target": ".vault-os/schema/fields.yaml",
+      "target": "Vault-OS/schema/fields.yaml",
       "sha256": "4eb9a5c3baeca50c7e558e96998fd290801dada77edca12b17f064d1bf0de4ab",
       "installMode": "create-only"
     },
@@ -25,7 +25,7 @@
         "99 System/02 Register/Bereiche.md"
       ],
       "source": "instance-template/registers/areas.yaml",
-      "target": ".vault-os/registers/areas.yaml",
+      "target": "Vault-OS/registers/areas.yaml",
       "sha256": "b8b55a203feaf9155bc0c5cd8fa7c762f113e7e74df8492e58021f9b6fd644e2",
       "installMode": "create-only"
     },
@@ -35,7 +35,7 @@
         "99 System/04 Assets/Skills/Commit Nachricht/_README.md"
       ],
       "source": "instance-template/policies/git-commits.yaml",
-      "target": ".vault-os/policies/git-commits.yaml",
+      "target": "Vault-OS/policies/git-commits.yaml",
       "sha256": "8d3c7097dfd2f526ba969a2d46ebdf97e258232f8373cfe1fc317bda84ecf266",
       "installMode": "create-only"
     },
@@ -44,7 +44,7 @@
         "99 System/04 Assets/Skills/Suche in Codex/SKILL.md"
       ],
       "source": "instance-template/integrations/search.yaml",
-      "target": ".vault-os/integrations/search.yaml",
+      "target": "Vault-OS/integrations/search.yaml",
       "sha256": "9d6ad3be5b8889b453773ea4c6e120cbefcdb561f7af11d323a8b93796e2bd95",
       "installMode": "create-only"
     },
@@ -53,7 +53,7 @@
         "99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md"
       ],
       "source": "instance-template/modules/journal/daily-note.yaml",
-      "target": ".vault-os/modules/journal/daily-note.yaml",
+      "target": "Vault-OS/modules/journal/daily-note.yaml",
       "sha256": "fcb608b6fda8839a344f1d1f95d0f8f4f3ae93d5616f8bc1ad855dbdfa9d9ae9",
       "installMode": "create-only"
     },
@@ -62,8 +62,8 @@
         "99 System/05 Automation/Validatoren/validate_mindos.py"
       ],
       "source": "instance-template/validation/vault.yaml",
-      "target": ".vault-os/validation.yaml",
-      "sha256": "23b3563d8178557ee0bee8e8aad8c44d6a2c4c5b81564442c05b71d808d5e7f0",
+      "target": "Vault-OS/validation.yaml",
+      "sha256": "bb58e2405e9cccb1c424ddc30e6c6de2d74fbb09f22c9d04c8c7b74d0b496e54",
       "installMode": "create-only"
     },
     {
@@ -71,7 +71,7 @@
         "99 System/05 Automation/_README.md"
       ],
       "source": "instance-template/integrations/automation.yaml",
-      "target": ".vault-os/integrations/automation.yaml",
+      "target": "Vault-OS/integrations/automation.yaml",
       "sha256": "cd69d3f5904874a1a9f11d4d18460b8828c8b07f0e2d3a3f892e515c92aea534",
       "installMode": "create-only"
     },
@@ -79,17 +79,8 @@
       "origins": [
         "99 System/06 Runtime/Agenten-Kurzkontext.md"
       ],
-      "source": "instance-template/integrations/agents.yaml",
-      "target": ".vault-os/integrations/agents.yaml",
-      "sha256": "3574ab9e620759bb3534ae18cc2910e33b679079249b84fa82f3a07247427287",
-      "installMode": "create-only"
-    },
-    {
-      "origins": [
-        "99 System/06 Runtime/Agenten-Kurzkontext.md"
-      ],
       "source": "instance-template/runtime/agent-context.yaml",
-      "target": ".vault-os/runtime/agent-context.yaml",
+      "target": "Vault-OS/runtime/agent-context.yaml",
       "sha256": "df1c588474a0ec1d20458d427da71d43ee0418128e1f7904dc5a7f5a72b01490",
       "installMode": "create-only"
     },
@@ -98,7 +89,7 @@
         "99 System/02 Register/Beziehungstypen.md"
       ],
       "source": "instance-template/modules/contacts/registers/relationships.yaml",
-      "target": ".vault-os/modules/contacts/registers/relationships.yaml",
+      "target": "Vault-OS/modules/contacts/registers/relationships.yaml",
       "sha256": "c48be8da84d8e946025fa4cf503e97f54b3201c2d756cc004f7453b3f9344e0a",
       "installMode": "create-only"
     },
@@ -107,7 +98,7 @@
         "99 System/02 Register/Relevanzwerte.md"
       ],
       "source": "instance-template/modules/contacts/registers/relevance.yaml",
-      "target": ".vault-os/modules/contacts/registers/relevance.yaml",
+      "target": "Vault-OS/modules/contacts/registers/relevance.yaml",
       "sha256": "0d913eb941bac556d3de4a4edb8e78731c1401120e63f6382e3c82d0d661ff10",
       "installMode": "create-only"
     }

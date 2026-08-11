@@ -8,7 +8,7 @@ description: Search an installed Vault-OS vault for relevant notes and retrieve 
 Use for vault-wide orientation, prior knowledge, related notes, or locating the
 natural file to update.
 
-1. Read `.vault-os/integrations/search.yaml` and respect its source precedence.
+1. Read `Vault-OS/integrations/search.yaml` and respect its source precedence.
 2. Prefer the configured QMD MCP tools when available. Otherwise use the QMD
    CLI, and fall back to ordinary filesystem search when QMD is unavailable.
 3. Scope searches to the local vault collection. Start with keyword search and

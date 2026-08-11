@@ -1,8 +1,9 @@
 # Vault-OS
 
-Vault-OS is a portable, local-first operating layer for Obsidian vaults. It
-provides versioned rules, schemas, workflows, reusable assets, validation, and
-agent context without owning a vault's content, name, language, or identity.
+Vault-OS is a portable, AI-first and local-first operating layer for Obsidian
+vaults. It provides versioned rules, schemas, workflows, reusable assets,
+validation, and agent context without owning a vault's content, name, language,
+or identity.
 
 It is not a pre-populated second brain, hosted service, Obsidian plugin, or AI
 model. It is an inspectable file-based system that is managed alongside the
@@ -25,16 +26,18 @@ release contract.
 - Obsidian to use the target directory as an Obsidian vault; and
 - a backup before installing into an existing vault.
 
-The lifecycle is currently release-validated on macOS. Linux and Windows have
-not yet completed the release acceptance matrix. Vault-OS does not modify
-`.obsidian` and requires no Obsidian plugin for its core.
+Vault-OS does not modify `.obsidian` and requires no Obsidian plugin for its
+core.
 
 An optional [recommended Obsidian profile](docs/how-to/obsidian-setup.md)
 describes compatible editor settings, official core plugins, and carefully
 scoped community-plugin choices. Vault-OS never applies that profile
 automatically.
 
-Codex, Claude Code, and [QMD](https://github.com/tobi/qmd) are optional.
+Codex, Claude Code, and [QMD](https://github.com/tobi/qmd) are optional runtime
+choices. Vault-OS remains usable without them, but its workflows and context
+model are designed primarily for collaboration with an authorized local AI
+agent.
 
 ## Quick start
 
@@ -58,6 +61,7 @@ Install a practical personal-knowledge profile into a new vault:
   --module knowledge \
   --module templates
 
+.venv/bin/python -m vault_os bootstrap "/path/to/My Vault"
 .venv/bin/python -m vault_os doctor "/path/to/My Vault"
 ```
 
@@ -79,7 +83,8 @@ The mandatory core provides:
 - portable schema and metadata conventions;
 - instance registers and runtime contracts;
 - deterministic validation; and
-- manifest-driven installation, update, diff, and health checks.
+- manifest-driven installation, update, device synchronization, diff, and
+  health checks.
 
 Fourteen optional modules add PARA, inbox, journal, knowledge processing,
 contacts, publishing, templates, review, governance, Git, search, navigation,
@@ -90,6 +95,14 @@ useful profiles.
 Vault name, language, folder names, enabled modules, registers, and local
 integration choices belong to the installed instance. `MindOS` is not embedded
 as a required name or identity.
+
+The optional `bootstrap` command adds a user-owned vault entry point after
+installation: a profile note, root `README.md`, `Dashboard.md`, and, when the
+`para` module is enabled, global project and area overviews. It creates missing
+files only and never adopts or overwrites existing content. Filenames are
+configured below `bootstrap` in `Vault-OS/config.yaml`; for example,
+`profileFile: Ich.md` produces the German filename without making it a product
+default.
 
 ## How it works
 
@@ -105,6 +118,16 @@ Vault-OS distinguishes three ownership domains:
   missing; updates never overwrite them.
 - **Runtime files** are generated locally and are not release content.
 
+Bootstrap files are ordinary user content. They are neither managed release
+files nor instance seeds, and their content belongs entirely to the vault after
+creation.
+
+Instance files use the visible `Vault-OS/` directory so Obsidian Sync and other
+approved file synchronization can carry them between devices. Device-specific
+release metadata, transactions, provider wrappers, client configuration, and
+search indexes stay in hidden `.vault-os`, `.agents`, `.claude`, `.codex`, and
+`.qmd` paths, including the project-local `.mcp.json` file.
+
 Before an update, every installed managed file must still match its recorded
 checksum. A missing or locally modified managed file stops the entire operation
 instead of being overwritten. `.obsidian`, ordinary vault content, credentials,
@@ -113,7 +136,7 @@ ownership.
 
 ## Operate and update an installation
 
-Edit `.vault-os/config.yaml` to change modules or instance paths. Preview before
+Edit `Vault-OS/config.yaml` to change modules or instance paths. Preview before
 applying:
 
 ```bash
@@ -126,6 +149,19 @@ Installation and updates are transactional. There is no automatic downgrade or
 uninstall in version `0.1`; use a pre-change backup for release rollback or
 removal. The complete operating procedure is documented in
 [Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md).
+
+On another device, wait for the approved sync service to finish, use the same
+Vault-OS package version, and rebuild only the device-local release record:
+
+```bash
+.venv/bin/python -m vault_os device-sync "/path/to/My Vault"
+.venv/bin/python -m vault_os agent-init "/path/to/My Vault" --provider codex
+.venv/bin/python -m vault_os doctor "/path/to/My Vault" --ai
+```
+
+`device-sync` does not start or control Obsidian Sync. It verifies the delivered
+managed and instance files before writing `.vault-os/lock.json`. See the
+[Obsidian setup guide](docs/how-to/obsidian-setup.md#use-obsidian-sync-on-more-than-one-device).
 
 ## AI and agent integration
 
@@ -194,6 +230,7 @@ using it as evidence or changing it.
 - [Set up AI assistance](docs/how-to/ai-setup.md)
 - [Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md)
 - [Troubleshooting](docs/how-to/troubleshooting.md)
+- [Release Vault-OS](docs/how-to/release.md)
 
 ### Reference
 
@@ -207,6 +244,7 @@ using it as evidence or changing it.
 - [Architecture decisions](docs/adr/)
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
+- [Agent integration validation](docs/validation/2026-08-11-agent-integration.md)
 
 ## Repository layout
 
@@ -225,6 +263,7 @@ docs/reference/           Technical contracts and catalogs
 docs/adr/                 Architecture decision records
 docs/analysis/            Human-readable analysis results
 docs/validation/          Release acceptance evidence
+.github/workflows/        Automated acceptance checks
 ```
 
 ## Current implementation
@@ -232,11 +271,12 @@ docs/validation/          Release acceptance evidence
 - All 15 pure core sources, all 88 pure module sources, both pure instance
   sources, and all portions of the 13 mixed sources have been extracted into
   their assigned ownership domains.
-- The package contains 25 core files, 79 files in 14 optional modules, 12
+- The package contains 25 core files, 79 files in 14 optional modules, 11
   instance seeds, and one declared runtime artifact.
-- Transactional installation, update, diff, doctor, release locking, integrity
-  validation, conflict protection, provider adapters, and optional QMD MCP
-  integration are implemented.
+- Transactional installation, user-owned bootstrap, update, diff, device
+  synchronization, doctor, release locking, integrity validation, conflict
+  protection, provider adapters, and optional QMD MCP integration are
+  implemented.
 - The lifecycle has passed automated clean-vault tests and hash-verified
   acceptance against a temporary copy of an existing real-world vault.
 - Installing into the live source vault remains a deliberate migration outside

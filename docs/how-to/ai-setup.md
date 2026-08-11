@@ -34,8 +34,13 @@ knowledge setup adds:
 ```
 
 For an existing Vault-OS installation, add the module identifiers to
-`.vault-os/config.yaml`, then run `diff` and `update` as described in the
+`Vault-OS/config.yaml`, then run `diff` and `update` as described in the
 [upgrade guide](upgrade-recover-remove.md).
+
+The optional `bootstrap` command may create the user-owned profile, README,
+dashboard, and PARA overview notes before provider initialization. It does not
+create `AGENTS.md`; provider-neutral agent instructions remain the explicit
+responsibility of `agent-init`.
 
 ## Initialize provider discovery
 
@@ -60,7 +65,9 @@ repeat the same `--provider` option. Version `0.1` has no provider de-initialize
 command.
 
 `agent-init` safely refreshes unchanged generated adapters and refuses to
-overwrite a locally modified artifact.
+overwrite a locally modified artifact. It also refuses to run when the
+installed release lock differs from the package metadata; run `diff` and
+`update` first.
 
 The command creates:
 
@@ -68,6 +75,12 @@ The command creates:
 - `CLAUDE.md` as a thin import when Claude Code is selected;
 - `.agents/skills/<name>/SKILL.md` wrappers for Codex; and
 - `.claude/skills/<name>/SKILL.md` wrappers for Claude Code.
+
+`AGENTS.md` and `CLAUDE.md` are visible shared instructions. Provider wrappers,
+QMD data, client configuration, and the generated integration record at
+`.vault-os/integrations/agents.yaml` are device-local. On a second synchronized
+device, run `device-sync` and then `agent-init` locally; do not copy the hidden
+runtime folders from another device.
 
 The actual installed skills remain canonical below the configured system root,
 normally `99 System/04 Assets/Skills`. Provider wrappers reference those files
@@ -77,7 +90,7 @@ If `AGENTS.md`, `CLAUDE.md`, or a generated skill path already contains
 unmanaged content, initialization stops. Back up the existing instructions and
 decide how to consolidate them. Vault-specific supplemental context can live in
 an ordinary Markdown note whose path is added to `readOrder` in
-`.vault-os/runtime/agent-context.yaml`; rerunning `agent-init` then includes that
+`Vault-OS/runtime/agent-context.yaml`; rerunning `agent-init` then includes that
 note in the generated startup order. There is no automatic instruction merge.
 
 ## Start the client
@@ -110,6 +123,11 @@ Within the client, verify that it can name the loaded Vault-OS instruction file
 and discover an installed skill. Claude Code also exposes `/memory`, `/skills`,
 and `/mcp` diagnostics. Do not claim a client works until an actual session has
 successfully read the vault.
+
+Automated tests validate the generated Codex and Claude Code artifacts and the
+QMD configuration contracts. A dated client run is stronger evidence than
+those structural tests. Current executed-client evidence and explicitly skipped
+clients are recorded under [`docs/validation`](../validation/).
 
 ## Add QMD search
 
@@ -156,8 +174,9 @@ under `.qmd`; Vault-OS generates `.qmd/.gitignore` so runtime index data is not
 committed accidentally.
 
 `agent-init --qmd` adds a project-scoped `qmd mcp` definition to the selected
-providers. It preserves unrelated provider configuration and stops on a
-conflicting existing `qmd` server definition. Finish with:
+providers. It preserves unrelated provider configuration and an already
+compatible `qmd` definition, but stops on a conflicting definition. Finish
+with:
 
 ```bash
 .venv/bin/python -m vault_os doctor "/path/to/My Vault" --ai

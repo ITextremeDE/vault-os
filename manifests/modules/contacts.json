@@ -16,7 +16,7 @@
       ],
       "source": "src/modules/contacts/schema/model.json",
       "target": "01 Schema/Models/contacts.json",
-      "sha256": "be0c9174e373f78608897fb435617362bcaeb6c38c9c394807409c294787eb81",
+      "sha256": "772c137429531a120c69ad7b7a3ae19b9422aab07200d7738d46b2258cd4079c",
       "installMode": "managed"
     },
     {
@@ -43,7 +43,7 @@
       ],
       "source": "src/modules/contacts/templates/person.md",
       "target": "04 Assets/Templates/Contacts/Person.md",
-      "sha256": "c2de7b86d0fb572594718097bc61f84648f5eab2b152da4614291bc50234229b",
+      "sha256": "54b3bcea2b56f6161aae6e45c8b9b38f4adeaa1524b49b9bb136d0e1fa6ba146",
       "installMode": "managed"
     },
     {
@@ -52,7 +52,7 @@
       ],
       "source": "src/modules/contacts/templates/representative.md",
       "target": "04 Assets/Templates/Contacts/Representative.md",
-      "sha256": "499775594aa9ef974e93aec85324b43bebcb4c66b7850fc8acee3baa8bc51b1a",
+      "sha256": "184f820db8a77e83a93edb5a5bdb9acc9a93863ce23588c2c0c6da3145350d01",
       "installMode": "managed"
     },
     {
@@ -61,7 +61,7 @@
       ],
       "source": "src/modules/contacts/templates/organization.md",
       "target": "04 Assets/Templates/Contacts/Organization.md",
-      "sha256": "64db11a14251fc97e78ef1118008da7ee4b6542f518eb8a68f25c66f2ff1cbf5",
+      "sha256": "13858cf6a2e9615161e84d8e5bdc427027e022672e4a5d72ed79d0996c846f68",
       "installMode": "managed"
     }
   ]

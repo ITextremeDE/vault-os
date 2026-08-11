@@ -12,10 +12,12 @@ import sys
 from pathlib import Path
 
 from .agents import doctor_agents, initialize_agents
+from .bootstrap import BootstrapPlan, bootstrap_vault
 from .operations import (
     Plan,
     diff_installation,
     doctor,
+    execute_device_sync,
     execute_install,
     execute_update,
     prepare_install_config,
@@ -31,7 +33,7 @@ DEFAULT_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(
         prog="vault-os",
-        description="Install and safely update Vault-OS in an Obsidian vault.",
+        description="Install, synchronize, and safely update Vault-OS in an Obsidian vault.",
     )
     value.add_argument(
         "--package-root",
@@ -76,6 +78,24 @@ def parser() -> argparse.ArgumentParser:
         help="Also validate initialized agent providers, skills, and optional QMD integration.",
     )
     health.add_argument("--json", action="store_true", help="Emit machine-readable output.")
+
+    bootstrap = commands.add_parser(
+        "bootstrap",
+        help="Create missing user-owned start files without overwriting existing content.",
+    )
+    bootstrap.add_argument("vault", type=Path)
+    bootstrap.add_argument(
+        "--json", action="store_true", help="Emit machine-readable output."
+    )
+
+    device_sync = commands.add_parser(
+        "device-sync",
+        help="Verify files delivered by vault sync and rebuild device-local release state.",
+    )
+    device_sync.add_argument("vault", type=Path)
+    device_sync.add_argument(
+        "--json", action="store_true", help="Emit machine-readable output."
+    )
 
     agents = commands.add_parser(
         "agent-init",
@@ -131,7 +151,10 @@ def print_plan(plan: Plan, *, json_output: bool) -> None:
         for conflict in plan.conflicts:
             print(f"- {conflict}")
     elif not visible:
-        print("Installation is up to date.")
+        if counts["lock"]:
+            print("Device-local release metadata updated.")
+        else:
+            print("Installation is up to date.")
 
 
 def print_doctor(result: dict[str, object], *, json_output: bool) -> None:
@@ -185,6 +208,26 @@ def print_agent_init(result: dict[str, object], *, json_output: bool) -> None:
             print(f"- {warning}")
 
 
+def print_bootstrap(plan: BootstrapPlan, *, json_output: bool) -> None:
+    report = plan.as_dict()
+    if json_output:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return
+    print("Vault-OS bootstrap")
+    counts = report["counts"]
+    print(
+        "Files: "
+        f"created={counts['created']}, preserved={counts['preserved']}, "
+        f"skipped={counts['skipped']}"
+    )
+    for target in report["created"]:
+        print(f"- created: {target}")
+    for target in report["preserved"]:
+        print(f"- preserved: {target}")
+    for reason in report["skipped"]:
+        print(f"- skipped: {reason}")
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
     try:
@@ -204,6 +247,10 @@ def main(argv: list[str] | None = None) -> int:
             print_plan(plan, json_output=args.json)
             return 0
         vault = vault_root(args.vault)
+        if args.command == "bootstrap":
+            plan = bootstrap_vault(package, vault)
+            print_bootstrap(plan, json_output=args.json)
+            return 0
         if args.command == "agent-init":
             result = initialize_agents(
                 package,
@@ -216,6 +263,10 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "update":
             plan = execute_update(package, vault)
+            print_plan(plan, json_output=args.json)
+            return 0
+        if args.command == "device-sync":
+            plan = execute_device_sync(package, vault)
             print_plan(plan, json_output=args.json)
             return 0
         if args.command == "diff":

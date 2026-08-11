@@ -7,8 +7,12 @@
 from __future__ import annotations
 
 import json
-import re
 from pathlib import Path
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - exercised on Python 3.10
+    import tomli as tomllib
 
 from ..package import ConflictError, VaultOSError
 from .base import ProviderAdapter, ProviderHealth, existing_bytes
@@ -16,6 +20,22 @@ from .base import ProviderAdapter, ProviderHealth, existing_bytes
 
 QMD_START = "# >>> Vault-OS QMD adapter >>>"
 QMD_END = "# <<< Vault-OS QMD adapter <<<"
+
+
+def _parse_toml(text: str) -> dict[str, object]:
+    try:
+        return tomllib.loads(text)
+    except tomllib.TOMLDecodeError as error:
+        raise ConflictError("existing .codex/config.toml contains invalid TOML") from error
+
+
+def _qmd_definition(command: str) -> dict[str, object]:
+    return {
+        "command": command,
+        "args": ["mcp"],
+        "cwd": "..",
+        "required": False,
+    }
 
 
 def _qmd_block(command: str) -> str:
@@ -38,6 +58,7 @@ def _merge_qmd(
         text = existing.decode("utf-8") if existing is not None else ""
     except UnicodeDecodeError as error:
         raise ConflictError("existing .codex/config.toml is not UTF-8") from error
+    parsed = _parse_toml(text)
     start = text.find(QMD_START)
     end = text.find(QMD_END)
     block = _qmd_block(command)
@@ -55,15 +76,24 @@ def _merge_qmd(
         )
         if current_block not in {block, previous_block}:
             raise ConflictError("Vault-OS QMD block in .codex/config.toml was changed locally")
-        return (text[:start] + block + text[end:]).encode("utf-8")
-    if re.search(r"(?m)^\s*\[mcp_servers\.(?:qmd|\"qmd\"|'qmd')\]\s*$", text):
+        candidate = text[:start] + block + text[end:]
+        _parse_toml(candidate)
+        return candidate.encode("utf-8")
+    servers = parsed.get("mcp_servers", {})
+    if not isinstance(servers, dict):
+        raise ConflictError("existing .codex/config.toml has invalid mcp_servers")
+    if "qmd" in servers:
+        if servers["qmd"] == _qmd_definition(command):
+            return existing if existing is not None else b""
         raise ConflictError("existing .codex/config.toml already defines mcp_servers.qmd")
     prefix = text
     if prefix and not prefix.endswith("\n"):
         prefix += "\n"
     if prefix and not prefix.endswith("\n\n"):
         prefix += "\n"
-    return (prefix + block).encode("utf-8")
+    candidate = prefix + block
+    _parse_toml(candidate)
+    return candidate.encode("utf-8")
 
 
 class CodexProviderAdapter(ProviderAdapter):
@@ -89,8 +119,6 @@ class CodexProviderAdapter(ProviderAdapter):
             content = existing_bytes(vault, ".codex/config.toml")
             if content is None:
                 health.errors.append("Codex config is missing: .codex/config.toml")
-            elif QMD_START.encode() not in content:
-                health.errors.append("Codex QMD MCP block is missing")
             elif _merge_qmd(content, command, command) != content:
                 health.errors.append("Codex QMD MCP block differs from agent state")
         except VaultOSError as error:

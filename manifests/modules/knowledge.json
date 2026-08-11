@@ -16,7 +16,7 @@
       ],
       "source": "src/modules/knowledge/schema/model.json",
       "target": "01 Schema/Models/knowledge.json",
-      "sha256": "2538ad90113a35b7f08e0afed1a423687f5e54d16034af65c7bcab6661e2d0f1",
+      "sha256": "6b6d2a23e72801d2ebc4c90b0ea62e5cab58cbfe28bbcda5eb62e3ea13c6062b",
       "installMode": "managed"
     },
     {
