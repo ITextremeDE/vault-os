@@ -47,10 +47,15 @@ overwriting the file.
 src/core/                 Portable core files
 src/modules/              Optional Vault-OS modules
 instance-template/        Neutral instance configuration
+analysis/                 Canonical source classification data
 scripts/                  Development and validation tools
 tests/                    Automated checks and test vaults
 docs/adr/                 Architecture decision records
+docs/analysis/            Human-readable analysis results
 ```
+
+The current extraction baseline is documented in the
+[MindOS portability analysis](docs/analysis/mindos-portability-matrix.md).
 
 ## Development roadmap
 
@@ -68,6 +73,7 @@ Run the current repository checks with:
 ```bash
 python3 -m unittest discover -s tests
 python3 scripts/check_portability.py
+python3 scripts/validate_portability_matrix.py
 ```
 
 ## License

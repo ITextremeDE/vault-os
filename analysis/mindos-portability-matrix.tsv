@@ -1,0 +1,120 @@
+source_path	decision	target	action	effort	rationale
+99 System/00 OS/Architektur.md	core	src/core/os	neutralize	M	Portable architecture with source-vault status and personal project links to remove.
+99 System/00 OS/Entscheidungslogik.md	core	src/core/os	extract	S	General decision rules are portable without an instance dependency.
+99 System/00 OS/Prinzipien.md	core	src/core/os	extract	S	General operating principles belong to the mandatory core.
+99 System/00 OS/_README.md	core	src/core/os	extract	S	Portable layer description and navigation entry point.
+99 System/00 OS/Änderungsprinzipien.md	core	src/core/os	extract	S	General change and rollback rules belong to the mandatory core.
+99 System/01 Schema/Benennungsstandard.md	split	src/core/schema + src/modules/*	split	L	Base naming rules are portable while content-specific conventions belong to feature modules.
+99 System/01 Schema/Frontmatter-Schema.md	split	src/core/schema + src/modules/* + instance-template	split	L	Base fields are core; contact, publishing, external-system, and local register fields are extensions.
+99 System/01 Schema/Inhaltsarten.md	split	src/core/schema + src/modules/*	split	M	System content is core while projects, contacts, journal, and knowledge kinds are module-defined.
+99 System/01 Schema/Linkstandard.md	core	src/core/schema	neutralize	M	Wiki-link rules are portable after paths and examples are made instance-neutral.
+99 System/01 Schema/Ordnerstruktur.md	module	src/modules/para	neutralize	M	The numbered PARA folder layout is an optional opinionated profile.
+99 System/01 Schema/Statusmodell.md	split	src/core/schema + src/modules/*	split	M	Lifecycle mechanics are core while allowed states and transitions depend on content modules.
+99 System/01 Schema/Typenmodell.md	split	src/core/schema + src/modules/*	split	L	Type mechanics are core while the current type catalog is feature-specific.
+99 System/01 Schema/_README.md	core	src/core/schema	extract	S	Portable schema-layer description and navigation entry point.
+99 System/02 Register/Bereiche.md	split	src/core/registers + instance-template/registers	split	L	Register contract is portable; all concrete area values are instance-owned.
+99 System/02 Register/Beziehungstypen.md	instance	instance-template/modules/contacts/registers	seed	M	Useful contact defaults must remain editable instance data rather than managed policy.
+99 System/02 Register/Relevanzwerte.md	instance	instance-template/modules/contacts/registers	seed	S	Useful contact defaults must remain editable instance data rather than managed policy.
+99 System/02 Register/Tag-Konventionen.md	core	src/core/registers	extract	S	General tag syntax and precedence rules are portable.
+99 System/02 Register/_README.md	core	src/core/registers	neutralize	S	Portable register contract after distinguishing managed schemas from instance values.
+99 System/03 Workflows/Ablage.md	module	src/modules/para/workflows	neutralize	M	Placement rules depend on the optional PARA folder and content model.
+99 System/03 Workflows/Arbeitsnotizen.md	module	src/modules/knowledge/workflows	neutralize	M	Working-note processing is an optional knowledge module workflow.
+99 System/03 Workflows/Archivierung.md	module	src/modules/para/workflows	neutralize	M	Archive paths and lifecycle behavior depend on the PARA profile.
+99 System/03 Workflows/Bereiche.md	module	src/modules/para/workflows	neutralize	M	Area management belongs to the optional PARA profile.
+99 System/03 Workflows/Eingang.md	module	src/modules/inbox/workflows	neutralize	M	Inbox processing is optional and depends on configured folders and downstream modules.
+99 System/03 Workflows/Erkenntnisse.md	module	src/modules/knowledge/workflows	neutralize	M	Insight processing belongs to the optional knowledge module.
+99 System/03 Workflows/Gesprächsnotizen.md	module	src/modules/knowledge/workflows	neutralize	M	Conversation-note processing belongs to the optional knowledge module.
+99 System/03 Workflows/Inhaltsreview.md	module	src/modules/review/workflows	neutralize	M	Content review is optional and depends on review metadata and views.
+99 System/03 Workflows/Inhaltsänderungslog.md	module	src/modules/governance/workflows	neutralize	M	Change logging is an optional governance policy, distinct from the local runtime log.
+99 System/03 Workflows/Journal.md	module	src/modules/journal/workflows	neutralize	M	Periodic notes and their lifecycle belong to the optional journal module.
+99 System/03 Workflows/Kontakte.md	module	src/modules/contacts/workflows	neutralize	M	Contact kinds and external references belong to the optional contacts module.
+99 System/03 Workflows/Projekte.md	module	src/modules/para/workflows	neutralize	M	Project management belongs to the optional PARA profile.
+99 System/03 Workflows/Wissen.md	module	src/modules/knowledge/workflows	neutralize	M	Durable knowledge processing belongs to the optional knowledge module.
+99 System/03 Workflows/Wissenskreislauf.md	module	src/modules/knowledge/workflows	neutralize	M	The conversation-to-insight chain is optional and contains source-vault integration references.
+99 System/03 Workflows/_README.md	core	src/core/workflows	neutralize	M	The workflow-layer contract is core but its module catalog must be generated or neutral.
+99 System/04 Assets/Bausteine/Abschlussblock.md	module	src/modules/governance/assets	neutralize	M	The standardized context-and-actions block is an optional content-governance convention.
+99 System/04 Assets/Bausteine/_README.md	module	src/modules/governance/assets	extract	S	Documentation for the optional reusable content blocks.
+99 System/04 Assets/Prompts/Arbeitsnotiz anlegen.md	module	src/modules/knowledge/prompts	neutralize	M	Knowledge prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Bereich anlegen.md	module	src/modules/para/prompts	neutralize	M	PARA prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Erkenntnis anlegen.md	module	src/modules/knowledge/prompts	neutralize	M	Knowledge prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Gesprächsnotiz anlegen.md	module	src/modules/knowledge/prompts	neutralize	M	Knowledge prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Journal aufbereiten.md	module	src/modules/journal/prompts	neutralize	M	Journal prompt with source-vault names and local policy to parameterize.
+99 System/04 Assets/Prompts/Journal-Notiz anlegen.md	module	src/modules/journal/prompts	neutralize	M	Journal prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Kontakt anlegen.md	module	src/modules/contacts/prompts	neutralize	L	Contact prompt includes source-vault and external-system assumptions.
+99 System/04 Assets/Prompts/Notiz vereinheitlichen.md	module	src/modules/governance/prompts	neutralize	M	Normalization prompt must use selected schemas instead of source-vault names.
+99 System/04 Assets/Prompts/Projekt anlegen.md	module	src/modules/para/prompts	neutralize	M	PARA prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Ressource anlegen.md	module	src/modules/knowledge/prompts	neutralize	M	Resource prompt with source-vault names and paths to parameterize.
+99 System/04 Assets/Prompts/Wissenseintrag anlegen.md	module	src/modules/knowledge/prompts	neutralize	L	Knowledge prompt includes source-vault and publication-system assumptions.
+99 System/04 Assets/Prompts/_README.md	module	src/modules/agents/prompts	neutralize	M	Prompt framework is optional agent tooling and contains source-vault references.
+99 System/04 Assets/Skills/Arbeitsnotiz aus Gespräch/SKILL.md	module	src/modules/knowledge/skills	neutralize	M	Knowledge-processing skill contains source-vault paths and links.
+99 System/04 Assets/Skills/Arbeitsnotiz aus Gespräch/_README.md	module	src/modules/knowledge/skills	extract	S	Documentation for the optional knowledge-processing skill.
+99 System/04 Assets/Skills/Audit Auslöser/SKILL.md	module	src/modules/audit/skills	extract	M	Generic audit triggering can be distributed as optional agent tooling.
+99 System/04 Assets/Skills/Audit Auslöser/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional audit skill.
+99 System/04 Assets/Skills/Audit Auslöser/references/_README.md	module	src/modules/audit/skills	extract	S	Reference index for the optional audit skill.
+99 System/04 Assets/Skills/Audit Auslöser/references/ausloeser-regeln.md	module	src/modules/audit/skills	extract	M	Generic audit trigger rules can be distributed with the audit module.
+99 System/04 Assets/Skills/Commit Nachricht/SKILL.md	split	src/modules/git/skills + instance-template/policies	split	L	Generic commit safety is reusable; categories, exceptions, and secret policy are instance-specific.
+99 System/04 Assets/Skills/Commit Nachricht/_README.md	split	src/modules/git/skills + instance-template/policies	split	M	Skill documentation combines a reusable purpose with source-vault commit policy.
+99 System/04 Assets/Skills/Datei aus Vorlage/SKILL.md	module	src/modules/templates/skills	extract	M	Generic file-from-template behavior is optional agent tooling.
+99 System/04 Assets/Skills/Datei aus Vorlage/_README.md	module	src/modules/templates/skills	extract	S	Documentation for the optional template skill.
+99 System/04 Assets/Skills/Erkenntnis aus Arbeitsnotiz/SKILL.md	module	src/modules/knowledge/skills	neutralize	M	Knowledge-processing skill contains source-vault paths and links.
+99 System/04 Assets/Skills/Erkenntnis aus Arbeitsnotiz/_README.md	module	src/modules/knowledge/skills	extract	S	Documentation for the optional knowledge-processing skill.
+99 System/04 Assets/Skills/Fortlaufendes Audit/SKILL.md	module	src/modules/audit/skills	extract	M	Continuous audit behavior is optional operational tooling.
+99 System/04 Assets/Skills/Fortlaufendes Audit/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional continuous-audit skill.
+99 System/04 Assets/Skills/Gesprächsnotiz aus Gespräch/SKILL.md	module	src/modules/knowledge/skills	neutralize	M	Knowledge-processing skill contains source-vault paths and links.
+99 System/04 Assets/Skills/Gesprächsnotiz aus Gespräch/_README.md	module	src/modules/knowledge/skills	extract	S	Documentation for the optional knowledge-processing skill.
+99 System/04 Assets/Skills/Import aus Eingang/SKILL.md	module	src/modules/inbox/skills	neutralize	L	Import behavior depends on source-vault paths, registers, and configured destinations.
+99 System/04 Assets/Skills/Import aus Eingang/_README.md	module	src/modules/inbox/skills	neutralize	S	Skill documentation contains source-vault naming.
+99 System/04 Assets/Skills/Import aus Eingang/references/import-regeln.md	module	src/modules/inbox/skills	extract	M	Generic import rules can accompany the inbox module.
+99 System/04 Assets/Skills/Inhalts Audit/SKILL.md	module	src/modules/audit/skills	extract	M	Content audit behavior is optional agent tooling.
+99 System/04 Assets/Skills/Inhalts Audit/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional content-audit skill.
+99 System/04 Assets/Skills/Inhalts Korrektur/SKILL.md	module	src/modules/audit/skills	extract	M	Controlled content correction is optional agent tooling.
+99 System/04 Assets/Skills/Inhalts Korrektur/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional content-correction skill.
+99 System/04 Assets/Skills/Kette Wissensverarbeitung/SKILL.md	module	src/modules/knowledge/skills	neutralize	L	The full knowledge chain contains source-vault paths and direct note links.
+99 System/04 Assets/Skills/Kette Wissensverarbeitung/_README.md	module	src/modules/knowledge/skills	extract	S	Documentation for the optional knowledge-chain skill.
+99 System/04 Assets/Skills/Obsidian Navigation/SKILL.md	module	src/modules/navigation/skills	neutralize	M	Obsidian navigation is portable after vault names and platform assumptions become parameters.
+99 System/04 Assets/Skills/Obsidian Navigation/_README.md	module	src/modules/navigation/skills	extract	S	Documentation for the optional navigation skill.
+99 System/04 Assets/Skills/Suche in Codex/SKILL.md	split	src/modules/search/skills + instance-template/integrations	split	L	Search workflow is reusable but qmd collection names, paths, and source hierarchy are instance configuration.
+99 System/04 Assets/Skills/Suche in Codex/_README.md	module	src/modules/search/skills	neutralize	S	Skill documentation contains source-vault naming.
+99 System/04 Assets/Skills/Vault Audit/SKILL.md	module	src/modules/audit/skills	extract	M	Generic vault auditing is optional agent tooling.
+99 System/04 Assets/Skills/Vault Audit/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional vault-audit skill.
+99 System/04 Assets/Skills/Vault Korrektur/SKILL.md	module	src/modules/audit/skills	extract	M	Controlled vault correction is optional agent tooling.
+99 System/04 Assets/Skills/Vault Korrektur/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional vault-correction skill.
+99 System/04 Assets/Skills/Vault-OS Audit/SKILL.md	module	src/modules/audit/skills	extract	M	Vault-OS conformance auditing belongs to optional development and operations tooling.
+99 System/04 Assets/Skills/Vault-OS Audit/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional Vault-OS audit skill.
+99 System/04 Assets/Skills/Vault-OS Audit/references/_README.md	module	src/modules/audit/skills	extract	S	Reference index for the optional Vault-OS audit skill.
+99 System/04 Assets/Skills/Vault-OS Audit/references/pruefkriterien.md	module	src/modules/audit/skills	extract	M	Portable conformance criteria belong to the audit module.
+99 System/04 Assets/Skills/Vault-OS Korrektur/SKILL.md	module	src/modules/audit/skills	extract	M	Controlled Vault-OS correction belongs to optional development tooling.
+99 System/04 Assets/Skills/Vault-OS Korrektur/_README.md	module	src/modules/audit/skills	extract	S	Documentation for the optional Vault-OS correction skill.
+99 System/04 Assets/Skills/_README.md	module	src/modules/agents/skills	neutralize	M	Skill packaging is optional agent tooling and contains source-vault references.
+99 System/04 Assets/Vorlagen/Arbeitsnotiz.md	module	src/modules/knowledge/templates	neutralize	M	Working-note template depends on the knowledge schema and localized headings.
+99 System/04 Assets/Vorlagen/Bereich - Artikel.md	module	src/modules/publishing/templates	neutralize	M	Article fields belong to an optional publishing module.
+99 System/04 Assets/Vorlagen/Bereich - Standard.md	module	src/modules/para/templates	neutralize	M	Area template belongs to the optional PARA profile.
+99 System/04 Assets/Vorlagen/Bereich - Video.md	module	src/modules/publishing/templates	neutralize	M	Video fields belong to an optional publishing module.
+99 System/04 Assets/Vorlagen/Bereich - Webseite.md	module	src/modules/publishing/templates	neutralize	M	Website fields belong to an optional publishing module.
+99 System/04 Assets/Vorlagen/Bereich.md	module	src/modules/para/templates	neutralize	M	Area dashboard template depends on Obsidian queries and PARA paths.
+99 System/04 Assets/Vorlagen/Erkenntnis.md	module	src/modules/knowledge/templates	neutralize	M	Insight template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Gesprächsnotiz.md	module	src/modules/knowledge/templates	neutralize	M	Conversation-note template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Journal - Jährliche Notiz.md	module	src/modules/journal/templates	neutralize	M	Annual note template belongs to the optional journal module.
+99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md	split	src/modules/journal/templates + instance-template/modules/journal	split	L	Generic daily structure is reusable; default area, organizations, systems, and private sections are instance policy.
+99 System/04 Assets/Vorlagen/Journal - Wöchentliche Notiz.md	module	src/modules/journal/templates	neutralize	M	Weekly note template belongs to the optional journal module.
+99 System/04 Assets/Vorlagen/Kontakt – Ansprechpartner.md	module	src/modules/contacts/templates	neutralize	M	Contact template depends on the optional contacts schema and integrations.
+99 System/04 Assets/Vorlagen/Kontakt – Einzelkontakt.md	module	src/modules/contacts/templates	neutralize	M	Contact template depends on the optional contacts schema and integrations.
+99 System/04 Assets/Vorlagen/Kontakt – Organisation.md	module	src/modules/contacts/templates	neutralize	M	Organization template depends on the optional contacts schema and integrations.
+99 System/04 Assets/Vorlagen/Projekt - Standard.md	module	src/modules/para/templates	neutralize	M	Project template belongs to the optional PARA profile.
+99 System/04 Assets/Vorlagen/Projekt.md	module	src/modules/para/templates	neutralize	M	Project dashboard template depends on Obsidian queries and PARA paths.
+99 System/04 Assets/Vorlagen/Ressource - Quelle.md	module	src/modules/knowledge/templates	neutralize	M	Source template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Ressource.md	module	src/modules/knowledge/templates	neutralize	M	Resource template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Wissen - Rezept.md	module	src/modules/knowledge/templates	neutralize	M	Recipe template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Wissen - Überblick.md	module	src/modules/knowledge/templates	neutralize	M	Overview template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/Wissen.md	module	src/modules/knowledge/templates	neutralize	M	Knowledge template belongs to the optional knowledge module.
+99 System/04 Assets/Vorlagen/_README.md	module	src/modules/templates	neutralize	S	Template catalog is optional tooling and contains source-vault naming.
+99 System/04 Assets/_README.md	core	src/core/assets	neutralize	M	The asset-layer contract is core while actual assets are module-owned.
+99 System/05 Automation/Validatoren/_README.md	core	src/core/validation	neutralize	M	Validator documentation must use generic command and component names.
+99 System/05 Automation/Validatoren/validate_mindos.py	split	src/core/validation + instance-template/validation	split	L	Validation engine is portable; model values, exclusions, paths, and command name require configuration.
+99 System/05 Automation/_README.md	split	src/core/automation + instance-template/integrations	split	L	Automation contract is portable but every listed automation, path, and runtime is instance-specific.
+99 System/06 Runtime/Agenten-Kurzkontext.md	split	src/core/runtime + instance-template/runtime	split	M	Generic agent rules are portable while selected modules, paths, and read order are instance-generated.
+99 System/06 Runtime/Betriebsregeln.md	core	src/core/runtime	extract	M	General runtime intervention and conflict rules belong to the core.
+99 System/06 Runtime/Inhaltsänderungslog.md	runtime	not distributed	exclude	S	Historical local change data is generated instance state and must never enter a release.
+99 System/06 Runtime/_README.md	core	src/core/runtime	neutralize	S	Runtime-layer contract is portable after generated and instance-owned files are distinguished.
+99 System/Review.base	module	src/modules/review/views	neutralize	M	Obsidian Bases review view is optional and depends on the selected schema fields.
+99 System/_README.md	core	src/core	neutralize	M	Root system entry point is portable after source-vault identity and module inventory become neutral.

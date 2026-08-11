@@ -15,6 +15,7 @@ from pathlib import Path
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 CHECKER = REPOSITORY_ROOT / "scripts/check_portability.py"
+MATRIX_CHECKER = REPOSITORY_ROOT / "scripts/validate_portability_matrix.py"
 
 
 class PortabilityCheckTests(unittest.TestCase):
@@ -41,6 +42,15 @@ class PortabilityCheckTests(unittest.TestCase):
 
         self.assertEqual(result.returncode, 1)
         self.assertIn("source vault name", result.stdout)
+
+    def test_portability_matrix_is_well_formed(self) -> None:
+        result = subprocess.run(
+            [sys.executable, str(MATRIX_CHECKER)],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
 
 if __name__ == "__main__":
