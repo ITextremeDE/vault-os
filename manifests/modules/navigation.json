@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "navigation",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Obsidian Navigation/SKILL.md",
+        "99 System/04 Assets/Skills/Obsidian Navigation/_README.md"
+      ],
+      "source": "src/modules/navigation/skills/obsidian-navigation/SKILL.md",
+      "target": "04 Assets/Skills/Obsidian Navigation/SKILL.md",
+      "sha256": "ca0437c598aaaffabd4f1b6102cb3dd529dac66a090942685095d951685a32e0",
+      "installMode": "managed"
+    }
+  ]
+}

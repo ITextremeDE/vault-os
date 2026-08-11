@@ -18,6 +18,105 @@
       "target": "01 Schema/Models/para.json",
       "sha256": "f2a3f130fee9ee679e38042f4048aa3638decf395e794bff289fd2db1022bd83",
       "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/01 Schema/Ordnerstruktur.md"
+      ],
+      "source": "src/modules/para/schema/folder-layout.md",
+      "target": "01 Schema/Models/para-folders.md",
+      "sha256": "8343ebc0bbf347c1e1830e2a11be042dd7656e714c5a47ca5134a5e2567b6609",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Ablage.md"
+      ],
+      "source": "src/modules/para/workflows/filing.md",
+      "target": "03 Workflows/Filing.md",
+      "sha256": "051ddbdd7ef5ee3f17b0f6037eb3d37e06ad5538a7b8f8c5686595e79c3700e3",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Archivierung.md"
+      ],
+      "source": "src/modules/para/workflows/archiving.md",
+      "target": "03 Workflows/Archiving.md",
+      "sha256": "4c572bbe99272a80210dc871e4861c13d7ce9c796d9f46ad76e84d465429376f",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Bereiche.md"
+      ],
+      "source": "src/modules/para/workflows/areas.md",
+      "target": "03 Workflows/Areas.md",
+      "sha256": "faf78378566c0f8dcdb1a7a32fbd5da5a6e5e650e9530bce238d4a5a5d221169",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Projekte.md"
+      ],
+      "source": "src/modules/para/workflows/projects.md",
+      "target": "03 Workflows/Projects.md",
+      "sha256": "cba507dba2aaceb4c5d03d8c96d67f17c13d9851e7008ba3d65cb76f647726cb",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Bereich anlegen.md"
+      ],
+      "source": "src/modules/para/prompts/create-area.md",
+      "target": "04 Assets/Prompts/Create Area.md",
+      "sha256": "ff57ca3de2cff63d07c0dc8fa6c87d17e3665256b548e4cf3697c5084bdf06d8",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Projekt anlegen.md"
+      ],
+      "source": "src/modules/para/prompts/create-project.md",
+      "target": "04 Assets/Prompts/Create Project.md",
+      "sha256": "502594dccfab632c7290c14488c34c096a2bc87ad7692a37194efe9ee09c7bd2",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Bereich.md"
+      ],
+      "source": "src/modules/para/templates/area-dashboard.md",
+      "target": "04 Assets/Templates/PARA/Area Dashboard.md",
+      "sha256": "aa52b1ad90fc24429a7c2c1d2a2ecd3d2a5b81f36e5c3e3032ac205851358c17",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Bereich - Standard.md"
+      ],
+      "source": "src/modules/para/templates/area.md",
+      "target": "04 Assets/Templates/PARA/Area.md",
+      "sha256": "52f4d432258f695db6d06cb4c1651ca022c3231b61e41781f11ec49cdb1f46cc",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Projekt.md"
+      ],
+      "source": "src/modules/para/templates/project-dashboard.md",
+      "target": "04 Assets/Templates/PARA/Project Dashboard.md",
+      "sha256": "2ea2978a7d973577e7b7f0b7a9ebae09df03ac4b9d7aa3bbbaaec2c8d9a1850c",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Projekt - Standard.md"
+      ],
+      "source": "src/modules/para/templates/project.md",
+      "target": "04 Assets/Templates/PARA/Project.md",
+      "sha256": "dcbe042b209a86c463e40b1b424658ab77b7a72caec5d05f9b81542f13bbe213",
+      "installMode": "managed"
     }
   ]
 }

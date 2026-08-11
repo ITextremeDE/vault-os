@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "inbox",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/03 Workflows/Eingang.md"
+      ],
+      "source": "src/modules/inbox/workflows/inbox.md",
+      "target": "03 Workflows/Inbox.md",
+      "sha256": "82568baa3ce52041a0028abfd53353aa32b1bcb59c612b71178335a97d84ab81",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Import aus Eingang/SKILL.md",
+        "99 System/04 Assets/Skills/Import aus Eingang/_README.md"
+      ],
+      "source": "src/modules/inbox/skills/inbox-import/SKILL.md",
+      "target": "04 Assets/Skills/Inbox Import/SKILL.md",
+      "sha256": "1cc827ca93db0676ced9b27a8f0f7bc666767173fd50cfc04f98a8cdc7424096",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Import aus Eingang/references/import-regeln.md"
+      ],
+      "source": "src/modules/inbox/skills/inbox-import/references/import-rules.md",
+      "target": "04 Assets/Skills/Inbox Import/references/import-rules.md",
+      "sha256": "f5710cf9270b391c2659c818e0ac2a098f8e322ef5a995983b9f6b6d7b98d814",
+      "installMode": "managed"
+    }
+  ]
+}

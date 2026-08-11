@@ -7,10 +7,21 @@
   "targetRoot": "system",
   "files": [
     {
-      "origins": ["99 System/04 Assets/Skills/Suche in Codex/SKILL.md"],
+      "origins": [
+        "99 System/04 Assets/Skills/Suche in Codex/SKILL.md"
+      ],
       "source": "src/modules/search/skills/local-conversation-search/SKILL.md",
       "target": "04 Assets/Skills/Local Conversation Search/SKILL.md",
       "sha256": "b876890fe738ecf9d9105a1bbf071174ddb2f72f4be466bbe60728a45e5de14c",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Suche in Codex/_README.md"
+      ],
+      "source": "src/modules/search/skills/local-conversation-search/README.md",
+      "target": "04 Assets/Skills/Local Conversation Search/README.md",
+      "sha256": "3cdf067526a0560ed190aa4df605756d9b06bd992f33c7e3fdf60ea0bf4f4a2b",
       "installMode": "managed"
     }
   ]

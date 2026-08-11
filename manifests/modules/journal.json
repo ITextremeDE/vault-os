@@ -20,10 +20,57 @@
       "installMode": "managed"
     },
     {
-      "origins": ["99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md"],
+      "origins": [
+        "99 System/03 Workflows/Journal.md"
+      ],
+      "source": "src/modules/journal/workflows/journal.md",
+      "target": "03 Workflows/Journal.md",
+      "sha256": "377afb615f6c20a25e1936bbed7ab62e50ae0f292541918edae7e7e21690be42",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Journal aufbereiten.md"
+      ],
+      "source": "src/modules/journal/prompts/prepare-journal.md",
+      "target": "04 Assets/Prompts/Prepare Journal.md",
+      "sha256": "205ba237d7777f6d20cdf3cebe92059672685d4442aa5a2c9d4eb35655782008",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Journal-Notiz anlegen.md"
+      ],
+      "source": "src/modules/journal/prompts/create-journal-note.md",
+      "target": "04 Assets/Prompts/Create Journal Note.md",
+      "sha256": "374159334b452805c6386e0bf6eb118960e6c2b464933ee3fccb6053fbc6c4a6",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Journal - Tägliche Notiz.md"
+      ],
       "source": "src/modules/journal/templates/daily-note.md",
       "target": "04 Assets/Templates/Journal/Daily Note.md",
       "sha256": "452ab8cc6c087ea1d0fcb1d24af945a256b84cd69e78d632c169a1409145d542",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Journal - Wöchentliche Notiz.md"
+      ],
+      "source": "src/modules/journal/templates/weekly-note.md",
+      "target": "04 Assets/Templates/Journal/Weekly Note.md",
+      "sha256": "eed1a455dadf121582aee448711ceac43392be5831b96c1a75c9bdd219b43f72",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Journal - Jährliche Notiz.md"
+      ],
+      "source": "src/modules/journal/templates/yearly-note.md",
+      "target": "04 Assets/Templates/Journal/Yearly Note.md",
+      "sha256": "3c810fde5f7cfe46994201ce5117b53380ceb3e7a74a2908f80c790da45f5878",
       "installMode": "managed"
     }
   ]

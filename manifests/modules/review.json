@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "review",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/03 Workflows/Inhaltsreview.md"
+      ],
+      "source": "src/modules/review/workflows/content-review.md",
+      "target": "03 Workflows/Content Review.md",
+      "sha256": "ae20ec009fab127b28a37adbc9ad9cac04e0117947d070e710922c415d2e7757",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/Review.base"
+      ],
+      "source": "src/modules/review/views/review.base",
+      "target": "Review.base",
+      "sha256": "abcb059b3c748b426c043c793bdf7d649d465e11f4b077d6eeb82ac4ac6162ae",
+      "installMode": "managed"
+    }
+  ]
+}

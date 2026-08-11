@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "agents",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/_README.md"
+      ],
+      "source": "src/modules/agents/prompts/README.md",
+      "target": "04 Assets/Prompts/README.md",
+      "sha256": "7a2d297892ee6da02715cb1d842599ced453f9ccaa629a03ab9e2668db0e8b6c",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/_README.md"
+      ],
+      "source": "src/modules/agents/skills/README.md",
+      "target": "04 Assets/Skills/README.md",
+      "sha256": "738aee380e5f92baf21d5784d1fe3d5be1dad38668613c11e648b1f62f514ad6",
+      "installMode": "managed"
+    }
+  ]
+}

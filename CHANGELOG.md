@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Versioned manifests for managed core files, optional modules, instance seeds, and runtime artifacts.
 - Manifest validation for ownership rules, path safety, checksums, source coverage, and extraction lineage.
 - Complete domain split of the 13 mixed source files.
+- Portable extraction of all 88 sources classified as optional modules.
+- Neutral instance-owned contact relationship and relevance register seeds.
+- Optional audit, governance, inbox, navigation, publishing, review, agent, and template modules.
+- Manifest tests that require lineage coverage for pure module and instance sources as well as split sources.
 - Machine-readable schema models for core, PARA, knowledge, contacts, and journal content.
 - Neutral Git commit and local conversation-search skills with instance-owned policy.
 - Configuration-driven, read-only vault validation without embedded source-vault assumptions.

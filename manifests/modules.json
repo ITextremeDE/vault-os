@@ -4,11 +4,75 @@
   "kind": "module-catalog",
   "owner": "managed",
   "modules": [
-    {"id": "contacts", "manifest": "manifests/modules/contacts.json", "default": false},
-    {"id": "git", "manifest": "manifests/modules/git.json", "default": false},
-    {"id": "journal", "manifest": "manifests/modules/journal.json", "default": false},
-    {"id": "knowledge", "manifest": "manifests/modules/knowledge.json", "default": false},
-    {"id": "para", "manifest": "manifests/modules/para.json", "default": false},
-    {"id": "search", "manifest": "manifests/modules/search.json", "default": false}
+    {
+      "id": "agents",
+      "manifest": "manifests/modules/agents.json",
+      "default": false
+    },
+    {
+      "id": "audit",
+      "manifest": "manifests/modules/audit.json",
+      "default": false
+    },
+    {
+      "id": "contacts",
+      "manifest": "manifests/modules/contacts.json",
+      "default": false
+    },
+    {
+      "id": "git",
+      "manifest": "manifests/modules/git.json",
+      "default": false
+    },
+    {
+      "id": "governance",
+      "manifest": "manifests/modules/governance.json",
+      "default": false
+    },
+    {
+      "id": "inbox",
+      "manifest": "manifests/modules/inbox.json",
+      "default": false
+    },
+    {
+      "id": "journal",
+      "manifest": "manifests/modules/journal.json",
+      "default": false
+    },
+    {
+      "id": "knowledge",
+      "manifest": "manifests/modules/knowledge.json",
+      "default": false
+    },
+    {
+      "id": "navigation",
+      "manifest": "manifests/modules/navigation.json",
+      "default": false
+    },
+    {
+      "id": "para",
+      "manifest": "manifests/modules/para.json",
+      "default": false
+    },
+    {
+      "id": "publishing",
+      "manifest": "manifests/modules/publishing.json",
+      "default": false
+    },
+    {
+      "id": "review",
+      "manifest": "manifests/modules/review.json",
+      "default": false
+    },
+    {
+      "id": "search",
+      "manifest": "manifests/modules/search.json",
+      "default": false
+    },
+    {
+      "id": "templates",
+      "manifest": "manifests/modules/templates.json",
+      "default": false
+    }
   ]
 }

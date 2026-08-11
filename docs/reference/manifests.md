@@ -58,5 +58,6 @@ python3 scripts/validate_manifests.py
 
 The validator checks manifest structure, ownership rules, path safety, source
 existence, checksums, duplicates, references, exact source-tree coverage, and
-lineage from the portability matrix. Every `split` source must have artifacts
-in exactly the core, module, and instance domains assigned by the matrix.
+lineage from the portability matrix. Every core, module, instance, and split
+source must have artifacts in exactly the ownership domains assigned by the
+matrix. Runtime-only source history must not leak into release artifacts.

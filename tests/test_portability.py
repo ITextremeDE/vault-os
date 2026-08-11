@@ -126,7 +126,53 @@ class PortabilityCheckTests(unittest.TestCase):
             result = self.run_manifest_checker(root)
 
         self.assertEqual(result.returncode, 1)
-        self.assertIn("split coverage", result.stdout)
+        self.assertIn("origin coverage", result.stdout)
+
+    def test_manifest_requires_every_pure_module_origin(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/modules/review.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            workflow = next(
+                entry
+                for entry in manifest["files"]
+                if entry["source"]
+                == "src/modules/review/workflows/content-review.md"
+            )
+            workflow["origins"] = ["99 System/Review.base"]
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("origin coverage", result.stdout)
+
+    def test_manifest_requires_every_pure_instance_origin(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/instance.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            relationship = next(
+                entry
+                for entry in manifest["files"]
+                if entry["source"]
+                == "instance-template/modules/contacts/registers/relationships.yaml"
+            )
+            relationship.pop("origins")
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_manifest_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("origin coverage", result.stdout)
 
 
 if __name__ == "__main__":

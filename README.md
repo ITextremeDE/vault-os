@@ -65,14 +65,15 @@ package contract.
 
 ## Current implementation
 
-- All 15 pure core sources and all portions of the 13 mixed sources have been
-  extracted into their assigned ownership domains.
-- The current package contains 25 core files, six optional modules, nine
-  instance seeds, and one declared runtime artifact.
+- All 15 pure core sources, all 88 pure module sources, both pure instance
+  sources, and all portions of the 13 mixed sources have been extracted into
+  their assigned ownership domains.
+- The current package contains 25 core files, 78 files in 14 optional modules,
+  11 instance seeds, and one declared runtime artifact.
 - The validator is vault-neutral and loads module models, field mappings, and
   register values from installed and instance-owned configuration.
-- The remaining source extraction covers files classified as pure modules or
-  instance data.
+- The sole runtime-history source remains deliberately excluded from release
+  content; runtime state is generated and owned by each installation.
 - Installation, update, diff, doctor, and release-lock behavior are not yet
   implemented.
 

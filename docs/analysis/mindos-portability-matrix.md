@@ -83,23 +83,23 @@ from Vault-OS releases.
 
 ## Implementation status
 
-The 15 pure core sources and all target-domain portions of the 13 mixed sources
-have been extracted. Manifest validation now proves their lineage and domain
-coverage. The remaining extraction scope consists of the files classified as
-pure modules or instance data.
+All distributable source classifications have been implemented: 15 pure core
+sources, 88 pure module sources, two instance seeds, and every target-domain
+portion of the 13 mixed sources. Manifest validation proves exact lineage and
+domain coverage. The sole runtime-history source remains deliberately excluded
+from release content.
 
 ## Extraction order
 
-1. Define manifests for core, modules, instance seeds, and generated runtime
-   files.
-2. Extract the 15 core files and make their contracts vault-name independent.
-3. Split the 13 mixed files before copying their resulting components.
-4. Extract optional modules in dependency order: schemas, PARA and knowledge,
-   journal and contacts, then agent and audit tooling.
-5. Add neutral instance seeds without update ownership.
-6. Implement install, update, diff, and doctor behavior against the manifests.
-7. Validate a clean installation and an update of MindOS without modifying
-   instance-owned or locally changed files.
+Steps 1 through 5 are complete: manifests, core extraction, mixed-source
+separation, optional modules, and instance seeds now form one validated package.
+
+The next delivery sequence is:
+
+1. Implement install, update, diff, and doctor behavior against the manifests.
+2. Validate a clean installation.
+3. Validate an update of the source vault without modifying instance-owned or
+   locally changed files.
 
 ## Validation
 

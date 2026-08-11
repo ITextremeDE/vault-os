@@ -18,6 +18,51 @@
       "target": "01 Schema/Models/contacts.json",
       "sha256": "be0c9174e373f78608897fb435617362bcaeb6c38c9c394807409c294787eb81",
       "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Kontakte.md"
+      ],
+      "source": "src/modules/contacts/workflows/contacts.md",
+      "target": "03 Workflows/Contacts.md",
+      "sha256": "35f728de8a749695c41f310c3ea2e68a0edbf83b85aa395b5742c259f01dd786",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Kontakt anlegen.md"
+      ],
+      "source": "src/modules/contacts/prompts/create-contact.md",
+      "target": "04 Assets/Prompts/Create Contact.md",
+      "sha256": "ec1e5c73c4350e184fa7d839a76766920367dc8caadf1d00f9461ea352ad028d",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Einzelkontakt.md"
+      ],
+      "source": "src/modules/contacts/templates/person.md",
+      "target": "04 Assets/Templates/Contacts/Person.md",
+      "sha256": "c2de7b86d0fb572594718097bc61f84648f5eab2b152da4614291bc50234229b",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Ansprechpartner.md"
+      ],
+      "source": "src/modules/contacts/templates/representative.md",
+      "target": "04 Assets/Templates/Contacts/Representative.md",
+      "sha256": "499775594aa9ef974e93aec85324b43bebcb4c66b7850fc8acee3baa8bc51b1a",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Organisation.md"
+      ],
+      "source": "src/modules/contacts/templates/organization.md",
+      "target": "04 Assets/Templates/Contacts/Organization.md",
+      "sha256": "64db11a14251fc97e78ef1118008da7ee4b6542f518eb8a68f25c66f2ff1cbf5",
+      "installMode": "managed"
     }
   ]
 }

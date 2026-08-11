@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "publishing",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Bereich - Artikel.md"
+      ],
+      "source": "src/modules/publishing/templates/article.md",
+      "target": "04 Assets/Templates/Publishing/Article.md",
+      "sha256": "8d469d1f3114ac9abf2fa0f2d320c93af3c95692c93f85904396fa9fb515dac2",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Bereich - Video.md"
+      ],
+      "source": "src/modules/publishing/templates/video.md",
+      "target": "04 Assets/Templates/Publishing/Video.md",
+      "sha256": "1e785dabc3096d511582b620197bd346268cc0f4b13fda79b1ef0a1f75bd8407",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Bereich - Webseite.md"
+      ],
+      "source": "src/modules/publishing/templates/website.md",
+      "target": "04 Assets/Templates/Publishing/Website.md",
+      "sha256": "2033cd11f0792e3c13a46fb97477f8f49ec6aaaf131d8e2fb482e795f4d33972",
+      "installMode": "managed"
+    }
+  ]
+}

@@ -18,6 +18,208 @@
       "target": "01 Schema/Models/knowledge.json",
       "sha256": "2538ad90113a35b7f08e0afed1a423687f5e54d16034af65c7bcab6661e2d0f1",
       "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Gesprächsnotizen.md"
+      ],
+      "source": "src/modules/knowledge/workflows/conversation-notes.md",
+      "target": "03 Workflows/Conversation Notes.md",
+      "sha256": "359e3af17499b888671efcf4a1ccd008965a1673fbd4d5e07e60fe1fde742561",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Arbeitsnotizen.md"
+      ],
+      "source": "src/modules/knowledge/workflows/working-notes.md",
+      "target": "03 Workflows/Working Notes.md",
+      "sha256": "abdab8b76e192d5a4f6029d315ad3714ca19ee194b1515de5f7c9abb30dc3e35",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Erkenntnisse.md"
+      ],
+      "source": "src/modules/knowledge/workflows/insights.md",
+      "target": "03 Workflows/Insights.md",
+      "sha256": "e0900acd62489473132146b5ca49ec49b56a243d473a34534fa8f243e63281fe",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Wissen.md"
+      ],
+      "source": "src/modules/knowledge/workflows/knowledge.md",
+      "target": "03 Workflows/Knowledge.md",
+      "sha256": "fcbfdb3f4b0d2e7cc82ae8cb36f444f790c9ee7a62dbab6b5da590c14ef6671c",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Wissenskreislauf.md"
+      ],
+      "source": "src/modules/knowledge/workflows/knowledge-cycle.md",
+      "target": "03 Workflows/Knowledge Cycle.md",
+      "sha256": "3c80c92604b44146856d68cf9c0738ba45d47ad3758c6d7fe0558103b84a6a47",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Gesprächsnotiz anlegen.md"
+      ],
+      "source": "src/modules/knowledge/prompts/create-conversation-note.md",
+      "target": "04 Assets/Prompts/Create Conversation Note.md",
+      "sha256": "ecf1ed71cb5b4f422002735915e796d0d355e9193c95bc8afac8b45846f366f9",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Arbeitsnotiz anlegen.md"
+      ],
+      "source": "src/modules/knowledge/prompts/create-working-note.md",
+      "target": "04 Assets/Prompts/Create Working Note.md",
+      "sha256": "a5d1d7a68d16f322739ae00228aeb96a1d6efc418dbb40e7ee406a420a1149e9",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Erkenntnis anlegen.md"
+      ],
+      "source": "src/modules/knowledge/prompts/create-insight.md",
+      "target": "04 Assets/Prompts/Create Insight.md",
+      "sha256": "00ed65d77aefd6ae389075167201038a8b675802a965f71890320c355a2dc919",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Ressource anlegen.md"
+      ],
+      "source": "src/modules/knowledge/prompts/create-resource.md",
+      "target": "04 Assets/Prompts/Create Resource.md",
+      "sha256": "e60407b728cd01fe0d9dc04281869cfd96b534629fbe414640508c52d0d55e2a",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Wissenseintrag anlegen.md"
+      ],
+      "source": "src/modules/knowledge/prompts/create-knowledge-note.md",
+      "target": "04 Assets/Prompts/Create Knowledge Note.md",
+      "sha256": "cc9dad776be93b655313608946a09330657bfe84d2e09d08caa892ea46e38889",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Gesprächsnotiz.md"
+      ],
+      "source": "src/modules/knowledge/templates/conversation-note.md",
+      "target": "04 Assets/Templates/Knowledge/Conversation Note.md",
+      "sha256": "b85a638c0873d6c697f1e0fd1cbad672ebeb281cf572e731751eca14c43715a2",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Arbeitsnotiz.md"
+      ],
+      "source": "src/modules/knowledge/templates/working-note.md",
+      "target": "04 Assets/Templates/Knowledge/Working Note.md",
+      "sha256": "4c416a524ca4fea443e26506522ff5bc3a4d837fe8e2ff8b1870aa6d430d42c8",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Erkenntnis.md"
+      ],
+      "source": "src/modules/knowledge/templates/insight.md",
+      "target": "04 Assets/Templates/Knowledge/Insight.md",
+      "sha256": "e10d2013e5514678af5f40f548ee346d3b4823e639040421f61ea5cc1c6d5b43",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Ressource.md"
+      ],
+      "source": "src/modules/knowledge/templates/resource.md",
+      "target": "04 Assets/Templates/Knowledge/Resource.md",
+      "sha256": "a3c1bc6d865cfe173ba7aee7181712173f94f791de2d0fbea0829cffacdd9435",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Ressource - Quelle.md"
+      ],
+      "source": "src/modules/knowledge/templates/source.md",
+      "target": "04 Assets/Templates/Knowledge/Source.md",
+      "sha256": "cc10b7e3bd6fbebc7e9733e080b6c6c68f17e54c4d49589ade4495a2e03fde7d",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Wissen.md"
+      ],
+      "source": "src/modules/knowledge/templates/knowledge.md",
+      "target": "04 Assets/Templates/Knowledge/Knowledge.md",
+      "sha256": "4d52802c48bdf7e33f2096bd7ecedde5cc81e94b76c2c4873097055d5ed58d29",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Wissen - Rezept.md"
+      ],
+      "source": "src/modules/knowledge/templates/recipe.md",
+      "target": "04 Assets/Templates/Knowledge/Recipe.md",
+      "sha256": "cc9545bcea66a1b12178e50c30ba185f06a2344cca2ac4cfef7fe2ef71c93f9d",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Wissen - Überblick.md"
+      ],
+      "source": "src/modules/knowledge/templates/overview.md",
+      "target": "04 Assets/Templates/Knowledge/Overview.md",
+      "sha256": "37a8dc1d071be399d468a71886183088e3782bce9160c8f9ec7093db720c7db9",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Gesprächsnotiz aus Gespräch/SKILL.md",
+        "99 System/04 Assets/Skills/Gesprächsnotiz aus Gespräch/_README.md"
+      ],
+      "source": "src/modules/knowledge/skills/conversation-capture/SKILL.md",
+      "target": "04 Assets/Skills/Conversation Capture/SKILL.md",
+      "sha256": "cc91182fe87228cb79d67ea1c56f3069ab198c9b97e3aa2074832e883c636858",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Arbeitsnotiz aus Gespräch/SKILL.md",
+        "99 System/04 Assets/Skills/Arbeitsnotiz aus Gespräch/_README.md"
+      ],
+      "source": "src/modules/knowledge/skills/conversation-to-working-note/SKILL.md",
+      "target": "04 Assets/Skills/Conversation to Working Note/SKILL.md",
+      "sha256": "07d4b6c45e670066471ee0053c5be07f86c0e8f833289127a69104fc553e4c81",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Erkenntnis aus Arbeitsnotiz/SKILL.md",
+        "99 System/04 Assets/Skills/Erkenntnis aus Arbeitsnotiz/_README.md"
+      ],
+      "source": "src/modules/knowledge/skills/working-note-to-insight/SKILL.md",
+      "target": "04 Assets/Skills/Working Note to Insight/SKILL.md",
+      "sha256": "850f3effd5cea361ec4a25d24c7f5b12e93e2c290e2183d8f47e156f49e6ee77",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Kette Wissensverarbeitung/SKILL.md",
+        "99 System/04 Assets/Skills/Kette Wissensverarbeitung/_README.md"
+      ],
+      "source": "src/modules/knowledge/skills/knowledge-processing-chain/SKILL.md",
+      "target": "04 Assets/Skills/Knowledge Processing Chain/SKILL.md",
+      "sha256": "8ca9a83acc07412ac1925e74ed3ec40adfd72d7fd128aaee7359a99d21403709",
+      "installMode": "managed"
     }
   ]
 }

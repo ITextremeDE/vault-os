@@ -318,7 +318,7 @@ def validate_runtime(value: dict[str, Any]) -> int:
     return len(files)
 
 
-def validate_split_coverage(
+def validate_origin_coverage(
     matrix: dict[str, dict[str, str]],
     core_origins: set[str],
     module_origins: set[str],
@@ -335,16 +335,32 @@ def validate_split_coverage(
         if unknown:
             raise ValueError(f"{name}: origins absent from portability matrix: " + ", ".join(unknown))
 
+    direct_domains = {
+        "core": "core",
+        "module": "modules",
+        "instance": "instance",
+    }
     for path, row in matrix.items():
-        if row["decision"] != "split":
-            continue
+        decision = row["decision"]
+        expected_domains: set[str] = set()
+        if decision in direct_domains:
+            expected_domains.add(direct_domains[decision])
+        elif decision == "split":
+            expected_domains = {
+                name
+                for name, (target_marker, _) in domains.items()
+                if target_marker in row["target"]
+            }
+        elif decision != "runtime":
+            raise ValueError(f"origin coverage: {path} has unknown decision {decision!r}")
+
         for name, (target_marker, origins) in domains.items():
-            expected = target_marker in row["target"]
+            expected = name in expected_domains
             present = path in origins
             if expected and not present:
-                raise ValueError(f"split coverage: {path} is missing its {name} artifact")
+                raise ValueError(f"origin coverage: {path} is missing its {name} artifact")
             if present and not expected:
-                raise ValueError(f"split coverage: {path} has an unexpected {name} artifact")
+                raise ValueError(f"origin coverage: {path} has an unexpected {name} artifact")
 
 
 def validate_repository(root: Path) -> Counts:
@@ -381,7 +397,7 @@ def validate_repository(root: Path) -> Counts:
             + ", ".join(duplicate_managed_targets)
         )
     instance_count, instance_origins = validate_instance(loaded["instance"], root)
-    validate_split_coverage(
+    validate_origin_coverage(
         matrix, core_origins, module_origins, instance_origins
     )
     return Counts(
@@ -413,7 +429,7 @@ def main() -> int:
         f"{counts.module_files} files in {counts.modules} modules, "
         f"{counts.instance} instance seeds, "
         f"{counts.runtime} runtime artifact, "
-        "all split origins covered."
+        "all classified origins covered."
     )
     return 0
 

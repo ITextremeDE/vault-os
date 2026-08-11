@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "governance",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Bausteine/Abschlussblock.md",
+        "99 System/04 Assets/Bausteine/_README.md"
+      ],
+      "source": "src/modules/governance/assets/closing-block.md",
+      "target": "04 Assets/Blocks/Closing Block.md",
+      "sha256": "091f38adf478b73ad257238f7eb2984f0d3135e9e21a4fb2e548122ebd30ab9e",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Prompts/Notiz vereinheitlichen.md"
+      ],
+      "source": "src/modules/governance/prompts/normalize-note.md",
+      "target": "04 Assets/Prompts/Normalize Note.md",
+      "sha256": "a69928b7c4f51c276cb760648e386ca83612131ff9273fbe7623068ddd9fe4d5",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/03 Workflows/Inhaltsänderungslog.md"
+      ],
+      "source": "src/modules/governance/workflows/content-change-log.md",
+      "target": "03 Workflows/Content Change Log.md",
+      "sha256": "e608317f1dd7439edc3c9fe47353528c6e4a8bf10edc7bfadbb577823792fa21",
+      "installMode": "managed"
+    }
+  ]
+}

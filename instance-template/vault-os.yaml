@@ -6,5 +6,16 @@ vault:
 
 paths:
   system: 99 System
+  inbox: 00 Inbox
+  projects: 01 Projects
+  areas: 02 Areas
+  resources: 03 Resources
+  archive: 04 Archive
+  journal: 05 Journal
+  contacts: 03 Resources/Contacts
+  conversationNotes: 03 Resources/Conversation Notes
+  workingNotes: 03 Resources/Working Notes
+  insights: 03 Resources/Insights
+  knowledge: 03 Resources/Knowledge
 
 modules: []

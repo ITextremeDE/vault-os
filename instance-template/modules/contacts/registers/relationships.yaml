@@ -1,0 +1,18 @@
+schema: 1
+register: relationships
+values:
+  - private
+  - family
+  - friendship
+  - partnership
+  - former-partnership
+  - customer
+  - prospect
+  - business-contact
+  - partner
+  - service-provider
+  - network
+rules:
+  multiple: true
+  freeText: false
+  semantics: relationship-not-role

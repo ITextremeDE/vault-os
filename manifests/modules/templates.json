@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "templates",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/_README.md"
+      ],
+      "source": "src/modules/templates/README.md",
+      "target": "04 Assets/Templates/README.md",
+      "sha256": "9b34e5112383a47d7e0690964c384adf11b2ddfbed963d0668ddf2296d776cc1",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Datei aus Vorlage/SKILL.md",
+        "99 System/04 Assets/Skills/Datei aus Vorlage/_README.md"
+      ],
+      "source": "src/modules/templates/skills/create-from-template/SKILL.md",
+      "target": "04 Assets/Skills/Create From Template/SKILL.md",
+      "sha256": "a3186d1b2c2f60b407cc02190198f893f5da4a07804aa756c000657a5dfbe758",
+      "installMode": "managed"
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "id": "audit",
+  "kind": "module",
+  "owner": "managed",
+  "required": false,
+  "targetRoot": "system",
+  "files": [
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Audit Auslöser/SKILL.md",
+        "99 System/04 Assets/Skills/Audit Auslöser/_README.md"
+      ],
+      "source": "src/modules/audit/skills/audit-router/SKILL.md",
+      "target": "04 Assets/Skills/Audit Router/SKILL.md",
+      "sha256": "7d8bc62a82525df025356be0a325a048f6bd0172ce4e46a3e97b96925b76ab83",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Audit Auslöser/references/_README.md",
+        "99 System/04 Assets/Skills/Audit Auslöser/references/ausloeser-regeln.md"
+      ],
+      "source": "src/modules/audit/skills/audit-router/references/trigger-rules.md",
+      "target": "04 Assets/Skills/Audit Router/references/trigger-rules.md",
+      "sha256": "aac1f118d2028b3019ca353fb073d9cdcbcb8839d2a5658202535d7f806a0cf6",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Fortlaufendes Audit/SKILL.md",
+        "99 System/04 Assets/Skills/Fortlaufendes Audit/_README.md"
+      ],
+      "source": "src/modules/audit/skills/continuous-audit/SKILL.md",
+      "target": "04 Assets/Skills/Continuous Audit/SKILL.md",
+      "sha256": "5524d291fa8ce7c7c6341d61d9d19c3fbecba5b001009e6a6a805160359b90b3",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Inhalts Audit/SKILL.md",
+        "99 System/04 Assets/Skills/Inhalts Audit/_README.md"
+      ],
+      "source": "src/modules/audit/skills/content-audit/SKILL.md",
+      "target": "04 Assets/Skills/Content Audit/SKILL.md",
+      "sha256": "af1f0422c1e9b0013a39c0cdd440d975a66feab06f81a6543edad8db9d6f1b17",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Inhalts Korrektur/SKILL.md",
+        "99 System/04 Assets/Skills/Inhalts Korrektur/_README.md"
+      ],
+      "source": "src/modules/audit/skills/content-correction/SKILL.md",
+      "target": "04 Assets/Skills/Content Correction/SKILL.md",
+      "sha256": "49efc6194801828e9dcc8e4d25fdd1a7aa0913966d3d0d438931d19988feaa76",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Vault-OS Audit/SKILL.md",
+        "99 System/04 Assets/Skills/Vault-OS Audit/_README.md"
+      ],
+      "source": "src/modules/audit/skills/os-audit/SKILL.md",
+      "target": "04 Assets/Skills/OS Audit/SKILL.md",
+      "sha256": "b8bdc23e56b08bd637cc6da11c1dfddc0daf69931599f01ed307c0116e55e613",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Vault-OS Audit/references/_README.md",
+        "99 System/04 Assets/Skills/Vault-OS Audit/references/pruefkriterien.md"
+      ],
+      "source": "src/modules/audit/skills/os-audit/references/criteria.md",
+      "target": "04 Assets/Skills/OS Audit/references/criteria.md",
+      "sha256": "cc12eaab7d84e0d9a93c2c5f79b35598e2139075b9a7fcf625c1ca9a6c760377",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Vault-OS Korrektur/SKILL.md",
+        "99 System/04 Assets/Skills/Vault-OS Korrektur/_README.md"
+      ],
+      "source": "src/modules/audit/skills/os-correction/SKILL.md",
+      "target": "04 Assets/Skills/OS Correction/SKILL.md",
+      "sha256": "88f2608ba6616710223c67f7d3d5826f60359b4db98257c5ba05dd8e63b99f2c",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Vault Audit/SKILL.md",
+        "99 System/04 Assets/Skills/Vault Audit/_README.md"
+      ],
+      "source": "src/modules/audit/skills/vault-audit/SKILL.md",
+      "target": "04 Assets/Skills/Vault Audit/SKILL.md",
+      "sha256": "9727d26084f507b31d7b5762083f26cc28dca69bec7f53510f469e7eee61995a",
+      "installMode": "managed"
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Skills/Vault Korrektur/SKILL.md",
+        "99 System/04 Assets/Skills/Vault Korrektur/_README.md"
+      ],
+      "source": "src/modules/audit/skills/vault-correction/SKILL.md",
+      "target": "04 Assets/Skills/Vault Correction/SKILL.md",
+      "sha256": "df078c530ed6b5209948072c41edbbfa7f643caeafdb3fbf6aa2c5660cc20ca7",
+      "installMode": "managed"
+    }
+  ]
+}

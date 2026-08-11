@@ -1,0 +1,10 @@
+schema: 1
+register: relevance
+values:
+  - high
+  - medium
+  - low
+rules:
+  multiple: false
+  freeText: false
+  semantics: current-system-importance
