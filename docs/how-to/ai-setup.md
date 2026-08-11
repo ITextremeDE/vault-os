@@ -189,6 +189,37 @@ QMD activation is persistent in the instance integration state. Version `0.1`
 has no automatic QMD de-initialize command; restoring the pre-activation backup
 is the safe reversal path.
 
+### Use an externally managed QMD runtime
+
+An existing device-local QMD service or client plugin can remain externally
+managed. Do not also pass `agent-init --qmd`; that would create a second
+project-local index and competing MCP configuration.
+
+Describe only the portable contract in the synchronized
+`Vault-OS/integrations/search.yaml` file:
+
+```yaml
+indexes:
+  - id: vault-qmd
+    engine: qmd
+    management: external
+    collection: vault
+    capabilities:
+      - lexical
+      - semantic
+      - mcp
+    deviceLocal: true
+    providerBindings:
+      - codex
+    refreshPolicy: Refresh before retrieval when the configured freshness limit is exceeded.
+```
+
+Do not put absolute paths, model files, caches, credentials, or machine-specific
+commands in the synchronized record. Configure and verify those on each device
+with the external runtime's own status and refresh commands. In this mode,
+`doctor --ai` intentionally reports the Vault-OS-managed QMD integration as
+disabled; that is not a claim about the external runtime.
+
 ## Provider-neutral extension
 
 Additional local clients can implement the

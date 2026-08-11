@@ -77,6 +77,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rich template structures for all 21 contact, journal, knowledge, PARA, and
   publishing purposes, including portable Dataview queries and recurring
   context sections recovered from the original MindOS design.
+- A portable index contract for documenting externally managed search runtimes
+  without synchronizing device-local commands, models, caches, or indexes.
 
 ### Changed
 
@@ -112,6 +114,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   managed artifacts and strengthened instance semantics.
 - Advanced the development package to `0.1.0-dev.12` for localized, structurally
   complete managed templates.
+- Advanced the development package to `0.1.0-dev.13` for explicit externally
+  managed search-index contracts.
 
 ### Fixed
 

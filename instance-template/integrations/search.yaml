@@ -2,6 +2,18 @@ schema: 1
 
 sources: []
 
+indexes: []
+
+requiredIndexContractFields:
+  - id
+  - engine
+  - management
+  - collection
+  - capabilities
+  - deviceLocal
+  - providerBindings
+  - refreshPolicy
+
 searchOrder:
   - indexes
   - metadata

@@ -154,6 +154,11 @@ Existing unrelated MCP configuration and a semantically identical unowned
 configuration stops initialization. The command detects but does not install
 QMD, download models, update the index, or generate embeddings.
 
+An externally managed QMD runtime is not activated with `--qmd`. Record its
+portable contract in `Vault-OS/integrations/search.yaml` and keep its commands,
+client registration, models, and index device-local. `doctor --ai` validates
+only the project-local integration owned by this command.
+
 ## Safety boundaries
 
 - All package sources are checked against their manifest checksums.

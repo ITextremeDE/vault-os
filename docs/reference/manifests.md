@@ -83,6 +83,15 @@ configured suffix-derived base.
 activation, and checksums of generated provider artifacts. It is not an
 instance seed and is not synchronized as canonical instance configuration.
 
+The instance-owned `Vault-OS/integrations/search.yaml` may describe externally
+managed search indexes without transferring their device-local runtime. Every
+index record declares `id`, `engine`, `management`, `collection`,
+`capabilities`, `deviceLocal`, `providerBindings`, and `refreshPolicy`.
+`management: external` records an integration choice only; Vault-OS does not
+create, configure, refresh, or diagnose that external index. Absolute paths,
+caches, models, credentials, and client-specific commands do not belong in the
+synchronized contract.
+
 ## Bootstrap artifacts
 
 `bootstrap` renders profile, README, dashboard, and optional PARA overview notes

@@ -36,6 +36,11 @@ vault installer.
 - QMD integration is project-local, optional, credential-free, and uses the
   external `qmd mcp` command. Vault-OS neither installs QMD nor creates models
   or embeddings.
+- An already existing externally managed search runtime remains outside the
+  agent lifecycle. The synchronized instance may describe its portable
+  contract in `Vault-OS/integrations/search.yaml`, while commands, indexes,
+  models, and client registration stay device-local. Such a runtime must not be
+  enabled a second time with `agent-init --qmd`.
 - Provider configuration never modifies `.obsidian` or global agent settings.
 - A further local client is integrated by implementing and registering another
   adapter. The shared lifecycle, QMD index generator, CLI choices, and doctor
@@ -54,5 +59,7 @@ vault installer.
 - Project-scoped MCP configuration still requires client trust and an installed
   QMD executable. Model behavior and user permissions remain client concerns;
   adapter presence alone is not a security boundary.
+- `doctor --ai` validates only QMD managed by the Vault-OS agent lifecycle.
+  Externally managed search is verified with its own device-local diagnostics.
 - Browser-only ChatGPT and claude.ai sessions do not receive local vault access
   from these files.

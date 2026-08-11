@@ -45,7 +45,7 @@
       ],
       "source": "instance-template/integrations/search.yaml",
       "target": "Vault-OS/integrations/search.yaml",
-      "sha256": "9d6ad3be5b8889b453773ea4c6e120cbefcdb561f7af11d323a8b93796e2bd95",
+      "sha256": "3cc321d865bbf3e0b4f6d1d4add598e851fc61cd3b80c90c0daf223179bddfcd",
       "installMode": "create-only"
     },
     {
