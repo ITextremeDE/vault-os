@@ -12,20 +12,30 @@ created:
 
 # {{title}}
 
-## Core idea
+## 🧩 Core idea
 
-## Description
+## 📖 Description
 
-## Significance
+## 🎯 Significance
 
-## Application
+- Why does this matter?
+- In which context does it apply?
 
-## Examples
+## ⚙️ Application
 
-## Sources
+- How can this be used in practice?
+- When should it come to mind?
 
-## References
+## 💡 Examples
 
-## Tasks
+## 🚀 Next step
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

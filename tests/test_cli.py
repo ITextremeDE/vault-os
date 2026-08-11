@@ -68,7 +68,7 @@ class VaultOSCliTests(unittest.TestCase):
         self.copy_package(destination)
         repository_path = destination / "manifests/repository.json"
         repository = json.loads(repository_path.read_text(encoding="utf-8"))
-        repository["version"] = "0.1.0-dev.12"
+        repository["version"] = "0.1.0-dev.13"
         repository_path.write_text(
             json.dumps(repository, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -401,6 +401,7 @@ class VaultOSCliTests(unittest.TestCase):
             difference = self.run_cli(REPOSITORY_ROOT, "diff", vault)
             self.assertEqual(difference.returncode, 0, difference.stdout + difference.stderr)
             self.assertEqual(json.loads(difference.stdout)["changes"], [])
+            self.assertEqual(json.loads(difference.stdout)["changes"], [])
             validator = vault / "99 System/05 Automation/Validators/validate_vault.py"
             validation = subprocess.run(
                 [sys.executable, str(validator), str(vault), "--json"],
@@ -616,6 +617,7 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertIn('typ: "Einzelkontakt"', person)
             self.assertIn('zustand: "Aktiv"', person)
             self.assertIn("beziehung: []", person)
+            self.assertIn("## 🤝 Beziehung", person)
             self.assertNotIn("{{fields.", person)
 
             organization = vault.joinpath(
@@ -648,7 +650,44 @@ class VaultOSCliTests(unittest.TestCase):
             )
             difference = self.run_cli(REPOSITORY_ROOT, "diff", vault)
             self.assertEqual(difference.returncode, 0, difference.stdout + difference.stderr)
-            self.assertEqual(json.loads(difference.stdout)["changes"], [])
+
+    def test_template_language_falls_back_from_region_and_to_english(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            base = Path(temporary)
+            seed = yaml.safe_load(
+                REPOSITORY_ROOT.joinpath("instance-template/vault-os.yaml").read_text(
+                    encoding="utf-8"
+                )
+            )
+            seed["modules"] = ["journal"]
+
+            for language, expected in (
+                ("de-DE", "Tägliche Notiz"),
+                ("fr", "Daily note"),
+            ):
+                with self.subTest(language=language):
+                    config = dict(seed)
+                    config["vault"] = {"name": language, "language": language}
+                    config_path = base / f"{language}.yaml"
+                    config_path.write_text(
+                        yaml.safe_dump(config, sort_keys=False, allow_unicode=True),
+                        encoding="utf-8",
+                    )
+                    vault = base / language
+                    install = self.run_cli(
+                        REPOSITORY_ROOT,
+                        "install",
+                        vault,
+                        "--config",
+                        str(config_path),
+                    )
+                    self.assertEqual(
+                        install.returncode, 0, install.stdout + install.stderr
+                    )
+                    daily = vault.joinpath(
+                        "99 System/04 Assets/Templates/Journal/Daily Note.md"
+                    ).read_text(encoding="utf-8")
+                    self.assertIn(expected, daily)
 
     def test_update_replaces_managed_file_and_preserves_instance_file(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -681,7 +720,7 @@ class VaultOSCliTests(unittest.TestCase):
             lock = json.loads(
                 (vault / ".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.12")
+            self.assertEqual(lock["packageVersion"], "0.1.0-dev.13")
 
     def test_update_migrates_legacy_hidden_instance_files_without_deleting_them(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -1235,7 +1274,7 @@ qmd = { command = "existing-qmd", args = ["mcp"] }
             lock = json.loads(
                 secondary.joinpath(".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.11")
+            self.assertEqual(lock["packageVersion"], "0.1.0-dev.12")
             self.assertEqual(
                 secondary.joinpath("Vault-OS/config.yaml").read_bytes(),
                 config_before,

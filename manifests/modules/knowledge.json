@@ -115,9 +115,15 @@
       ],
       "source": "src/modules/knowledge/templates/conversation-note.md",
       "target": "04 Assets/Templates/Knowledge/Conversation Note.md",
-      "sha256": "43dd5a5fabc14c01d66b5a272280d3e9a2656378a7699b6501de53e59b610352",
+      "sha256": "167553c8c142e7ed12a48af18609de19928f8e41038da319ff65a757cda025aa",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/conversation-note.md",
+          "sha256": "b01439e57c2484d90335dce455058ddbd2c61e3da2903374125a044b4198f14c"
+        }
+      }
     },
     {
       "origins": [
@@ -125,9 +131,15 @@
       ],
       "source": "src/modules/knowledge/templates/working-note.md",
       "target": "04 Assets/Templates/Knowledge/Working Note.md",
-      "sha256": "742c8c4e4d845efc50fc688cd4a712d6ce04af36bc2afba51fb8103e53bb6f74",
+      "sha256": "6702ec81a38d6d6ac44dd3192a70a0dad5b6b145522c3b2834b76715fe7a082c",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/working-note.md",
+          "sha256": "48e96551272ee904d1b71f2877e55f201e1351edc132c0379e5fcbcb93453a3a"
+        }
+      }
     },
     {
       "origins": [
@@ -135,9 +147,15 @@
       ],
       "source": "src/modules/knowledge/templates/insight.md",
       "target": "04 Assets/Templates/Knowledge/Insight.md",
-      "sha256": "047526c30cfdc93400121f63821b5c4fb6f3ac2019115df3f12206bb94a6269d",
+      "sha256": "5c36fbd5f18bd289cfeacde7a42c8e277be18d66572c7e344192cf386e986763",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/insight.md",
+          "sha256": "f3524f110b147ab5b7b40de52029c5ee63167ba4cb39b79c83f553892c2522e6"
+        }
+      }
     },
     {
       "origins": [
@@ -145,9 +163,15 @@
       ],
       "source": "src/modules/knowledge/templates/resource.md",
       "target": "04 Assets/Templates/Knowledge/Resource.md",
-      "sha256": "d1b453e3e8121ffcf0ebea51fcb901430927ce1d2db13cc6d075d5154d228b66",
+      "sha256": "e11610db7590e782afd2279d469347438c90b658b46cb1dafc8f0348837a76c9",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/resource.md",
+          "sha256": "7dcb43d9f08d11c9af84314ea6236acf805e302977bca18550eb080e8a06927a"
+        }
+      }
     },
     {
       "origins": [
@@ -155,9 +179,15 @@
       ],
       "source": "src/modules/knowledge/templates/source.md",
       "target": "04 Assets/Templates/Knowledge/Source.md",
-      "sha256": "05368f46ac1aec1edcf4dac32c640eb5c93f8b791fa5fb8b95df821254d601c5",
+      "sha256": "3a10756c90cdad4d2b832bfcf959d995b73605d81687f3d47602a828e103cf76",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/source.md",
+          "sha256": "3e68adc0d6af4866f7aa96342cf4d1fd0cac92094f3bd427eb734d4dfd3d2817"
+        }
+      }
     },
     {
       "origins": [
@@ -165,9 +195,15 @@
       ],
       "source": "src/modules/knowledge/templates/knowledge.md",
       "target": "04 Assets/Templates/Knowledge/Knowledge.md",
-      "sha256": "4d9f63b20a03e799923766660693896f6ff2d3e13b4209d690c504ef03efac52",
+      "sha256": "819be649b76abd730936014b44f090f0b00381a2a12785c24436445c4faec206",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/knowledge.md",
+          "sha256": "e10c678e787dd51848b3caf92874bd899281cce23095782ae840614aabfdc7a9"
+        }
+      }
     },
     {
       "origins": [
@@ -175,9 +211,15 @@
       ],
       "source": "src/modules/knowledge/templates/recipe.md",
       "target": "04 Assets/Templates/Knowledge/Recipe.md",
-      "sha256": "224890b045e917d951ef2336768c0a9301f607b225f2a54c28a637fc3f60c44b",
+      "sha256": "ecf7b9dda7da0163e43e78a66a8082a3b29fcd39f02af415afdbb886d3363680",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/recipe.md",
+          "sha256": "bd4e910dce3c3f90295acd743a268b4f8f737abdba3569fd5a0274d4751b267a"
+        }
+      }
     },
     {
       "origins": [
@@ -185,9 +227,15 @@
       ],
       "source": "src/modules/knowledge/templates/overview.md",
       "target": "04 Assets/Templates/Knowledge/Overview.md",
-      "sha256": "a233d319cb83d3fb22fab50f11406b9763197c27f9783f3c1cd6774290ae137e",
+      "sha256": "5ae45911b635bbaa2dd6d40f745c1605596cb27d09ed47f79caaff960efa440c",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/knowledge/templates/de/overview.md",
+          "sha256": "abb7d4119014e77d3ab8ff186b394d410bc63950546b2a9c116f56162e592040"
+        }
+      }
     },
     {
       "origins": [

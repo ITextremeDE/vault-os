@@ -13,7 +13,7 @@ created:
 
 # {{title}}
 
-## Open tasks
+## ✅ Open tasks
 
 ```dataview
 TASK
@@ -22,39 +22,45 @@ WHERE !fullyCompleted AND {{fields.area}} = this.{{fields.area}} AND file.name !
 SORT file.mtime DESC
 ```
 
-## Active projects
+## 📂 Active projects
 
 ```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type, {{fields.status}} AS Status
+TABLE file.link AS Project, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
 FROM "{{paths.projects}}"
 WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} != "{{values.status.completed}}" AND {{fields.status}} != "{{values.status.archived}}" AND file.name != "README"
 SORT file.mtime DESC
 ```
 
-## Waiting
+## ⏳ Waiting
 
 ```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type
+TABLE file.link AS Project, {{fields.type}} AS Type, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
 FROM "{{paths.projects}}"
 WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.waiting}}" AND file.name != "README"
 SORT file.mtime DESC
 ```
 
-## Completed, not archived
+## ✅ Completed, not archived
 
 ```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type
+TABLE file.link AS Project, {{fields.type}} AS Type, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
 FROM "{{paths.projects}}"
 WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.completed}}" AND file.name != "README"
 SORT file.mtime DESC
 ```
 
-## Recently changed
+## 🕒 Recently changed
 
 ```dataview
-TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status
+TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
 FROM "{{paths.projects}}"
 WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
 SORT file.mtime DESC
 LIMIT 10
 ```
+
+## 🧭 Reflection
+
+- Which project needs a clear decision next?
+- What is complete but not yet cleanly archived?
+- Where does an unresolved issue block the next useful step?

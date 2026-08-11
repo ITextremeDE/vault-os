@@ -13,12 +13,14 @@ created:
 
 # {{title}}
 
-## Description
+## 📝 Description
 
-## Sources
+# 🧩 Context and actions
 
-## References
+## 📚 Sources
 
-## Tasks
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

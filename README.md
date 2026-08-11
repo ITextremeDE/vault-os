@@ -122,6 +122,9 @@ installed release in `.vault-os/lock.json` only after a successful transaction.
 Managed templates and views are materialized during the lifecycle from the
 installed field profile and path configuration. Their portable sources remain
 stable while each vault receives directly usable field names, values, and paths.
+Templates use complete English sources by default and complete German sources
+when `vault.language` is `de` or a regional variant such as `de-DE`. Languages
+without a packaged translation fall back to English.
 
 Vault-OS distinguishes three ownership domains:
 

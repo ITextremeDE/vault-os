@@ -18,6 +18,7 @@ import yaml
 
 SCHEMA_VERSION = 1
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+LANGUAGE_PATTERN = re.compile(r"^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$")
 RUNTIME_LOCK_TARGET = ".vault-os/lock.json"
 BOOTSTRAP_DEFAULTS = {
     "profileFile": "Profile.md",
@@ -76,6 +77,13 @@ def load_json(path: Path, label: str) -> dict[str, Any]:
 
 
 @dataclass(frozen=True)
+class LocalizedSource:
+    language: str
+    source: str
+    sha256: str
+
+
+@dataclass(frozen=True)
 class FileSpec:
     source: str
     target: str
@@ -84,9 +92,23 @@ class FileSpec:
     target_root: str
     install_mode: str
     materialize: str | None
+    localized_sources: tuple[LocalizedSource, ...]
 
-    def source_path(self, package_root: Path) -> Path:
-        return package_root / self.source
+    def source_for_language(self, language: str | None) -> LocalizedSource:
+        if language:
+            normalized = language.casefold()
+            candidates = (normalized, normalized.split("-", 1)[0])
+            by_language = {
+                item.language.casefold(): item for item in self.localized_sources
+            }
+            for candidate in candidates:
+                localized = by_language.get(candidate)
+                if localized is not None:
+                    return localized
+        return LocalizedSource("en", self.source, self.sha256)
+
+    def source_path(self, package_root: Path, language: str | None = None) -> Path:
+        return package_root / self.source_for_language(language).source
 
 
 @dataclass(frozen=True)
@@ -277,6 +299,58 @@ class Package:
                 raise VaultOSError(f"{label}: invalid materialize mode")
             if materialize is not None and install_mode != "managed":
                 raise VaultOSError(f"{label}: only managed files may be materialized")
+            raw_localized = entry.get("localizedSources", {})
+            if not isinstance(raw_localized, dict):
+                raise VaultOSError(f"{label}: localizedSources must be an object")
+            if raw_localized and install_mode != "managed":
+                raise VaultOSError(
+                    f"{label}: only managed files may provide localizedSources"
+                )
+            localized_sources: list[LocalizedSource] = []
+            normalized_languages: set[str] = set()
+            localized_paths: set[str] = {source}
+            for language, localized in raw_localized.items():
+                localized_label = f"{label}.localizedSources.{language}"
+                if (
+                    not isinstance(language, str)
+                    or not LANGUAGE_PATTERN.fullmatch(language)
+                ):
+                    raise VaultOSError(f"{localized_label}: invalid language tag")
+                normalized_language = language.casefold()
+                if normalized_language == "en":
+                    raise VaultOSError(
+                        f"{localized_label}: English must use the canonical source"
+                    )
+                if normalized_language in normalized_languages:
+                    raise VaultOSError(f"{localized_label}: duplicate language tag")
+                normalized_languages.add(normalized_language)
+                if not isinstance(localized, dict):
+                    raise VaultOSError(f"{localized_label}: expected an object")
+                localized_source = safe_relative(
+                    localized.get("source"), f"{localized_label}.source"
+                )
+                localized_checksum = localized.get("sha256")
+                if not isinstance(localized_checksum, str) or not re.fullmatch(
+                    r"[0-9a-f]{64}", localized_checksum
+                ):
+                    raise VaultOSError(f"{localized_label}: invalid sha256")
+                localized_path = root / localized_source
+                if localized_source in localized_paths:
+                    raise VaultOSError(
+                        f"{localized_label}: duplicate source {localized_source}"
+                    )
+                localized_paths.add(localized_source)
+                if not localized_path.is_file() or localized_path.is_symlink():
+                    raise VaultOSError(
+                        f"{localized_label}: invalid source {localized_source}"
+                    )
+                if sha256_file(localized_path) != localized_checksum:
+                    raise VaultOSError(
+                        f"{localized_label}: package checksum mismatch for {localized_source}"
+                    )
+                localized_sources.append(
+                    LocalizedSource(language, localized_source, localized_checksum)
+                )
             result.append(
                 FileSpec(
                     source=source,
@@ -286,6 +360,7 @@ class Package:
                     target_root=target_root,
                     install_mode=install_mode,
                     materialize=materialize,
+                    localized_sources=tuple(localized_sources),
                 )
             )
         return tuple(result)
@@ -303,6 +378,8 @@ class Package:
         for field in ("name", "language"):
             if not isinstance(vault.get(field), str) or not vault[field].strip():
                 raise VaultOSError(f"configuration: vault.{field} must be non-empty")
+        if not LANGUAGE_PATTERN.fullmatch(vault["language"]):
+            raise VaultOSError("configuration: vault.language must be a language tag")
         paths = value.get("paths")
         if not isinstance(paths, dict) or not paths:
             raise VaultOSError("configuration: paths must be an object")

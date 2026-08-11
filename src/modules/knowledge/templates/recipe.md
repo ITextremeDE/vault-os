@@ -12,18 +12,34 @@ created:
 
 # {{title}}
 
-## Summary and yield
+## 🧩 Summary and yield
 
-## Ingredients
+- What is this recipe for?
+- How many servings does it make?
 
-## Preparation
+## 🛒 Ingredients
 
-## Method
+## 🔪 Preparation
 
-## Variations
+## 🍳 Method
 
-## Notes and result
+1.
 
-## Sources
+## 🔁 Variations
 
-## References
+## 💡 Notes
+
+## ⭐ Result and experience
+
+- How did it turn out?
+- What should change next time?
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
+
+- [ ]

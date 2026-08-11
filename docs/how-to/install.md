@@ -207,6 +207,12 @@ then install with:
 Paths are relative to the vault root. Absolute paths, `..`, `.obsidian`, the
 filesystem root, and the user's home directory are rejected as targets.
 
+`vault.language: de` installs the complete German template variants;
+`de-DE` falls back to the same primary-language package. English is the
+canonical fallback for languages without a packaged translation. Language
+selection changes headings and guidance, while configured field names, stored
+values, module fields, and paths are still materialized from the instance.
+
 After installation, `Vault-OS/config.yaml` is the instance-owned canonical
 configuration. Edit that installed file for later module or path changes; do
 not keep two competing configuration sources. Field roles, localized stored

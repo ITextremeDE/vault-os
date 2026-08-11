@@ -18,16 +18,25 @@ created:
 
 # {{title}}
 
-## Draft
+## ✍️ Draft
 
-## Publication data
+## 🚀 Publication data
 
-## Promotion
+- **Series:**
+- **Category:**
+- **Tags:**
+- **Related entries:**
 
-## Sources
+## 📣 Social media post
 
-## References
+Read more:
 
-## Tasks
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

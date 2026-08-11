@@ -21,6 +21,7 @@ SCHEMA_VERSION = 1
 MANIFEST_KEYS = {"core", "modules", "instance", "runtime"}
 TARGET_ROOTS = {"system", "vault"}
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
+LANGUAGE_PATTERN = re.compile(r"^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$")
 RUNTIME_LOCK_TARGET = ".vault-os/lock.json"
 
 
@@ -114,6 +115,37 @@ def validate_files(value: dict[str, Any], root: Path, owner: str) -> tuple[set[s
         if target in targets:
             raise ValueError(f"{label}: duplicate target {target}")
         sources.add(source)
+        localized_sources = entry.get("localizedSources", {})
+        if not isinstance(localized_sources, dict):
+            raise ValueError(f"{label}.localizedSources: expected an object")
+        if localized_sources and owner != "managed":
+            raise ValueError(
+                f"{label}: only managed files may provide localizedSources"
+            )
+        normalized_languages: set[str] = set()
+        for language, localized in localized_sources.items():
+            localized_label = f"{label}.localizedSources.{language}"
+            if (
+                not isinstance(language, str)
+                or not LANGUAGE_PATTERN.fullmatch(language)
+            ):
+                raise ValueError(f"{localized_label}: invalid language tag")
+            normalized_language = language.casefold()
+            if normalized_language == "en":
+                raise ValueError(
+                    f"{localized_label}: English must use the canonical source"
+                )
+            if normalized_language in normalized_languages:
+                raise ValueError(f"{localized_label}: duplicate language tag")
+            normalized_languages.add(normalized_language)
+            if not isinstance(localized, dict):
+                raise ValueError(f"{localized_label}: expected an object")
+            localized_source = validate_checksum(localized, root, localized_label)
+            if localized_source in sources:
+                raise ValueError(
+                    f"{localized_label}: duplicate source {localized_source}"
+                )
+            sources.add(localized_source)
         targets.add(target)
     return sources, targets
 

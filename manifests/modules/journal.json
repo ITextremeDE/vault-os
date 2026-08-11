@@ -52,9 +52,15 @@
       ],
       "source": "src/modules/journal/templates/daily-note.md",
       "target": "04 Assets/Templates/Journal/Daily Note.md",
-      "sha256": "24d8346d4795330b6949529c2cfe3bb0dffd9f15f2ddc78b1ff67c30a704b8c2",
+      "sha256": "b655d13032b858163a61b72300ed04bedddd07b6321e05d0139f04d923f06fe7",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/journal/templates/de/daily-note.md",
+          "sha256": "40b4969f3be5ee0d81b7ceb4e36de2a5c809a666f675acd29700aa3221f7de99"
+        }
+      }
     },
     {
       "origins": [
@@ -62,9 +68,15 @@
       ],
       "source": "src/modules/journal/templates/weekly-note.md",
       "target": "04 Assets/Templates/Journal/Weekly Note.md",
-      "sha256": "343a6dbcfcc550b31c5c768f98cd6c6c372bf057b8a790c8e6cad4d75cfbe20d",
+      "sha256": "45a113f85469c4cb56a574ade42aa1cd472a666a7dc579b051fb609696f3c431",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/journal/templates/de/weekly-note.md",
+          "sha256": "cd20ee324b47c6e85f11d015575c4ff83530bc1837e015ddd1640ca2f0ea41e3"
+        }
+      }
     },
     {
       "origins": [
@@ -72,9 +84,15 @@
       ],
       "source": "src/modules/journal/templates/yearly-note.md",
       "target": "04 Assets/Templates/Journal/Yearly Note.md",
-      "sha256": "980757d2c7edfdbf2caaa5ef4177162855cd65929f3f343c256982644591b1fe",
+      "sha256": "7832efee6771d0e80b332012bab925b174002e1245423eaf041a1b2050e44ae2",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/journal/templates/de/yearly-note.md",
+          "sha256": "da8eff86d67afd120520108a91326ffa8ff20b657edfa771f0c9c8fbe8322319"
+        }
+      }
     }
   ]
 }

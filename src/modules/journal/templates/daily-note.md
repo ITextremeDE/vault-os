@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MPL-2.0 -->
+
 ---
 {{fields.kind}}: "{{values.kind.journal}}"
 {{fields.type}}: "{{values.type.daily}}"
@@ -11,26 +13,42 @@ created: {{date:YYYY-MM-DD}}
 
 # {{date:YYYY-MM-DD}} · Daily note
 
-## Context
+## 🗂️ Day context
 
-### Relevant appointments
+### 📅 Relevant appointments
 
-### Focus
+### 🎯 Focus
 
-## Reflection
+Keep at most three deliberate focus items. Operational tasks remain in the
+configured task system.
 
-### State
+## 💭 Journal
+
+### 🧠 State
 
 - **Energy (1–5):**
 - **Mood (1–5):**
 - **Focus (1–5):**
 
-### What mattered
+### 💼 Professional
 
-### Progress
+- **What mattered:**
+- **Progress:**
+- **Challenge:**
 
-### Challenge
+### 🏡 Personal
 
-### Insight
+- **Positive moment:**
+- **On my mind:**
+- **Challenge:**
 
-### Next step
+### 🔗 Connection
+
+- **Influence between contexts:**
+
+### 🎯 Insight
+
+### 🚀 Next step
+
+Record a next step only when it is also maintained in the canonical task system
+or note. Remove unused sections when finishing the daily note.

@@ -143,11 +143,14 @@ def read_bytes_secure(root: Path, relative: str, label: str) -> bytes:
         raise VaultOSError(f"cannot read {label} {relative}: {error}") from error
 
 
-def source_bytes(package: Package, spec: FileSpec) -> bytes:
-    path = spec.source_path(package.root)
+def source_bytes(
+    package: Package, spec: FileSpec, language: str | None = None
+) -> bytes:
+    selected = spec.source_for_language(language)
+    path = spec.source_path(package.root, language)
     content = path.read_bytes()
-    if sha256_bytes(content) != spec.sha256:
-        raise VaultOSError(f"package checksum changed while reading {spec.source}")
+    if sha256_bytes(content) != selected.sha256:
+        raise VaultOSError(f"package checksum changed while reading {selected.source}")
     return content
 
 
@@ -182,12 +185,14 @@ def managed_artifacts(
     profile_content: bytes | None = None
     result: dict[str, ManagedArtifact] = {}
     for target, spec in package.managed_files(config).items():
-        content = source_bytes(package, spec)
+        language = config.data["vault"]["language"]
+        selected_source = spec.source_for_language(language)
+        content = source_bytes(package, spec, language)
         if spec.materialize == "instance":
             if profile_content is None:
                 profile_content = materialization_profile_bytes(package, vault, config)
             content = render_instance_source(
-                content, config, profile_content, spec.source
+                content, config, profile_content, selected_source.source
             )
         result[target] = ManagedArtifact(spec, content, sha256_bytes(content))
     return result

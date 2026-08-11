@@ -31,6 +31,14 @@ visible instance configuration before installing the managed artifact. Ordinary
 Obsidian placeholders such as `{{title}}` and `{{date:YYYY-MM-DD}}` remain intact.
 Materialization is valid only for managed entries.
 
+A managed entry may declare `localizedSources`, keyed by language tag. Every
+localized source has its own repository-relative `source` and `sha256`. The
+ordinary `source` is the canonical English fallback and must not be repeated as
+an `en` localization. The lifecycle selects the exact configured
+`vault.language`, then its primary language subtag (`de-DE` → `de`), and finally
+the canonical English source. Localized sources share the same target,
+ownership, materialization rules, and conflict protection.
+
 Managed files use `installMode: managed`. The updater replaces or removes an
 installed managed file only when it still matches the installed checksum
 recorded in the local release lock. For an ordinary managed file this equals the

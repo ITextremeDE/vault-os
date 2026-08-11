@@ -13,22 +13,32 @@ created:
 
 # {{title}}
 
-## Starting point
+## 🚪 Starting point
 
-## Related material
+What led to this working note?
 
-## Core ideas
+## 🔗 Related material
 
-## Synthesis
+- **Conversation note:**
+- **Resource:**
+- **Project:**
 
-## Possible insights
+## 💡 Core ideas
 
-## Open questions
+## 🧠 Synthesis
 
-## Sources
+What is genuinely important here?
 
-## References
+## ✨ Possible insights
 
-## Tasks
+## ❓ Open questions
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

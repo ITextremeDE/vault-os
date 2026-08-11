@@ -13,18 +13,30 @@ created:
 
 # {{title}}
 
-## Statement
+## 💡 Statement
 
-## Reasoning
+A clear, independent insight.
 
-## Origin and context
+## 🧠 Reasoning
 
-## Related material
+Why is this statement sound or relevant?
 
-## Sources
+## 🧭 Origin and context
 
-## References
+What did this insight emerge from?
 
-## Tasks
+## 🔗 Related material
+
+- **Working note:**
+- **Project:**
+- **Knowledge or overview:**
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

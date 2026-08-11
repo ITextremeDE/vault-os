@@ -13,22 +13,39 @@ created:
 
 # {{title}}
 
-## Goal
+## 🔗 Related material
 
-## Context
+- **Conversation note:**
+- **Working note:**
+- **Insight:**
+- **Resource:**
 
-## Starting point
+## 🚀 Description
 
-## Notes
+## 🎯 Goal
 
-## Next steps
+## 🧭 Context
 
-## Resources
+## 🚪 Starting point
 
-## Sources
+## ✍️ Notes
 
-## References
+## 👣 Next steps
 
-## Tasks
+## 🛠️ Resources
+
+## 💬 Conversation notes
+
+| Date | Note |
+| --- | --- |
+| | |
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

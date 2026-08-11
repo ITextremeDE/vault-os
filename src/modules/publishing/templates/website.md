@@ -16,12 +16,14 @@ created:
 
 # {{title}}
 
-## Content
+## 🌐 Content
 
-## Sources
+# 🧩 Context and actions
 
-## References
+## 📚 Sources
 
-## Tasks
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

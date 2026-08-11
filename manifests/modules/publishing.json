@@ -12,9 +12,15 @@
       ],
       "source": "src/modules/publishing/templates/article.md",
       "target": "04 Assets/Templates/Publishing/Article.md",
-      "sha256": "4839ba7573df901108884c02340213f1ceaa05d516f3d34b0a66be4ddc396729",
+      "sha256": "9770b293178f9be4c3329a831579790cf048751e9e72cccba8f2f3053a53ed20",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/publishing/templates/de/article.md",
+          "sha256": "4f3ec2dbb3cb33cca74a6f606d607b2039760d575c22492847c66fef0440f625"
+        }
+      }
     },
     {
       "origins": [
@@ -22,9 +28,15 @@
       ],
       "source": "src/modules/publishing/templates/video.md",
       "target": "04 Assets/Templates/Publishing/Video.md",
-      "sha256": "9ecc1e07ece678c7baf3e66b9637775362e0ffddc73ed57d1b9b7d3499b305ee",
+      "sha256": "2b0ba3e2203dd6532fc1ec2360a7b03286e205f9b402edfc55313d2a3fcaa662",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/publishing/templates/de/video.md",
+          "sha256": "d2299672e6c62acde169bf43a0368c09e1abd74f424cad50da21a6d4107d419a"
+        }
+      }
     },
     {
       "origins": [
@@ -32,9 +44,15 @@
       ],
       "source": "src/modules/publishing/templates/website.md",
       "target": "04 Assets/Templates/Publishing/Website.md",
-      "sha256": "8e144101482c1a7d0dec739c99beb54c3b52275d949957eaec64412f88d621f6",
+      "sha256": "795e4940f410f5a0a32a75bd02e443fd67e278aec3eb0968dbc429d130a9669f",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/publishing/templates/de/website.md",
+          "sha256": "9c51e3aa75aaf9d18b5e887e206280d97efe1461c14e18e825c4e8e95bd543d7"
+        }
+      }
     }
   ]
 }

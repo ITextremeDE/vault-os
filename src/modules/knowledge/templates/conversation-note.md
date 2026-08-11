@@ -9,29 +9,39 @@ aliases: []
 tags: []
 cssclasses: []
 created:
-location:
-date:
-time:
-author:
-participants: []
+{{moduleFields.location}}:
+{{moduleFields.date}}:
+{{moduleFields.time}}:
+{{moduleFields.author}}:
+{{moduleFields.participants}}: []
 ---
 
 # {{title}}
 
-## Occasion
+| **Topic** | |
+| --- | --- |
+| **Location** | `= default(this.{{moduleFields.location}}, "–")` |
+| **Date** | `= choice(this.{{moduleFields.date}}, dateformat(this.{{moduleFields.date}}, "yyyy-MM-dd"), "–")` |
+| **Time** | `= default(this.{{moduleFields.time}}, "–")` |
+| **Author** | `= default(this.{{moduleFields.author}}, "–")` |
+| **Participants** | `= default(this.{{moduleFields.participants}}, [])` |
 
-## Content
+## 🎯 Occasion
 
-## Key points
+## 💬 Content
 
-## Processing state
+## 💡 Key points
 
-raw / evaluated / transferred
+## 🧾 Processing
 
-## Sources
+- **State:** raw / evaluated / transferred
 
-## References
+# 🧩 Context and actions
 
-## Tasks
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

@@ -13,16 +13,22 @@ created:
 
 # {{title}}
 
-## Concept
+## 🎬 Concept
 
-## Script or production prompt
+## 🤖 Script or production prompt
 
-## Publication data
+## 🚀 Publication data
 
-## Sources
+- **Title:**
+- **Description:**
+- **Tags:**
 
-## References
+# 🧩 Context and actions
 
-## Tasks
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

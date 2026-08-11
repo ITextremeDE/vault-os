@@ -88,9 +88,15 @@
       ],
       "source": "src/modules/para/templates/area-dashboard.md",
       "target": "04 Assets/Templates/PARA/Area Dashboard.md",
-      "sha256": "fbec4e9122036cfc5395d4ace1fc7a7a39e13b0be6744fdec9683f74e72d2bad",
+      "sha256": "065ec46d8701c35f583b069635e7b102be8cb60332a3c999167f9dc9b26eb4dc",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/para/templates/de/area-dashboard.md",
+          "sha256": "9db2560b93834fef454302f5afd268ed272c9e9bd7fea48469983abf147a6091"
+        }
+      }
     },
     {
       "origins": [
@@ -98,9 +104,15 @@
       ],
       "source": "src/modules/para/templates/area.md",
       "target": "04 Assets/Templates/PARA/Area.md",
-      "sha256": "70edeec55eef8458443a48f69c88a6dbd06a78e4e3fb6b8fa7754c5325df335b",
+      "sha256": "6a1ce4c8f7985147ddb1610a77d46691e90920d91544f0296cdd9408b2d1e4b6",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/para/templates/de/area.md",
+          "sha256": "3f9d3d3a7df891f217d112584a3bf3f9d9dd39ff66d4df9d93ed4f34260cd970"
+        }
+      }
     },
     {
       "origins": [
@@ -108,9 +120,15 @@
       ],
       "source": "src/modules/para/templates/project-dashboard.md",
       "target": "04 Assets/Templates/PARA/Project Dashboard.md",
-      "sha256": "3945961b81ab3650f3e5dff483610a4a4e15ed2fc5ff8ef713ea965493c1f6e8",
+      "sha256": "e8ca81474cc71a6eb2f3178da8b2d584396a32cd9a4911512e7dd8a4ecc5c5e4",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/para/templates/de/project-dashboard.md",
+          "sha256": "ab5c206c6470cb1d407d3633c8ae5982417abf898564698aa9b4d2a2ba06d809"
+        }
+      }
     },
     {
       "origins": [
@@ -118,9 +136,15 @@
       ],
       "source": "src/modules/para/templates/project.md",
       "target": "04 Assets/Templates/PARA/Project.md",
-      "sha256": "c456eab37a033bb8a9a90566dd8f32bcfa5f5b572526c0e233d7174a6c7de049",
+      "sha256": "a016761422bf7fcada06ca8d1b305d5cdb26c6fc857beb2be4eab65288318860",
       "installMode": "managed",
-      "materialize": "instance"
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/para/templates/de/project.md",
+          "sha256": "52e2bd7cd2d00f2921cfa06ac8b56d80cf19c47673f548d522c2f4c074de3b54"
+        }
+      }
     }
   ]
 }

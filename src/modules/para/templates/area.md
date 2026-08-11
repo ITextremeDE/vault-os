@@ -13,12 +13,12 @@ created:
 
 # {{title}}
 
-## Focus
+## 🎯 Focus
 
-## Responsibilities
+## 🧭 Responsibilities
 
-## Ongoing topics
+## 🔄 Ongoing topics
 
-## Important links
+## 🔗 Important links
 
-## Open questions
+## ❓ Open questions

@@ -12,14 +12,25 @@ created:
 
 # {{title}}
 
-## Description
+## 🔗 Related material
 
-## Guiding questions
+- **Projects:**
+- **Resources:**
+- **Working notes:**
+- **Insights:**
 
-## Central insights
+## 🧭 Description
 
-## Projects and resources
+## ❓ Guiding questions
 
-## Sources
+## 💡 Central insights
 
-## References
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
+
+- [ ]

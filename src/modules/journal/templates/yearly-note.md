@@ -13,16 +13,24 @@ created:
 
 # {{date:YYYY}} · Yearly note
 
-## Guiding ideas
+## 🧭 Guiding ideas
 
-## Goals
+## 🎯 Goals
 
-## Developments
+## 📈 Developments
 
-## Achievements
+## 🏆 Achievements
 
-## Learnings
+## 💡 Learnings
 
-## Open topics
+## ❓ Open topics
 
-## Outlook
+## 🔭 Outlook
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks

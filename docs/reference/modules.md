@@ -28,7 +28,10 @@ are more useful together, especially for agent-assisted work.
 The `review` module's `.base` file needs an Obsidian version with Bases support
 to render as a view. Templates and the Bases view are materialized from the
 instance field, value, module-field, and path mappings during install and
-update. Vault-OS does not install or configure Obsidian plugins.
+update. The 21 content templates ship as complete English and German variants;
+`vault.language` selects the presentation language while semantic mappings stay
+instance-owned. Unsupported template languages fall back to English. Vault-OS
+does not install or configure Obsidian plugins.
 The [recommended Obsidian profile](../how-to/obsidian-setup.md) maps the
 relevant modules to core plugins and explains the optional community-plugin
 boundaries.

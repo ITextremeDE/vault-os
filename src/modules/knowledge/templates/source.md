@@ -13,20 +13,30 @@ created:
 
 # {{title}}
 
-## Source type
+## 🔗 Related material
 
-## Origin
+- **Conversation note:**
+- **Working note:**
+- **Insight:**
+- **Project:**
+- **Knowledge or overview:**
 
-## Summary
+## 🗂️ Source type
 
-## Relevance
+Article / book / document / link / study / video / website / note
 
-## Related material
+## 📍 Origin
 
-## Sources
+## 📝 Summary
 
-## References
+## 🎯 Relevance
 
-## Tasks
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

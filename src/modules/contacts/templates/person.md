@@ -17,18 +17,32 @@ created:
 
 # {{title}}
 
-## Identity
+{{logo}}
 
-## Relationship
+{{photo}}
 
-## Interactions
+## 🧾 Identity
 
-## Context and notes
+- **First name:**
+- **Last name:**
+- **Job:** `= default(this.{{moduleFields.job}}, "–")`
 
-## Sources
+## 🤝 Relationship
 
-## References
+- **Relationship type:** `= default(this.{{moduleFields.relationship}}, "–")`
+- **Relevance:** `= default(this.{{moduleFields.relevance}}, "–")`
+- **Last contact:** `= choice(this.{{moduleFields.last_contact}}, dateformat(this.{{moduleFields.last_contact}}, "yyyy-MM-dd"), "–")`
 
-## Tasks
+## 🗓️ Interactions
+
+## 🧠 Context and notes
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
 
 - [ ]

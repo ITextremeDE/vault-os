@@ -72,6 +72,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   names and documented per-value semantics for instance registers.
 - Context-qualified preferred value mappings for deterministic materialization
   when a localized profile maps several stored values to one stable identifier.
+- Complete German managed-template sources alongside the canonical English
+  templates, with exact-language, primary-language, and English fallback.
+- Rich template structures for all 21 contact, journal, knowledge, PARA, and
+  publishing purposes, including portable Dataview queries and recurring
+  context sections recovered from the original MindOS design.
 
 ### Changed
 
@@ -105,6 +110,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   content validation.
 - Advanced the development package to `0.1.0-dev.11` for instance-materialized
   managed artifacts and strengthened instance semantics.
+- Advanced the development package to `0.1.0-dev.12` for localized, structurally
+  complete managed templates.
 
 ### Fixed
 
@@ -126,3 +133,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   localized instance fields, values, module fields, and configured paths.
 - Restored the explicit authorization boundary for changes to top-level vault
   directories in both managed operating rules and generated agent instructions.
+- Prevented portable extraction from replacing established rich templates with
+  minimal English skeletons.

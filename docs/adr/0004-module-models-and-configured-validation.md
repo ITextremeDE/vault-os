@@ -32,6 +32,9 @@ folder layout, and vault owner.
 - Managed templates and views use reserved semantic tokens. Lifecycle commands
   materialize those tokens from the current instance field profile and path
   configuration while preserving native Obsidian placeholders.
+- Managed template entries may provide complete language-specific sources. The
+  configured language selects an exact or primary-language source and otherwise
+  falls back to the canonical English source before instance materialization.
 - A context-qualified `preferredValues` entry resolves the reverse direction
   explicitly when multiple stored values map to one stable identifier.
 - The portable validator loads installed model fragments and instance data at
@@ -48,6 +51,8 @@ folder layout, and vault owner.
   inherit the stricter managed defaults.
 - Direct Obsidian template insertion and Bases views use the same localized
   metadata contract as validator and agent workflows.
+- Template language can vary without coupling semantic identifiers, metadata,
+  paths, ownership, or update behavior to one locale.
 - Core files remain valid when no optional productivity or knowledge module is
   selected.
 - Duplicate content kinds across installed models are deterministic errors.

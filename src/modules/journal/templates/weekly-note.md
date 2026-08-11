@@ -14,16 +14,25 @@ created:
 # {{date:GGGG-[W]WW}} · Weekly note
 
 Create this note only for a genuine week-wide development, decision, or insight.
-Omit empty sections and do not repeat daily notes mechanically.
+Do not merely repeat daily notes, invent missing reflection, or create generic
+follow-up tasks. Remove empty sections.
 
-## Focus
+## 🎯 Focus
 
-## Important events
+## 🗓️ Important events
 
-## Progress
+## 🚀 Progress
 
-## Open questions
+## ❓ Open questions
 
-## Reflection
+## 🧭 Reflection
 
-## Outlook
+## 🔭 Outlook
+
+# 🧩 Context and actions
+
+## 📚 Sources
+
+## 🔗 References
+
+## ✅ Tasks
