@@ -104,6 +104,53 @@ class VaultValidatorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
         self.assertIn("frontmatter.type", result.stdout)
 
+    def test_instance_profile_maps_localized_fields_and_values(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            root.joinpath(".vault-os/schema/fields.yaml").write_text(
+                """schema: 1
+fields:
+  kind: art
+  type: typ
+  status: status
+  area: bereich
+values:
+  kind:
+    Projekt: project
+  type:
+    Planung: planning
+  status:
+    Offen: open
+required: [art, typ, status, bereich, aliases, tags, cssclasses, created]
+lists: [aliases, tags, cssclasses]
+dates: [created, modified, reviewed]
+order: [art, typ, status, bereich, aliases, tags, cssclasses, created, modified]
+""",
+                encoding="utf-8",
+            )
+            root.joinpath("Projects/example.md").write_text(
+                """---
+art: Projekt
+typ: Planung
+status: Offen
+bereich: Example
+aliases: []
+tags: []
+cssclasses: []
+created: 2026-08-11
+---
+
+# Example
+""",
+                encoding="utf-8",
+            )
+
+            result = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("RESULT errors=0 warnings=0", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

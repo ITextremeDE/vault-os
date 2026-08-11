@@ -8,9 +8,9 @@ content or identity.
 ## Status
 
 Vault-OS is under active development and has not reached its first public
-release. The initial `0.1.0` release will be published only after installation
-and update behavior have been validated against both a clean vault and an
-existing real-world vault.
+release. Installation and update behavior have been validated against both a
+clean vault and a hash-verified copy of an existing real-world vault. Publishing
+the initial `0.1.0` release remains pending.
 
 ## Goals
 
@@ -58,6 +58,7 @@ tests/                    Automated checks and test vaults
 docs/adr/                 Architecture decision records
 docs/analysis/            Human-readable analysis results
 docs/reference/           Technical contracts and formats
+docs/validation/          Evidence from release acceptance checks
 ```
 
 The current extraction baseline is documented in the
@@ -104,8 +105,9 @@ contract.
 - Transactional installation, update, diff, doctor, release locking, package
   integrity validation, and managed-file conflict protection are implemented.
 - Clean-vault installation and update behavior are covered by automated
-  integration tests. Validation against an existing real-world vault remains
-  outstanding before `0.1.0`.
+  integration tests. The lifecycle has also passed a hash-verified installation,
+  update, validation, and conflict test against a temporary copy of an existing
+  real-world vault.
 
 ## Development roadmap
 
@@ -114,7 +116,7 @@ contract.
 3. [x] Implement deterministic install, update, diff, and doctor commands.
 4. [x] Validate installation in a clean test vault.
 5. [x] Validate updates without changing instance-owned files in test vaults.
-6. [ ] Validate installation and updates against an existing real-world vault.
+6. [x] Validate installation and updates against an existing real-world vault.
 7. [ ] Publish version `0.1.0`.
 
 ## Validation
@@ -134,6 +136,9 @@ Run the repository checks with:
 .venv/bin/python scripts/validate_portability_matrix.py
 .venv/bin/python scripts/validate_manifests.py
 ```
+
+The [real-vault lifecycle report](docs/validation/2026-08-11-real-vault-lifecycle.md)
+records the pre-release acceptance evidence and its remaining migration boundary.
 
 ## License
 

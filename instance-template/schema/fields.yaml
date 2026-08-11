@@ -6,6 +6,11 @@ fields:
   status: status
   area: area
 
+values:
+  kind: {}
+  type: {}
+  status: {}
+
 required:
   - kind
   - type

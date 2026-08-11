@@ -18,6 +18,8 @@ folder layout, and vault owner.
   module fields.
 - Instance YAML maps semantic field roles, supplies register values, selects
   modules, and configures paths and validation behavior.
+- Instance field profiles may map localized stored kind, type, and status
+  values to the stable identifiers used by module models.
 - The portable validator loads installed model fragments and instance data at
   runtime. It contains no built-in vault name, content catalog, field names,
   areas, external-system paths, or secret exceptions.

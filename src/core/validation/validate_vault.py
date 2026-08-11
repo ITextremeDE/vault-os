@@ -44,6 +44,9 @@ class FieldProfile:
     type: str
     status: str
     area: str
+    kind_values: dict[str, str]
+    type_values: dict[str, str]
+    status_values: dict[str, str]
     required: tuple[str, ...]
     lists: tuple[str, ...]
     dates: tuple[str, ...]
@@ -91,6 +94,18 @@ def string_list(value: object, label: str) -> tuple[str, ...]:
     return tuple(value)
 
 
+def string_map(value: object, label: str) -> dict[str, str]:
+    if not isinstance(value, dict) or any(
+        not isinstance(source, str)
+        or not source
+        or not isinstance(target, str)
+        or not target
+        for source, target in value.items()
+    ):
+        raise ValueError(f"{label}: expected an object with non-empty string mappings")
+    return dict(value)
+
+
 def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
     fields_path = resolve_root_file(root, config.get("fields"), "frontmatter.fields")
     data = load_yaml(fields_path, "frontmatter fields")
@@ -100,11 +115,23 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
     for role in ("kind", "type", "status", "area"):
         if not isinstance(roles.get(role), str) or not roles[role]:
             raise ValueError(f"frontmatter fields: missing role {role}")
+    values = data.get("values", {})
+    if not isinstance(values, dict):
+        raise ValueError("frontmatter fields: values must be an object")
     return FieldProfile(
         kind=roles["kind"],
         type=roles["type"],
         status=roles["status"],
         area=roles["area"],
+        kind_values=string_map(
+            values.get("kind", {}), "frontmatter fields.values.kind"
+        ),
+        type_values=string_map(
+            values.get("type", {}), "frontmatter fields.values.type"
+        ),
+        status_values=string_map(
+            values.get("status", {}), "frontmatter fields.values.status"
+        ),
         required=string_list(data.get("required"), "frontmatter fields.required"),
         lists=string_list(data.get("lists"), "frontmatter fields.lists"),
         dates=string_list(data.get("dates"), "frontmatter fields.dates"),
@@ -280,13 +307,28 @@ def frontmatter_findings(
         kind = data.get(profile.kind)
         content_type = data.get(profile.type)
         status = data.get(profile.status)
-        definition = kinds.get(kind) if isinstance(kind, str) else None
+        canonical_kind = (
+            profile.kind_values.get(kind, kind) if isinstance(kind, str) else kind
+        )
+        canonical_type = (
+            profile.type_values.get(content_type, content_type)
+            if isinstance(content_type, str)
+            else content_type
+        )
+        canonical_status = (
+            profile.status_values.get(status, status)
+            if isinstance(status, str)
+            else status
+        )
+        definition = (
+            kinds.get(canonical_kind) if isinstance(canonical_kind, str) else None
+        )
         if definition is None:
             findings.append(
                 Finding("error", "frontmatter.kind", rel, 1, f"unknown kind: {kind!r}")
             )
         else:
-            if content_type not in definition["types"]:
+            if canonical_type not in definition["types"]:
                 findings.append(
                     Finding(
                         "error",
@@ -296,7 +338,7 @@ def frontmatter_findings(
                         f"type {content_type!r} is invalid for kind {kind!r}",
                     )
                 )
-            if status not in definition["statuses"]:
+            if canonical_status not in definition["statuses"]:
                 findings.append(
                     Finding(
                         "error",

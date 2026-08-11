@@ -33,8 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and create-only preservation of instance files.
 - Integration tests for clean installation, safe updates, module changes,
   conflicts, symbolic-link protection, package tampering, and rollback.
+- Hash-verified lifecycle acceptance against a temporary copy of an existing
+  real-world vault.
 
 ### Changed
 
 - Extended the neutral instance configuration with the system root and module selection.
 - Added PyYAML as the explicit runtime dependency for frontmatter and instance configuration.
+- Allowed instance field profiles to map localized stored values to stable
+  Vault-OS kind, type, and status identifiers.

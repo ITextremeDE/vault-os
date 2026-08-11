@@ -161,7 +161,7 @@
       "origins": ["99 System/05 Automation/Validatoren/validate_mindos.py"],
       "source": "src/core/validation/validate_vault.py",
       "target": "05 Automation/Validators/validate_vault.py",
-      "sha256": "5be749f3b902fd0f271f0e5954d0b1dd4478368d9a8852e822ce710046d6eb24",
+      "sha256": "f61c04c1889fcf3e1a4315ab69d9b775f5fdc9908c6ea61c3cd9d2247af0466b",
       "installMode": "managed"
     },
     {

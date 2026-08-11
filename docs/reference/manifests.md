@@ -43,6 +43,11 @@ replace an existing target, regardless of whether it still resembles the seed.
 The initial configuration seed becomes `.vault-os/config.yaml` and defines the
 vault name, language, system root, and selected modules.
 
+The instance-owned field profile under `.vault-os/schema/fields.yaml` maps
+semantic field roles. Its optional `values.kind`, `values.type`, and
+`values.status` objects map stored localized values to the stable identifiers
+declared by managed models. Empty maps use model identifiers directly.
+
 ## Runtime artifacts
 
 Runtime entries declare a target and generator but no release source or

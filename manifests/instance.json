@@ -17,7 +17,7 @@
       ],
       "source": "instance-template/schema/fields.yaml",
       "target": ".vault-os/schema/fields.yaml",
-      "sha256": "756b43cb7effadf2c24fdc3fe832171c9b8ef35fbce22c70f9b3591f92d9e282",
+      "sha256": "4eb9a5c3baeca50c7e558e96998fd290801dada77edca12b17f064d1bf0de4ab",
       "installMode": "create-only"
     },
     {
