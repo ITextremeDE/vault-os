@@ -45,8 +45,7 @@ agent.
 
 ## Quick start
 
-Once the public repository is available, clone it and prepare an isolated
-Python environment:
+Clone the public repository and prepare an isolated Python environment:
 
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
@@ -289,8 +288,9 @@ docs/validation/          Release acceptance evidence
 - All 15 pure core sources, all 88 pure module sources, both pure instance
   sources, and all portions of the 13 mixed sources have been extracted into
   their assigned ownership domains.
-- The package contains 25 core files, 79 files in 14 optional modules, 11
-  instance seeds, and one declared runtime artifact.
+- The package contains a required core, 14 optional modules, neutral instance
+  seeds, and one declared runtime lock. The manifests are the canonical source
+  for exact package contents.
 - Transactional installation, user-owned bootstrap, update, diff, device
   synchronization, doctor, release locking, integrity validation, conflict
   protection, provider adapters, and optional QMD MCP integration are
@@ -300,18 +300,11 @@ docs/validation/          Release acceptance evidence
 - A production vault has been migrated side by side into a fresh installation;
   the legacy source remained unchanged as the recovery copy.
 
-## Development roadmap
+## Release status
 
-1. [x] Classify the existing framework by ownership and portability.
-2. [x] Extract and neutralize the portable core.
-3. [x] Implement deterministic lifecycle commands.
-4. [x] Validate clean-vault installation and updates.
-5. [x] Validate the lifecycle against a real-world vault copy.
-6. [x] Add provider-neutral agent integration with Codex and Claude adapters.
-7. [x] Complete public installation, operation, AI, module, and
-   troubleshooting documentation.
-8. [x] Complete and validate a deliberate production-vault migration.
-9. [ ] Publish version `0.1.0`.
+The extraction, lifecycle, provider-adapter, documentation, and production-vault
+migration milestones are complete. Version `0.1.0` remains an unreleased
+development build; operational release work is tracked outside this README.
 
 ## Development validation
 
@@ -323,7 +316,8 @@ docs/validation/          Release acceptance evidence
 git diff --check
 ```
 
-Contribution rules are in [CONTRIBUTING.md](CONTRIBUTING.md).
+Contribution rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Report suspected
+vulnerabilities through the private process in [SECURITY.md](SECURITY.md).
 
 ## License
 

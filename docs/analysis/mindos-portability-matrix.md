@@ -94,11 +94,11 @@ from release content.
 Steps 1 through 5 are complete: manifests, core extraction, mixed-source
 separation, optional modules, and instance seeds now form one validated package.
 
-The next delivery sequence is:
+The follow-on delivery sequence is also complete:
 
-1. Implement install, update, diff, and doctor behavior against the manifests.
-2. Validate a clean installation.
-3. Validate an update of the source vault without modifying instance-owned or
+1. Install, update, diff, and doctor behavior is implemented against the manifests.
+2. Clean installation is covered by automated acceptance tests.
+3. Updates have been validated without modifying instance-owned or
    locally changed files.
 
 ## Validation

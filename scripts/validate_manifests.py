@@ -23,6 +23,7 @@ TARGET_ROOTS = {"system", "vault"}
 VERSION_PATTERN = re.compile(r"^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$")
 LANGUAGE_PATTERN = re.compile(r"^[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$")
 RUNTIME_LOCK_TARGET = ".vault-os/lock.json"
+IGNORED_SOURCE_NAMES = {".DS_Store"}
 
 
 @dataclass(frozen=True)
@@ -174,6 +175,7 @@ def source_tree_files(path: Path, root: Path) -> set[str]:
         candidate.relative_to(root).as_posix()
         for candidate in path.rglob("*")
         if candidate.is_file()
+        and candidate.name not in IGNORED_SOURCE_NAMES
         and "__pycache__" not in candidate.parts
         and candidate.suffix.lower() not in {".pyc", ".pyo"}
     }

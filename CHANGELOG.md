@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- A private security-reporting policy for the public repository.
 - Initial repository structure and project boundaries.
 - MPL-2.0 licensing and repository ownership model.
 - Neutral example configuration for independently named vaults.
@@ -82,6 +83,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Extended acceptance CI to cover the minimum supported Python 3.10 and the
+  current Python 3.14 runtime.
+- Replaced the README task checklist with a concise release status so
+  operational planning remains in the designated project system.
 - Extended the neutral instance configuration with the system root and module selection.
 - Added PyYAML as the explicit runtime dependency for frontmatter and instance configuration.
 - Allowed instance field profiles to map localized stored values to stable
@@ -119,6 +124,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Ignored macOS `.DS_Store` metadata when checking manifest source coverage
+  without hiding other undeclared package files.
+- Extended portability checks to installation-relevant manifest paths while
+  preserving historical extraction origins as evidence.
+- Corrected stale public-repository, package-content, and extraction status
+  wording in the pre-release documentation.
 - Preserved semantically compatible inline Codex QMD definitions and rejected
   conflicting or invalid TOML before writing.
 - Prevented `agent-init` from running against package metadata newer than the

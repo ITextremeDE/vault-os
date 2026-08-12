@@ -60,6 +60,57 @@ class PortabilityCheckTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("source vault name", result.stdout)
 
+    def test_manifest_target_with_source_vault_name_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/core.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "MindOS/README.md"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("source vault name", result.stdout)
+        self.assertIn("manifests/core.json", result.stdout)
+
+    def test_manifest_private_path_is_rejected(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/core.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["target"] = "/Users/jschadek/private.md"
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("personal macOS path", result.stdout)
+
+    def test_manifest_origins_remain_historical_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            manifest_path = root / "manifests/core.json"
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest["files"][0]["origins"] = ["99 System/MindOS.md"]
+            manifest_path.write_text(
+                json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            result = self.run_checker(root)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_portability_matrix_is_well_formed(self) -> None:
         result = subprocess.run(
             [sys.executable, str(MATRIX_CHECKER)],
@@ -76,6 +127,17 @@ class PortabilityCheckTests(unittest.TestCase):
             capture_output=True,
             text=True,
         )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_manifest_inventory_ignores_ds_store_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_manifest_fixture(root)
+            (root / "src/core/.DS_Store").write_bytes(b"finder metadata")
+            (root / "instance-template/.DS_Store").write_bytes(b"finder metadata")
+
+            result = self.run_manifest_checker(root)
+
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_manifest_rejects_changed_managed_source(self) -> None:

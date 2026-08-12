@@ -10,6 +10,8 @@ layer portable, local-first, and independent from any specific vault owner.
 - Do not include personal information, credentials, absolute local paths, or
   content copied from a private vault.
 - Keep changes small and include validation appropriate to their impact.
+- Report suspected vulnerabilities through the private process in
+  [SECURITY.md](SECURITY.md), not through a public issue.
 
 ## Validate a change
 

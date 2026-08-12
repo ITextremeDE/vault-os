@@ -20,7 +20,7 @@ Codex, Claude Code, and QMD are optional and are covered by the
 Vault-OS has not yet published `0.1.0`. Until then, a checkout of `main` is a
 development build rather than a stable release.
 
-Once the public repository is available:
+Clone the public repository:
 
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
