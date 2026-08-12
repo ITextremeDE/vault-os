@@ -1,0 +1,83 @@
+name: Bug report
+description: Report a reproducible problem in Vault-OS
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve Vault-OS. Remove credentials, personal vault
+        content, and identifying local paths before submitting this report.
+
+  - type: input
+    id: version
+    attributes:
+      label: Vault-OS version
+      description: Provide the release, tag, or commit where the problem occurs.
+      placeholder: v0.1.0 or a commit SHA
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include the operating system, Obsidian version, and relevant AI client or search tool.
+      placeholder: macOS 26, Obsidian 1.x, Codex CLI, QMD
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Installation or bootstrap
+        - Upgrade or lifecycle command
+        - Managed files and ownership
+        - AI provider integration
+        - QMD or search integration
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Problem
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest safe sequence that reproduces the problem.
+      placeholder: |
+        1. Create a temporary test vault
+        2. Run ...
+        3. Observe ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Relevant output
+      description: Paste sanitized logs, validation output, or screenshots if useful.
+      render: shell
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I removed credentials, personal vault content, and identifying local paths.
+          required: true

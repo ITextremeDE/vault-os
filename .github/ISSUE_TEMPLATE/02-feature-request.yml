@@ -1,0 +1,63 @@
+name: Feature request
+description: Propose a portable improvement to Vault-OS
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vault-OS features must remain local-first, provider-neutral, and usable
+        with independently named vaults.
+
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case
+      description: What should a Vault-OS user be able to accomplish?
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Current limitation
+      description: What is difficult or impossible today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed outcome
+      description: Describe the desired behavior. Implementation ideas are optional.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Note existing workarounds or other approaches you considered.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Portability checks
+      options:
+        - label: The request does not depend on a fixed vault name, user, organization, language, or absolute local path.
+          required: true
+        - label: The request does not require Vault-OS to manage `.obsidian`.
+          required: true
+        - label: The request can remain independent of a specific AI provider.
+          required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add sanitized examples, mockups, or related links if useful.
+    validations:
+      required: false
