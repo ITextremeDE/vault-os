@@ -9,6 +9,9 @@ context without owning a vault's content, name, language, or identity. Shared
 vault configuration can travel with ordinary Markdown files while AI clients,
 search indexes, credentials, and runtime settings remain device-local.
 
+For a concise overview and quick start, visit the
+[Vault-OS project page on ITextreme](https://itextreme.de/vault-os).
+
 Vault-OS helps you:
 
 - keep knowledge in ordinary Markdown and YAML files you control;
@@ -261,6 +264,10 @@ using it as evidence or changing it.
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
 - [Agent integration validation](docs/validation/2026-08-11-agent-integration.md)
 - [Production vault migration validation](docs/validation/2026-08-11-production-vault-migration.md)
+
+### Further reading
+
+- [Vault-OS 0.1.0: A portable operating system for Obsidian vaults](https://itextreme.de/articles/vault-os-portables-betriebssystem-fuer-obsidian-vaults)
 
 ## Repository layout
 
