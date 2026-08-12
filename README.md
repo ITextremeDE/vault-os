@@ -1,24 +1,32 @@
 # Vault-OS
 
-**A portable, AI-first and local-first framework for Obsidian vaults.**
+**Turn any Obsidian vault into a portable, AI-ready knowledge workspace without
+giving up ownership of your files.**
 
-Vault-OS provides versioned rules, schemas, workflows, reusable assets,
-validation, and agent context without owning a vault's content, name, language,
-or identity. Use Obsidian Sync for vault content and shared configuration while
-AI clients, search indexes, credentials, and runtime settings remain
-device-local.
+**AI-first, local-first, and compatible with Obsidian Sync.** Vault-OS provides
+versioned rules, schemas, workflows, reusable assets, validation, and agent
+context without owning a vault's content, name, language, or identity. Shared
+vault configuration can travel with ordinary Markdown files while AI clients,
+search indexes, credentials, and runtime settings remain device-local.
+
+Vault-OS helps you:
+
+- keep knowledge in ordinary Markdown and YAML files you control;
+- reproduce and safely update the working structure around that knowledge;
+- work with provider-neutral instructions for authorized local AI agents; and
+- use Obsidian Sync or another suitable file-sync service without treating
+  device-local AI state as vault content.
 
 It is not a pre-populated second brain, hosted service, Obsidian plugin, or AI
-model. It is an inspectable file-based system that is managed alongside the
-vault owner's content without taking ownership of that content.
+model.
 
 ## Status
 
-Vault-OS is under active development and has not reached its first public
-release. Installation and update behavior have been validated against a clean
-vault and a hash-verified copy of an existing real-world vault. A deliberate
-side-by-side production migration into a fresh Vault-OS instance has also been
-completed and validated. Publishing `0.1.0` remains pending.
+The current development build is `0.1.0-dev.13`; publishing the first stable
+release, `0.1.0`, remains pending. Installation and update behavior have been
+validated against a clean vault and a hash-verified copy of an existing
+real-world vault. A deliberate side-by-side production migration into a fresh
+Vault-OS instance has also been completed and validated.
 
 Use the current `main` branch for evaluation and development, not as a stable
 release contract.
@@ -54,7 +62,8 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
 
-Install a practical personal-knowledge profile into a new vault:
+Install the recommended starter profile for personal knowledge management into
+a new vault:
 
 ```bash
 .venv/bin/python -m vault_os install "/path/to/My Vault" \
@@ -68,26 +77,25 @@ Install a practical personal-knowledge profile into a new vault:
 .venv/bin/python -m vault_os doctor "/path/to/My Vault"
 ```
 
-The installer may create the target directory. Open it in Obsidian after the
-command succeeds. For an existing vault, custom language or paths, and
-side-by-side adoption, follow the complete [installation guide](docs/how-to/install.md).
+The installer may create the target directory. A successful health check ends
+with `Status: healthy`. Then open the vault in Obsidian, start with its generated
+`README.md` or `Dashboard.md`, and capture new material in the inbox.
 
-A local coding agent such as Codex or Claude Code can also perform the complete
-installation when it has authorized filesystem and terminal access. Give it the
-target vault, desired modules, and permission boundaries, then ask it to follow
-the [agent-assisted installation procedure](docs/how-to/install.md#let-an-ai-agent-install-vault-os).
-A browser-only LLM can explain the process but cannot install local files.
+For an existing vault, custom language or paths, and side-by-side adoption,
+follow the complete [installation guide](docs/how-to/install.md).
+
+A local coding agent such as Codex or Claude Code can perform the complete
+installation when it has authorized filesystem and terminal access. Give it
+the repository, exact target vault, desired profile, and permission boundaries,
+then ask it to follow `AGENTS.md` and the
+[agent-assisted installation procedure](docs/how-to/install.md#let-an-ai-agent-install-vault-os),
+finish with `doctor`, and report every warning.
 
 ## What Vault-OS installs
 
-The mandatory core provides:
-
-- operating principles and change rules;
-- portable schema and metadata conventions;
-- instance registers and runtime contracts;
-- deterministic validation; and
-- manifest-driven installation, update, device synchronization, diff, and
-  health checks.
+The mandatory core combines operating rules, schemas, workflows, validation,
+and a manifest-driven lifecycle for installation, updates, synchronization,
+diffs, and health checks.
 
 Fourteen optional modules add PARA, inbox, journal, knowledge processing,
 contacts, publishing, templates, review, governance, Git, search, navigation,
@@ -95,53 +103,40 @@ agent conventions, and audits. Every module is disabled by default. The
 [module catalog](docs/reference/modules.md) explains each module and suggests
 useful profiles.
 
-Every installation creates the configured inbox directory. With `para`, it
-also creates the configured projects, areas, resources, and archive roots; with
-`journal`, the configured journal root and its daily, weekly, and yearly
-subdirectories. These directories and everything later placed inside them
-remain user-owned and are not recorded as managed release content.
+An installation contains the managed system, visible instance configuration,
+a device-local release lock, and the configured user-owned inbox. The `para`
+and `journal` modules add their configured directory structures. The optional
+`bootstrap` command creates missing entry points such as `Profile.md`,
+`README.md`, `Dashboard.md`, and directory READMEs without overwriting or
+adopting existing content.
 
-Vault name, language, folder names, enabled modules, registers, and local
-integration choices belong to the installed instance. `MindOS` is not embedded
-as a required name or identity.
-
-The optional `bootstrap` command adds a user-owned vault entry point after
-installation: a profile note, root `README.md`, `Dashboard.md`, and READMEs for
-the configured inbox and enabled PARA and journal structures. It creates
-missing files only and never adopts or overwrites existing content. Filenames
-are configured below `bootstrap` in `Vault-OS/config.yaml`; for example,
-`profileFile: Ich.md` produces the German filename without making it a product
-default.
+Vault name, language, paths, filenames, enabled modules, registers, and local
+integration choices belong to the instance. `MindOS` is not embedded as a
+required name or identity.
 
 ## How it works
 
 Release manifests map package sources to target paths and checksums. The
-installer validates the complete package, stages all writes, and records the
-installed release in `.vault-os/lock.json` only after a successful transaction.
-Managed templates and views are materialized during the lifecycle from the
-installed field profile and path configuration. Their portable sources remain
-stable while each vault receives directly usable field names, values, and paths.
-Templates use complete English sources by default and complete German sources
-when `vault.language` is `de` or a regional variant such as `de-DE`. Languages
-without a packaged translation fall back to English.
+installer validates and stages the complete change before recording it in
+`.vault-os/lock.json`. Templates and views are materialized from each instance's
+field and path mappings; English and German sources are included, with English
+as the fallback for other languages.
 
 Vault-OS distinguishes three ownership domains:
 
 - **Managed files** belong to a Vault-OS release and are changed only through
   lifecycle commands.
-- **Instance files** belong to the vault owner and are created only when
-  missing; updates never overwrite them.
+- **Instance files** belong to the vault owner; updates never overwrite them.
 - **Runtime files** are generated locally and are not release content.
 
-Bootstrap files are ordinary user content. They are neither managed release
-files nor instance seeds, and their content belongs entirely to the vault after
-creation.
+Bootstrap files are ordinary user content and belong entirely to the vault
+after creation.
 
 Instance files use the visible `Vault-OS/` directory so Obsidian Sync and other
 approved file synchronization can carry them between devices. Device-specific
 release metadata, transactions, provider wrappers, client configuration, and
-search indexes stay in hidden `.vault-os`, `.agents`, `.claude`, `.codex`, and
-`.qmd` paths, including the project-local `.mcp.json` file.
+search indexes stay in the hidden `.vault-os/`, `.agents/`, `.claude/`,
+`.codex/`, and `.qmd/` directories or the project-local `.mcp.json` file.
 
 Before an update, every installed managed file must still match its recorded
 checksum. A missing or locally modified managed file stops the entire operation
@@ -193,7 +188,9 @@ Install useful agent modules and initialize one built-in provider:
   --module agents \
   --module search \
   --module knowledge \
-  --module audit
+  --module audit \
+  --module navigation \
+  --module templates
 
 .venv/bin/python -m vault_os agent-init "/path/to/AI Vault" \
   --provider codex
@@ -266,47 +263,15 @@ using it as evidence or changing it.
 ## Repository layout
 
 ```text
-src/core/                 Portable core files
-src/modules/              Optional Vault-OS modules
+src/                      Portable core and optional module sources
 instance-template/        Neutral instance configuration
-manifests/                Ownership, source, target, and checksum declarations
-vault_os/                 Lifecycle and provider-adapter implementation
-bin/                      Executable command wrapper
-analysis/                 Canonical source classification data
-scripts/                  Development and validation tools
-tests/                    Automated checks and test vaults
-docs/how-to/              Installation and operating guides
-docs/reference/           Technical contracts and catalogs
-docs/adr/                 Architecture decision records
-docs/analysis/            Human-readable analysis results
-docs/validation/          Release acceptance evidence
-.github/workflows/        Automated acceptance checks
+manifests/                Ownership, paths, and checksums
+vault_os/                 Lifecycle and provider adapters
+docs/                     Guides, references, decisions, and evidence
+tests/ and scripts/       Automated checks and validation tools
 ```
 
-## Current implementation
-
-- All 15 pure core sources, all 88 pure module sources, both pure instance
-  sources, and all portions of the 13 mixed sources have been extracted into
-  their assigned ownership domains.
-- The package contains a required core, 14 optional modules, neutral instance
-  seeds, and one declared runtime lock. The manifests are the canonical source
-  for exact package contents.
-- Transactional installation, user-owned bootstrap, update, diff, device
-  synchronization, doctor, release locking, integrity validation, conflict
-  protection, provider adapters, and optional QMD MCP integration are
-  implemented.
-- The lifecycle has passed automated clean-vault tests and hash-verified
-  acceptance against a temporary copy of an existing real-world vault.
-- A production vault has been migrated side by side into a fresh installation;
-  the legacy source remained unchanged as the recovery copy.
-
-## Release status
-
-The extraction, lifecycle, provider-adapter, documentation, and production-vault
-migration milestones are complete. Version `0.1.0` remains an unreleased
-development build; operational release work is tracked outside this README.
-
-## Development validation
+## Development and support
 
 ```bash
 .venv/bin/python -m unittest discover -s tests
@@ -316,8 +281,11 @@ development build; operational release work is tracked outside this README.
 git diff --check
 ```
 
-Contribution rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Report suspected
-vulnerabilities through the private process in [SECURITY.md](SECURITY.md).
+Questions, bug reports, and feature proposals belong in
+[GitHub Issues](https://github.com/ITextremeDE/vault-os/issues). Contribution
+rules are in [CONTRIBUTING.md](CONTRIBUTING.md). Report suspected vulnerabilities
+through the private process in [SECURITY.md](SECURITY.md), not through a public
+issue.
 
 ## License
 
