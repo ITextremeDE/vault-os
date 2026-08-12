@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-08-12
+
 ### Added
 
 - A private security-reporting policy for the public repository.
@@ -83,6 +85,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Reworked the README around the product value, verified installation paths,
+  first-use guidance, provider-neutral AI setup, and concise support routing.
 - Extended acceptance CI to cover the minimum supported Python 3.10 and the
   current Python 3.14 runtime.
 - Replaced the README task checklist with a concise release status so
@@ -150,3 +154,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   directories in both managed operating rules and generated agent instructions.
 - Prevented portable extraction from replacing established rich templates with
   minimal English skeletons.
+
+[Unreleased]: https://github.com/ITextremeDE/vault-os/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ITextremeDE/vault-os/releases/tag/v0.1.0

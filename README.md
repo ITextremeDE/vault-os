@@ -22,14 +22,14 @@ model.
 
 ## Status
 
-The current development build is `0.1.0-dev.13`; publishing the first stable
-release, `0.1.0`, remains pending. Installation and update behavior have been
-validated against a clean vault and a hash-verified copy of an existing
-real-world vault. A deliberate side-by-side production migration into a fresh
-Vault-OS instance has also been completed and validated.
+Vault-OS `0.1.0` is the first published versioned release. Installation and
+update behavior have been validated against clean vaults and a hash-verified
+copy of an existing real-world vault. A deliberate side-by-side production
+migration into a fresh Vault-OS instance has also been completed and validated.
 
-Use the current `main` branch for evaluation and development, not as a stable
-release contract.
+Use the `v0.1.0` tag for a reproducible installation. The `main` branch contains
+ongoing development, and interfaces may continue to evolve throughout the
+`0.x` release line.
 
 ## Requirements
 
@@ -58,6 +58,7 @@ Clone the public repository and prepare an isolated Python environment:
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
 cd vault-os
+git checkout v0.1.0
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
@@ -256,6 +257,7 @@ using it as evidence or changing it.
 
 - [Architecture decisions](docs/adr/)
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
+- [Vault-OS 0.1.0 release validation](docs/validation/2026-08-12-v0.1.0-release.md)
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
 - [Agent integration validation](docs/validation/2026-08-11-agent-integration.md)
 - [Production vault migration validation](docs/validation/2026-08-11-production-vault-migration.md)

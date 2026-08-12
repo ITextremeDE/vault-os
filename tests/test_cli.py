@@ -68,7 +68,7 @@ class VaultOSCliTests(unittest.TestCase):
         self.copy_package(destination)
         repository_path = destination / "manifests/repository.json"
         repository = json.loads(repository_path.read_text(encoding="utf-8"))
-        repository["version"] = "0.1.0-dev.14"
+        repository["version"] = "0.1.1-dev.1"
         repository_path.write_text(
             json.dumps(repository, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -739,7 +739,7 @@ class VaultOSCliTests(unittest.TestCase):
             lock = json.loads(
                 (vault / ".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.14")
+            self.assertEqual(lock["packageVersion"], "0.1.1-dev.1")
 
     def test_update_migrates_legacy_hidden_instance_files_without_deleting_them(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -1293,7 +1293,7 @@ qmd = { command = "existing-qmd", args = ["mcp"] }
             lock = json.loads(
                 secondary.joinpath(".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0-dev.13")
+            self.assertEqual(lock["packageVersion"], "0.1.0")
             self.assertEqual(
                 secondary.joinpath("Vault-OS/config.yaml").read_bytes(),
                 config_before,

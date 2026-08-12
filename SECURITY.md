@@ -2,9 +2,9 @@
 
 ## Supported versions
 
-Vault-OS has not published a stable release yet. Security fixes currently
-target the latest commit on `main`. After `0.1.0`, this section will identify
-the supported release lines.
+Security fixes target the latest published `0.1.x` release and the maintained
+development state on `main`. Earlier `0.1.0-dev.*` builds are unsupported;
+upgrade to the published release before reporting a version-specific issue.
 
 ## Report a vulnerability
 

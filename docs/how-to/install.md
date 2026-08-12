@@ -17,18 +17,19 @@ Codex, Claude Code, and QMD are optional and are covered by the
 
 ## Obtain Vault-OS
 
-Vault-OS has not yet published `0.1.0`. Until then, a checkout of `main` is a
-development build rather than a stable release.
+The current published release is `0.1.0`. Use its tag for a reproducible
+installation instead of installing an arbitrary development commit from
+`main`.
 
 Clone the public repository:
 
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
 cd vault-os
+git checkout v0.1.0
 ```
 
-For a released version, check out its tag before installation rather than using
-an arbitrary development commit.
+For a later release, replace `v0.1.0` with the intended version tag.
 
 ## Prepare Python
 
