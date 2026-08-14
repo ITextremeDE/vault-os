@@ -24,40 +24,19 @@ SORT file.mtime DESC
 
 ## 📂 Active projects
 
-```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} != "{{values.status.completed}}" AND {{fields.status}} != "{{values.status.archived}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Active projects]]
 
 ## ⏳ Waiting
 
-```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.waiting}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Waiting]]
 
 ## ✅ Completed, not archived
 
-```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.completed}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Completed, not archived]]
 
 ## 🕒 Recently changed
 
-```dataview
-TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}"
-WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
-SORT file.mtime DESC
-LIMIT 10
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Recently changed]]
 
 ## 🧭 Reflection
 

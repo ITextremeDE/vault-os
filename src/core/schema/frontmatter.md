@@ -12,6 +12,8 @@ queries, agents, and automation.
 - Instance registers provide concrete controlled values such as areas.
 - Required fields are explicit; absence and an empty value are not equivalent.
 - Multi-value fields remain YAML lists, including when empty.
+- Single-value relations use one Wiki link; multi-value relations use YAML
+  lists of Wiki links.
 - Date-only fields use the ISO `YYYY-MM-DD` format.
 - Extension fields require one canonical definition and a recurring purpose.
 - External references use verified ID/URL pairs; explicit instance pairs may

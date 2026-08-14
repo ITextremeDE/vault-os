@@ -26,41 +26,19 @@ SORT file.mtime DESC
 
 ## 📂 Active projects
 
-```dataview
-TABLE file.link AS Project, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} != "{{values.status.completed}}" AND {{fields.status}} != "{{values.status.archived}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Active projects]]
 
 ## 👥 Contacts
 
-```dataview
-TABLE file.link AS Contact, {{fields.type}} AS Type, {{fields.status}} AS Status, choice({{moduleFields.last_contact}}, dateformat({{moduleFields.last_contact}}, "yyyy-MM-dd"), "–") AS "Last contact", dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.contacts}}"
-WHERE {{fields.area}} = this.{{fields.area}} AND file.name != "README"
-SORT default({{moduleFields.last_contact}}, date("1900-01-01")) DESC, file.name ASC
-```
+![[{{paths.system}}/04 Assets/Bases/Area Dashboards.base#Contacts]]
 
 ## 🔗 Relevant links
 
-```dataview
-TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}" OR "{{paths.areas}}" OR "{{paths.resources}}"
-WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
-SORT file.mtime DESC
-LIMIT 10
-```
+![[{{paths.system}}/04 Assets/Bases/Area Dashboards.base#Relevant links]]
 
 ## 🕒 Recently changed
 
-```dataview
-TABLE file.link AS Note, {{fields.type}} AS Type, {{fields.status}} AS Status, dateformat(file.ctime, "yyyy-MM-dd") AS Created, dateformat(file.mtime, "yyyy-MM-dd") AS Modified
-FROM "{{paths.projects}}" OR "{{paths.areas}}" OR "{{paths.resources}}"
-WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
-SORT file.mtime DESC
-LIMIT 10
-```
+![[{{paths.system}}/04 Assets/Bases/Area Dashboards.base#Recently changed]]
 
 ## 🧭 Reflection
 

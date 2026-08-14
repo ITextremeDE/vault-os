@@ -3,11 +3,16 @@ filters:
   and:
     - file.ext == "md"
     - {{fields.kind}} != "{{values.kind.system}}"
+formulas:
+  link: "file.asLink(file.basename)"
+properties:
+  formula.link:
+    displayName: Note
 views:
   - type: table
     name: Review queue
     order:
-      - file.name
+      - formula.link
       - {{fields.kind}}
       - {{fields.type}}
       - {{fields.status}}

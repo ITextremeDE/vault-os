@@ -18,13 +18,35 @@ created:
 
 # {{title}}
 
-| **Topic** | |
-| --- | --- |
-| **Location** | `= default(this.{{moduleFields.location}}, "–")` |
-| **Date** | `= choice(this.{{moduleFields.date}}, dateformat(this.{{moduleFields.date}}, "yyyy-MM-dd"), "–")` |
-| **Time** | `= default(this.{{moduleFields.time}}, "–")` |
-| **Author** | `= default(this.{{moduleFields.author}}, "–")` |
-| **Participants** | `= default(this.{{moduleFields.participants}}, [])` |
+```base
+filters: "file.path == this.file.path"
+formulas:
+  value_1: "if({{moduleFields.location}}, {{moduleFields.location}}, \"–\")"
+  value_2: "if({{moduleFields.date}}, {{moduleFields.date}}.format(\"YYYY-MM-DD\"), \"–\")"
+  value_3: "if({{moduleFields.time}}, {{moduleFields.time}}, \"–\")"
+  value_4: "if({{moduleFields.author}}, {{moduleFields.author}}, \"–\")"
+  value_5: "if(list({{moduleFields.participants}}).isEmpty(), \"–\", {{moduleFields.participants}})"
+properties:
+  "formula.value_1":
+    displayName: "Location"
+  "formula.value_2":
+    displayName: "Date"
+  "formula.value_3":
+    displayName: "Time"
+  "formula.value_4":
+    displayName: "Author"
+  "formula.value_5":
+    displayName: "Participants"
+views:
+  - type: table
+    name: "Table"
+    order:
+      - "formula.value_1"
+      - "formula.value_2"
+      - "formula.value_3"
+      - "formula.value_4"
+      - "formula.value_5"
+```
 
 ## 🎯 Occasion
 

@@ -21,7 +21,7 @@
       ],
       "source": "src/modules/review/views/review.base",
       "target": "Review.base",
-      "sha256": "e7f31292890e5d71f0036b440c99f268838466a9d184b273d5f4f294d38b3443",
+      "sha256": "49b12eb3a782b25be618e3cd5d77bd1a9a126393581e47325fa5539f9ac7b4e9",
       "installMode": "managed",
       "materialize": "instance"
     }

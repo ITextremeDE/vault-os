@@ -25,7 +25,7 @@ ownership and future updates.
 - Language selection occurs before field, value, module-field, and path
   materialization. All variants therefore share one semantic and ownership
   contract.
-- The initial package provides complete English and German variants for all 21
+- The package provides complete English and German variants for all 22
   content templates and the template-module README.
 - Reusable structure from MindOS is retained, while references to a particular
   person, organization, vault, task system, or external service remain outside

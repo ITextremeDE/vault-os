@@ -9,6 +9,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -600,6 +601,7 @@ class VaultOSCliTests(unittest.TestCase):
                     "Person": "person",
                     "Einzelkontakt": "person",
                     "Ansprechpartner": "representative",
+                    "Rolle": "role",
                     "Dashboard": "dashboard",
                 },
                 "status": {
@@ -619,7 +621,12 @@ class VaultOSCliTests(unittest.TestCase):
                 "relationship": "beziehung",
                 "relevance": "relevanz",
                 "last_contact": "letzter_kontakt",
-                "organizations": "organisationen",
+                "job": "job",
+                "person": "person",
+                "organization": "organisation",
+                "function": "funktion",
+                "start_date": "von",
+                "end_date": "bis",
             }
             fields_path.write_text(
                 yaml.safe_dump(fields, sort_keys=False, allow_unicode=True),
@@ -642,16 +649,106 @@ class VaultOSCliTests(unittest.TestCase):
             organization = vault.joinpath(
                 "99 System/04 Assets/Templates/Contacts/Organization.md"
             ).read_text(encoding="utf-8")
-            self.assertIn('FROM "03 Ressourcen/Kontakte"', organization)
-            self.assertIn('typ = "Ansprechpartner"', organization)
-            self.assertIn("contains(organisationen", organization)
+            self.assertNotIn("```base", organization)
+            self.assertNotIn("```dataview", organization)
+            self.assertIn(
+                "![[99 System/04 Assets/Bases/Contact Roles.base#Ansprechpartner]]",
+                organization,
+            )
+            self.assertIn(
+                "![[99 System/04 Assets/Bases/Contact Details.base#Beziehung]]",
+                organization,
+            )
+
+            contact_details = vault.joinpath(
+                "99 System/04 Assets/Bases/Contact Details.base"
+            ).read_text(encoding="utf-8")
+            parsed_contact_details = yaml.safe_load(contact_details)
+            self.assertEqual(
+                [view["name"] for view in parsed_contact_details["views"]],
+                ["Job", "Beziehung"],
+            )
+            self.assertEqual(parsed_contact_details["filters"], "file.path == this.file.path")
+            self.assertIn("job_display", contact_details)
+            self.assertIn("relationship_display", contact_details)
+
+            contact_roles = vault.joinpath(
+                "99 System/04 Assets/Bases/Contact Roles.base"
+            ).read_text(encoding="utf-8")
+            parsed_contact_roles = yaml.safe_load(contact_roles)
+            self.assertEqual(
+                [view["name"] for view in parsed_contact_roles["views"]],
+                ["Personenrollen", "Ansprechpartner"],
+            )
+            self.assertIn("file.hasLink(this.file)", contact_roles)
+            self.assertIn('typ == \\"Rolle\\"', contact_roles)
+            self.assertIn('"note.person":', contact_roles)
+            self.assertIn('"note.funktion":', contact_roles)
+            self.assertIn('"note.zustand":', contact_roles)
+
+            role = vault.joinpath(
+                "99 System/04 Assets/Templates/Contacts/Role.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn('typ: "Rolle"', role)
+            self.assertIn("organisation:", role)
+            self.assertIn("funktion:", role)
 
             dashboard = vault.joinpath(
                 "99 System/04 Assets/Templates/PARA/Area Dashboard.md"
             ).read_text(encoding="utf-8")
             self.assertIn('FROM "01 Projekte" OR "02 Bereiche"', dashboard)
-            self.assertIn("bereich = this.bereich", dashboard)
+            self.assertEqual(dashboard.count("```base"), 0)
+            self.assertEqual(dashboard.count("```dataview"), 1)
+            self.assertIn(
+                "![[99 System/04 Assets/Bases/Project Dashboards.base#Aktive Projekte]]",
+                dashboard,
+            )
+            self.assertIn(
+                "![[99 System/04 Assets/Bases/Area Dashboards.base#Kontakte]]",
+                dashboard,
+            )
             self.assertNotIn("{{area}}", dashboard)
+
+            project_dashboards = vault.joinpath(
+                "99 System/04 Assets/Bases/Project Dashboards.base"
+            ).read_text(encoding="utf-8")
+            parsed_project_dashboards = yaml.safe_load(project_dashboards)
+            self.assertEqual(
+                [view["name"] for view in parsed_project_dashboards["views"]],
+                [
+                    "Aktive Projekte",
+                    "Warten auf",
+                    "Abgeschlossen, nicht archiviert",
+                    "Zuletzt geändert",
+                    "Archiv – zuletzt geändert",
+                ],
+            )
+            self.assertIn(
+                'file.inFolder(\\"01 Projekte/\\" + this.bereich)',
+                project_dashboards,
+            )
+            self.assertIn(
+                'file.inFolder(\\"04 Archive/01 Projekte/\\" + this.bereich)',
+                project_dashboards,
+            )
+
+            area_dashboards = vault.joinpath(
+                "99 System/04 Assets/Bases/Area Dashboards.base"
+            ).read_text(encoding="utf-8")
+            parsed_area_dashboards = yaml.safe_load(area_dashboards)
+            self.assertEqual(
+                [view["name"] for view in parsed_area_dashboards["views"]],
+                [
+                    "Kontakte",
+                    "Relevante Verknüpfungen",
+                    "Zuletzt geändert",
+                    "Archiv – relevante Verknüpfungen",
+                    "Archiv – zuletzt geändert",
+                ],
+            )
+            self.assertIn('bereich == this.bereich', area_dashboards)
+            self.assertIn('"note.typ":', area_dashboards)
+            self.assertIn('"note.zustand":', area_dashboards)
 
             review = vault.joinpath("99 System/Review.base").read_text(
                 encoding="utf-8"
@@ -1293,7 +1390,9 @@ qmd = { command = "existing-qmd", args = ["mcp"] }
             lock = json.loads(
                 secondary.joinpath(".vault-os/lock.json").read_text(encoding="utf-8")
             )
-            self.assertEqual(lock["packageVersion"], "0.1.0")
+            self.assertEqual(
+                lock["packageVersion"], Package.load(REPOSITORY_ROOT).version
+            )
             self.assertEqual(
                 secondary.joinpath("Vault-OS/config.yaml").read_bytes(),
                 config_before,

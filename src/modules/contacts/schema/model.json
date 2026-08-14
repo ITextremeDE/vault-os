@@ -3,13 +3,14 @@
   "module": "contacts",
   "contentKinds": {
     "contact": {
-      "types": ["person", "representative", "organization"],
+      "types": ["person", "representative", "organization", "role"],
       "statuses": ["active", "inactive", "departed", "deceased", "archived"],
       "areaRequired": true,
       "filenameByType": {
         "person": "Family name, Given name",
         "representative": "Family name, Given name",
-        "organization": "Organization name"
+        "organization": "Organization name",
+        "role": "Organization – Family name, Given name – Function"
       },
       "filenamePatternByType": {
         "person": "^.+, .+$",
@@ -22,6 +23,10 @@
     "relationship": {"type": "register", "register": "relationships"},
     "relevance": {"type": "register", "register": "relevance"},
     "last_contact": {"type": "date"},
-    "organizations": {"type": "wiki-link-list", "typeRequired": "representative"}
+    "person": {"type": "wiki-link", "typeRequired": "role"},
+    "organization": {"type": "wiki-link", "typeRequired": "role"},
+    "function": {"type": "string"},
+    "start_date": {"type": "date"},
+    "end_date": {"type": "date"}
   }
 }

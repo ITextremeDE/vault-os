@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: MPL-2.0
+filters: "(file.inFolder(\"{{paths.contacts}}/Roles\")) && ({{fields.type}} == \"{{values.type.role}}\" && file.hasLink(this.file))"
+formulas:
+  last_contact_display: "if(file({{moduleFields.person}}).properties.{{moduleFields.last_contact}}, file({{moduleFields.person}}).properties.{{moduleFields.last_contact}}.format(\"YYYY-MM-DD\"), \"–\")"
+  start_display: "if({{moduleFields.start_date}}, {{moduleFields.start_date}}.format(\"YYYY-MM-DD\"), \"–\")"
+  end_display: "if({{moduleFields.end_date}}, {{moduleFields.end_date}}.format(\"YYYY-MM-DD\"), \"–\")"
+properties:
+  "note.{{moduleFields.organization}}":
+    displayName: "Organization"
+  "note.{{moduleFields.person}}":
+    displayName: "Contact"
+  "note.{{moduleFields.function}}":
+    displayName: "Function"
+  "note.{{fields.status}}":
+    displayName: "Role status"
+  "formula.last_contact_display":
+    displayName: "Last contact"
+  "formula.start_display":
+    displayName: "From"
+  "formula.end_display":
+    displayName: "Until"
+views:
+  - type: table
+    name: "Person roles"
+    sort:
+      - property: "note.{{fields.status}}"
+        direction: ASC
+      - property: "note.{{moduleFields.organization}}"
+        direction: ASC
+    order:
+      - "note.{{moduleFields.organization}}"
+      - "note.{{moduleFields.function}}"
+      - "note.{{fields.status}}"
+      - "formula.start_display"
+      - "formula.end_display"
+  - type: table
+    name: "Organization contacts"
+    sort:
+      - property: "note.{{fields.status}}"
+        direction: ASC
+      - property: "note.{{moduleFields.person}}"
+        direction: ASC
+    order:
+      - "note.{{moduleFields.person}}"
+      - "note.{{moduleFields.function}}"
+      - "note.{{fields.status}}"
+      - "formula.last_contact_display"
+      - "formula.start_display"
+      - "formula.end_display"

@@ -16,7 +16,7 @@
       ],
       "source": "src/modules/contacts/schema/model.json",
       "target": "01 Schema/Models/contacts.json",
-      "sha256": "772c137429531a120c69ad7b7a3ae19b9422aab07200d7738d46b2258cd4079c",
+      "sha256": "9fb600894acd36bf5b3df194b8368105845ce3f56be5aa55223be17726d3d225",
       "installMode": "managed"
     },
     {
@@ -25,7 +25,7 @@
       ],
       "source": "src/modules/contacts/workflows/contacts.md",
       "target": "03 Workflows/Contacts.md",
-      "sha256": "35f728de8a749695c41f310c3ea2e68a0edbf83b85aa395b5742c259f01dd786",
+      "sha256": "c75ef79f7660e70760324970e69d345110ad124deea115f066a8c409e30f0c08",
       "installMode": "managed"
     },
     {
@@ -34,7 +34,7 @@
       ],
       "source": "src/modules/contacts/prompts/create-contact.md",
       "target": "04 Assets/Prompts/Create Contact.md",
-      "sha256": "ec1e5c73c4350e184fa7d839a76766920367dc8caadf1d00f9461ea352ad028d",
+      "sha256": "8d98561c27119efe57e4f89c53b0a2432299efb1cab5fd4334d858c2f015d30e",
       "installMode": "managed"
     },
     {
@@ -43,13 +43,13 @@
       ],
       "source": "src/modules/contacts/templates/person.md",
       "target": "04 Assets/Templates/Contacts/Person.md",
-      "sha256": "dd07b6bc17c31930ce1f05da7f238fdbfcecf3fb0019ad8da0d549b4cb2e5be8",
+      "sha256": "bac41e8ff6530255392172e5b6db87bf964c28f5b923be1fe709ba624edf9348",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/person.md",
-          "sha256": "fcff75729c8fd8e7886c09ca187887c1c7c73c948debe169064688547c45cae1"
+          "sha256": "9ff4cbdcdb529767bbce3719e31c47df762212ceddce1d06bd1275a3283047e6"
         }
       }
     },
@@ -59,13 +59,13 @@
       ],
       "source": "src/modules/contacts/templates/representative.md",
       "target": "04 Assets/Templates/Contacts/Representative.md",
-      "sha256": "f9f1c53f4808a0372c1a3398906a2c39927a2c3d824fc4e66985c2b4934783f3",
+      "sha256": "b5c3ce9a1b6e0d01ee874850f26d2586c4f4c1821d342e6a0fdf1aa24a3cf1dc",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/representative.md",
-          "sha256": "13cc329d986b0e87a16b797b450920e543324d555947e56b460d6b55af4b0489"
+          "sha256": "ea78ffd59c561cfed23533f66f5bed5527aa4a5caf7ef82f7b173adc503ec5f1"
         }
       }
     },
@@ -75,13 +75,65 @@
       ],
       "source": "src/modules/contacts/templates/organization.md",
       "target": "04 Assets/Templates/Contacts/Organization.md",
-      "sha256": "7f6398b5e26fc2610b538cf9e5860531281e0d2e8f9bc4a4eb4e01e92954d51f",
+      "sha256": "5984fc580f41e0d1ce3ab25fc7301335d8e4593b90b0237ea7d2af8192fea5a8",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/organization.md",
-          "sha256": "90875821c36aa655869e14e8b8c5421a46213c4a2737077ef4e47a3b9f780814"
+          "sha256": "5e35ef897d03345c3ebf386aa5578d64faa3079ce323d07b2b91aefe6201125f"
+        }
+      }
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Ansprechpartner.md"
+      ],
+      "source": "src/modules/contacts/templates/role.md",
+      "target": "04 Assets/Templates/Contacts/Role.md",
+      "sha256": "b4e71f5f40dff480bf78cd34541e10002ba71cae421526b46c4c5b46e0346d10",
+      "installMode": "managed",
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/contacts/templates/de/role.md",
+          "sha256": "256a995df160ca8e7c26fa09488d582d1f8cefe531935b9206bd7622815eb0f9"
+        }
+      }
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Einzelkontakt.md",
+        "99 System/04 Assets/Vorlagen/Kontakt – Ansprechpartner.md",
+        "99 System/04 Assets/Vorlagen/Kontakt – Organisation.md"
+      ],
+      "source": "src/modules/contacts/views/contact-roles.base",
+      "target": "04 Assets/Bases/Contact Roles.base",
+      "sha256": "cd2436ffddc8d25dfde8a4f4d39c12d085b0b0739e74555f729c77445a99cf7a",
+      "installMode": "managed",
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/contacts/views/de/contact-roles.base",
+          "sha256": "635b4afad8a10dd0587fdb43c74dca45b95e36e9440fcd1480ca5f5456e6e9de"
+        }
+      }
+    },
+    {
+      "origins": [
+        "99 System/04 Assets/Vorlagen/Kontakt – Einzelkontakt.md",
+        "99 System/04 Assets/Vorlagen/Kontakt – Ansprechpartner.md",
+        "99 System/04 Assets/Vorlagen/Kontakt – Organisation.md"
+      ],
+      "source": "src/modules/contacts/views/contact-details.base",
+      "target": "04 Assets/Bases/Contact Details.base",
+      "sha256": "38b1b8259c7b51b2717e8c5861715fd1c536266ee5e35345010ba0a511bd4bcb",
+      "installMode": "managed",
+      "materialize": "instance",
+      "localizedSources": {
+        "de": {
+          "source": "src/modules/contacts/views/de/contact-details.base",
+          "sha256": "8adbaa82d9a486fc8c4ee759938e4d7bf209456fb9f2cdde1394228cb50b8a8b"
         }
       }
     }

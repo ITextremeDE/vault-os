@@ -12,12 +12,12 @@
       ],
       "source": "src/modules/templates/README.md",
       "target": "04 Assets/Templates/README.md",
-      "sha256": "a1b235690006448a477f06b033a25179f9604de2042ed6b6da79e48427387557",
+      "sha256": "3171ccfd21902d78c4b888dc3ebafd8dc4bd8c51145696c06017f537afd24ab1",
       "installMode": "managed",
       "localizedSources": {
         "de": {
           "source": "src/modules/templates/de/README.md",
-          "sha256": "0d79e8bd928bc159615328d99450f4c49642e228886cb4bc46354ee2e298c451"
+          "sha256": "9829f4e4802d41b3570563c27b041ea31e113d86b76a64f04ac98f15e458ea1d"
         }
       }
     },

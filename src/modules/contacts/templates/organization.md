@@ -25,18 +25,11 @@ created:
 
 ## 🤝 Relationship
 
-- **Relationship type:** `= default(this.{{moduleFields.relationship}}, "–")`
-- **Relevance:** `= default(this.{{moduleFields.relevance}}, "–")`
-- **Last contact:** `= choice(this.{{moduleFields.last_contact}}, dateformat(this.{{moduleFields.last_contact}}, "yyyy-MM-dd"), "–")`
+![[{{paths.system}}/04 Assets/Bases/Contact Details.base#Relationship]]
 
-## 👥 Representatives
+## 👥 Representatives and roles
 
-```dataview
-TABLE file.link AS Representative, {{fields.status}} AS Status, choice({{moduleFields.last_contact}}, dateformat({{moduleFields.last_contact}}, "yyyy-MM-dd"), "–") AS "Last contact"
-FROM "{{paths.contacts}}"
-WHERE {{fields.type}} = "{{values.type.representative}}" AND contains({{moduleFields.organizations}}, this.file.link)
-SORT default({{moduleFields.last_contact}}, date("1900-01-01")) DESC, file.name ASC
-```
+![[{{paths.system}}/04 Assets/Bases/Contact Roles.base#Organization contacts]]
 
 ## 🗓️ Interactions
 

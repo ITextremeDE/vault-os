@@ -20,6 +20,7 @@ Fallback. Die Übersetzung verändert Darstellung und Hinweise, aber niemals
 semantische Kennungen, Feldzuordnungen, Pfade oder Eigentumsgrenzen.
 
 Vorlagen sind bewusst nützliche Strukturen statt leerer Gerippe. Sie dürfen
-Leitfragen, Dataview-Abfragen und wiederkehrende Kontextabschnitte enthalten,
-müssen aber unabhängig von einem bestimmten Vault, einer Person, Organisation
-oder einem externen Dienst bleiben.
+Leitfragen, Obsidian-Bases-Ansichten, Dataview-Aufgabenabfragen für die von Bases
+nicht einzeln bereitgestellten Markdown-Aufgaben und wiederkehrende
+Kontextabschnitte enthalten, müssen aber unabhängig von einem bestimmten Vault,
+einer Person, Organisation oder einem externen Dienst bleiben.

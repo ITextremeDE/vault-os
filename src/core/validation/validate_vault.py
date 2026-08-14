@@ -28,7 +28,7 @@ WIKI_LINK_RE = re.compile(r"(!?)\[\[([^\]]+)\]\]")
 MARKDOWN_LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 FIELD_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-FIELD_TYPES = {"date", "register", "string", "wiki-link-list"}
+FIELD_TYPES = {"date", "register", "string", "wiki-link", "wiki-link-list"}
 SENSITIVE_QUERY_KEYS = {
     "access_token",
     "api_key",
@@ -562,6 +562,18 @@ def module_field_findings(
                     f"{stored_name} must use YYYY-MM-DD",
                 )
             )
+        elif field_type == "wiki-link":
+            match = WIKI_LINK_RE.fullmatch(value) if isinstance(value, str) else None
+            if match is None or not wiki_target(match.group(2)):
+                findings.append(
+                    Finding(
+                        "error",
+                        "frontmatter.wiki_link",
+                        rel,
+                        1,
+                        f"{stored_name} must be a Wiki link",
+                    )
+                )
         elif field_type == "wiki-link-list":
             if not isinstance(value, list) or any(
                 not isinstance(item, str)

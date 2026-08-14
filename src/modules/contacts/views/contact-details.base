@@ -1,0 +1,27 @@
+# SPDX-License-Identifier: MPL-2.0
+filters: "file.path == this.file.path"
+formulas:
+  job_display: "if({{moduleFields.job}}, {{moduleFields.job}}, \"–\")"
+  relationship_display: "if(list({{moduleFields.relationship}}).isEmpty(), \"–\", {{moduleFields.relationship}})"
+  relevance_display: "if({{moduleFields.relevance}}, {{moduleFields.relevance}}, \"–\")"
+  last_contact_display: "if({{moduleFields.last_contact}}, {{moduleFields.last_contact}}.format(\"YYYY-MM-DD\"), \"–\")"
+properties:
+  "formula.job_display":
+    displayName: "Job"
+  "formula.relationship_display":
+    displayName: "Relationship"
+  "formula.relevance_display":
+    displayName: "Relevance"
+  "formula.last_contact_display":
+    displayName: "Last contact"
+views:
+  - type: table
+    name: "Job"
+    order:
+      - "formula.job_display"
+  - type: table
+    name: "Relationship"
+    order:
+      - "formula.relationship_display"
+      - "formula.relevance_display"
+      - "formula.last_contact_display"

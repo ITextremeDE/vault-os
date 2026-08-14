@@ -24,40 +24,19 @@ SORT file.mtime DESC
 
 ## 📂 Aktive Projekte
 
-```dataview
-TABLE file.link AS Projekt, {{fields.type}} AS Typ, {{fields.status}} AS Status, dateformat(file.ctime, "dd.MM.yyyy") AS Erstellt, dateformat(file.mtime, "dd.MM.yyyy") AS Geändert
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} != "{{values.status.completed}}" AND {{fields.status}} != "{{values.status.archived}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Aktive Projekte]]
 
 ## ⏳ Warten auf
 
-```dataview
-TABLE file.link AS Projekt, {{fields.type}} AS Typ, dateformat(file.ctime, "dd.MM.yyyy") AS Erstellt, dateformat(file.mtime, "dd.MM.yyyy") AS Geändert
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.waiting}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Warten auf]]
 
 ## ✅ Abgeschlossen, nicht archiviert
 
-```dataview
-TABLE file.link AS Projekt, {{fields.type}} AS Typ, dateformat(file.ctime, "dd.MM.yyyy") AS Erstellt, dateformat(file.mtime, "dd.MM.yyyy") AS Geändert
-FROM "{{paths.projects}}"
-WHERE {{fields.kind}} = "{{values.kind.project}}" AND {{fields.area}} = this.{{fields.area}} AND {{fields.status}} = "{{values.status.completed}}" AND file.name != "README"
-SORT file.mtime DESC
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Abgeschlossen, nicht archiviert]]
 
 ## 🕒 Zuletzt geändert
 
-```dataview
-TABLE file.link AS Datei, {{fields.type}} AS Typ, {{fields.status}} AS Status, dateformat(file.ctime, "dd.MM.yyyy") AS Erstellt, dateformat(file.mtime, "dd.MM.yyyy") AS Geändert
-FROM "{{paths.projects}}"
-WHERE {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
-SORT file.mtime DESC
-LIMIT 10
-```
+![[{{paths.system}}/04 Assets/Bases/Project Dashboards.base#Zuletzt geändert]]
 
 ## 🧭 Reflexion
 

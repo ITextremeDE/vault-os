@@ -25,13 +25,16 @@ created:
 
 - **Vorname:**
 - **Nachname:**
-- **Job:** `= default(this.{{moduleFields.job}}, "–")`
+
+![[{{paths.system}}/04 Assets/Bases/Contact Details.base#Job]]
+
+## 🏢 Rollen und Organisationen
+
+![[{{paths.system}}/04 Assets/Bases/Contact Roles.base#Personenrollen]]
 
 ## 🤝 Beziehung
 
-- **Beziehungstyp:** `= default(this.{{moduleFields.relationship}}, "–")`
-- **Relevanz:** `= default(this.{{moduleFields.relevance}}, "–")`
-- **Letzter Kontakt:** `= choice(this.{{moduleFields.last_contact}}, dateformat(this.{{moduleFields.last_contact}}, "dd.MM.yyyy"), "–")`
+![[{{paths.system}}/04 Assets/Bases/Contact Details.base#Beziehung]]
 
 ## 🗓️ Interaktionen
 

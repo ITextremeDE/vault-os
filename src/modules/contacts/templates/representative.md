@@ -12,7 +12,6 @@ created:
 {{moduleFields.relationship}}: []
 {{moduleFields.relevance}}:
 {{moduleFields.last_contact}}:
-{{moduleFields.organizations}}: []
 ---
 
 # {{title}}
@@ -26,15 +25,11 @@ created:
 
 ## 🏢 Roles and organizations
 
-| Organization | Role |
-| --- | --- |
-| `= this.{{moduleFields.organizations}}[0]` | |
+![[{{paths.system}}/04 Assets/Bases/Contact Roles.base#Person roles]]
 
 ## 🤝 Relationship
 
-- **Relationship type:** `= default(this.{{moduleFields.relationship}}, "–")`
-- **Relevance:** `= default(this.{{moduleFields.relevance}}, "–")`
-- **Last contact:** `= choice(this.{{moduleFields.last_contact}}, dateformat(this.{{moduleFields.last_contact}}, "yyyy-MM-dd"), "–")`
+![[{{paths.system}}/04 Assets/Bases/Contact Details.base#Relationship]]
 
 ## 🗓️ Interactions
 

@@ -19,6 +19,7 @@ Localization changes presentation and guidance, never semantic identifiers,
 field mappings, paths, or ownership.
 
 Templates are intentionally useful structures rather than empty skeletons. They
-may include prompts, Dataview queries, and recurring context sections, but must
-remain independent of a specific vault, person, organization, or external
+may include prompts, Obsidian Bases views, Dataview task queries when Bases
+cannot expose individual Markdown tasks, and recurring context sections, but
+must remain independent of a specific vault, person, organization, or external
 service.

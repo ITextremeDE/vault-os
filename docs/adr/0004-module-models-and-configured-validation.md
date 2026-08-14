@@ -25,6 +25,8 @@ folder layout, and vault owner.
   conventions without rewriting existing content.
 - Multi-value instance registers may explicitly accept either one scalar value
   or a YAML list so established content shapes remain valid.
+- Module fields may declare validated single Wiki links or Wiki-link lists so
+  relation records do not require parallel positional arrays.
 - Instance registers may document their overall purpose and every controlled
   value without moving those local semantics into the portable model.
 - External-reference policy may declare explicit ID/URL field pairs when an

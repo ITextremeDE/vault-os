@@ -210,7 +210,7 @@ externalReferences:
             )
             root.joinpath("Projects/2026-08-11 Example.md").unlink()
             note = root / "Contacts/Historischer Kontakt.md"
-            note.parent.mkdir()
+            note.parent.mkdir(parents=True)
             note.write_text(
                 """---
 art: Kontakt
@@ -277,7 +277,6 @@ archive_url: https://example.invalid/archive
             "frontmatter.string",
             "frontmatter.register",
             "frontmatter.date",
-            "frontmatter.wiki_link_list",
             "frontmatter.filename",
             "frontmatter.external_reference_pair",
             "frontmatter.external_reference_id",
@@ -285,6 +284,49 @@ archive_url: https://example.invalid/archive
         ):
             self.assertIn(rule, result.stdout)
             self.assertNotIn("redacted-secret", result.stdout)
+
+    def test_single_wiki_link_module_fields_are_validated(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            role = root / "Contacts/Roles/Example – Doe, Jane – Manager.md"
+            role.parent.mkdir(parents=True)
+            role.write_text(
+                """---
+kind: contact
+type: role
+status: active
+area: Example
+aliases: []
+tags: []
+cssclasses: []
+created: 2026-08-14
+person: "[[Projects/2026-08-11 Example]]"
+organization: "[[Projects/2026-08-11 Example]]"
+function: Manager
+start_date:
+end_date:
+---
+
+# Example – Doe, Jane – Manager
+""",
+                encoding="utf-8",
+            )
+
+            valid = self.run_validator(root)
+            self.assertEqual(valid.returncode, 0, valid.stdout + valid.stderr)
+
+            role.write_text(
+                role.read_text(encoding="utf-8").replace(
+                    'organization: "[[Projects/2026-08-11 Example]]"',
+                    "organization: Example Inc",
+                ),
+                encoding="utf-8",
+            )
+            invalid = self.run_validator(root)
+
+        self.assertEqual(invalid.returncode, 1, invalid.stdout + invalid.stderr)
+        self.assertIn("frontmatter.wiki_link", invalid.stdout)
 
     def test_explicit_external_reference_pair_supports_nonderived_names(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -322,22 +364,24 @@ archive_url: https://example.invalid/archive
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             self.create_vault(root)
-            note = root / "Contacts/Doe, Jane.md"
-            note.parent.mkdir()
+            note = root / "Contacts/Roles/Example – Doe, Jane – Manager.md"
+            note.parent.mkdir(parents=True)
             note.write_text(
                 """---
 kind: contact
-type: representative
+type: role
 status: active
 area: Example
 aliases: []
 tags: []
 cssclasses: []
 created: 2026-08-11
-organizations: []
+person:
+organization:
+function: Manager
 ---
 
-# Jane Doe
+# Example – Doe, Jane – Manager
 """,
                 encoding="utf-8",
             )

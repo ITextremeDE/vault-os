@@ -138,7 +138,7 @@ Some optional Vault-OS modules benefit from additional core plugins:
 
 | Vault-OS module | Core plugin | Level | Configuration |
 | --- | --- | --- | --- |
-| `review` | Bases | Required for the installed `.base` view | Enable Bases; the view itself is supplied by the module. |
+| `contacts`, `knowledge`, `para`, `review` | Bases | Required for dynamic template views and the installed review view | Enable Bases; Vault-OS supplies the embedded views and `.base` file. |
 | `journal` | Daily notes | Optional | Point it to configured `paths.journalDaily` and the installed filename policy. Its template may point to `<system-root>/04 Assets/Templates/Journal/Daily Note.md`. Do not invent a second journal structure. |
 | `navigation` | Daily notes | Required for its `obsidian://daily` action | Enable it when the navigation skill should open or create today's journal note. |
 | `templates` | Templates | Optional | Point the template folder to `<system-root>/04 Assets/Templates` when templates should be inserted manually. Lifecycle commands materialize configured fields, values, and paths first; Obsidian resolves its remaining native placeholders. Treat those template files as managed. |
@@ -159,7 +159,7 @@ it off is a vault-owner decision, not a Vault-OS installation step.
 
 | Plugin | Position | Use it when | Boundary |
 | --- | --- | --- | --- |
-| [Dataview](https://github.com/blacksmithgu/obsidian-dataview) | Optional | Existing notes or advanced dashboards already use Dataview queries. | Prefer the official Bases core plugin for new portable views when it is sufficient. Review DataviewJS as executable code rather than passive note content. |
+| [Dataview](https://github.com/blacksmithgu/obsidian-dataview) | Optional | PARA dashboards should aggregate individual Markdown tasks or existing notes still depend on Dataview. | Vault-OS uses Bases for file- and property-based views; keep Dataview only where Bases cannot expose task rows. Review DataviewJS as executable code rather than passive note content. |
 | [Obsidian Git](https://github.com/Vinzent03/obsidian-git) | Optional for advanced users | Git is the deliberate version-control workflow for the vault. | Start with automatic pull and push disabled. Do not let multiple sync tools race over the same files; Git history is not the only backup. |
 | [Tasks](https://github.com/obsidian-tasks-group/obsidian-tasks) | Optional | Tasks are intentionally managed inside this vault. | Do not create a competing task system when an external task manager is canonical. |
 | [Templater](https://github.com/SilentVoid13/Templater) | Not a default | Core Templates and Vault-OS skills cannot express a required automation. | Templates may execute JavaScript or system commands. Keep them reviewed, scoped, and portable. |
@@ -184,7 +184,7 @@ concrete module or workflow that needs them.
 2. Open **Settings** and apply the file, link, property, deletion, and recovery
    recommendations.
 3. Enable the recommended core plugins.
-4. Enable Bases when the `review` module is installed and its view will be
+4. Enable Bases when `contacts`, `knowledge`, `para`, or `review` views will be
    used.
 5. Configure Daily notes or Templates only when their corresponding module
    workflow needs Obsidian commands.

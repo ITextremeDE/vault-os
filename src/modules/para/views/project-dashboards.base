@@ -1,0 +1,80 @@
+# SPDX-License-Identifier: MPL-2.0
+formulas:
+  project_link: "file.asLink(file.basename)"
+  note_link: "file.asLink(file.basename)"
+  created: "if(note.created, note.created.format(\"YYYY-MM-DD\"), file.ctime.format(\"YYYY-MM-DD\"))"
+  modified: "file.mtime.format(\"YYYY-MM-DD\")"
+properties:
+  "formula.project_link":
+    displayName: "Project"
+  "formula.note_link":
+    displayName: "Note"
+  "note.{{fields.type}}":
+    displayName: "Type"
+  "note.{{fields.status}}":
+    displayName: "Status"
+  "formula.created":
+    displayName: "Created"
+  "formula.modified":
+    displayName: "Modified"
+views:
+  - type: table
+    name: "Active projects"
+    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} != \"{{values.status.completed}}\" && {{fields.status}} != \"{{values.status.archived}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.project_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Waiting"
+    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.waiting}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.project_link"
+      - "note.{{fields.type}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Completed, not archived"
+    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.completed}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.project_link"
+      - "note.{{fields.type}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Recently changed"
+    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Archive recently changed"
+    filters: "file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"

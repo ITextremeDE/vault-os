@@ -12,23 +12,25 @@ are more useful together, especially for agent-assisted work.
 | --- | --- | --- |
 | `agents` | Conventions for reusable agent prompts and skills | Prompt and skill contracts |
 | `audit` | Detect and correct operating-system and content drift | Audit routing, OS/content/vault audit and correction skills |
-| `contacts` | Structured people, organizations, and representatives | Schema, workflow, prompts, templates, instance registers |
+| `contacts` | Structured people, organizations, representatives, and role relations | Schema, workflow, prompts, templates, reusable role and contact-detail Bases views, instance registers |
 | `git` | Safe commits governed by instance policy | Commit-planning skill |
 | `governance` | Normalize notes and record relevant content changes | Closing block, normalization prompt, change-log workflow |
 | `inbox` | Capture and route unclassified material | Inbox workflow and import skill |
 | `journal` | Daily, weekly, and yearly reflection | Schema, workflow, prompts, templates, configured period directories and READMEs |
 | `knowledge` | Process conversations into working notes, insights, and durable knowledge | Schema, workflows, prompts, templates, processing skills |
 | `navigation` | Open existing notes through Obsidian without changing them | Obsidian navigation skill |
-| `para` | Organize projects, areas, resources, and archives | Schema, filing/archiving workflows, templates, configured roots and READMEs |
+| `para` | Organize projects, areas, resources, and archives | Schema, filing/archiving workflows, templates, reusable dashboard Bases views, configured roots and READMEs |
 | `publishing` | Prepare creator content | Article, video, and website templates |
 | `review` | Review content state | Review workflow and Obsidian Bases view |
 | `search` | Search vault notes and configured local conversation sources | Vault and conversation search skills |
 | `templates` | Create validated notes from installed templates | Template contract and creation skill |
 
-The `review` module's `.base` file needs an Obsidian version with Bases support
-to render as a view. Templates and the Bases view are materialized from the
-instance field, value, module-field, and path mappings during install and
-update. The 21 content templates ship as complete English and German variants;
+The `contacts`, `knowledge`, and `para` templates and the `contacts`, `para`, and `review`
+modules' `.base` files need an Obsidian version with Bases support to render
+their dynamic views. PARA task views remain Dataview queries because Bases does
+not expose individual Markdown tasks. Templates and the Bases views are materialized from
+the instance field, value, module-field, and path mappings during install and
+update. The 22 content templates ship as complete English and German variants;
 `vault.language` selects the presentation language while semantic mappings stay
 instance-owned. Unsupported template languages fall back to English. Vault-OS
 does not install or configure Obsidian plugins.

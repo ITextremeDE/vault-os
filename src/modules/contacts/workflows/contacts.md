@@ -2,9 +2,13 @@
 
 # Contacts
 
-Use `contact` with type `person`, `representative`, or `organization`. Select a
+Use `contact` with type `person`, `representative`, `organization`, or `role`. Select a
 registered area and use only registered relationship and relevance values.
-Represent organization membership in structured metadata, not only prose.
+Represent every role as an independent relation note below the configured
+contacts root in `Roles/`. A role links exactly one person and one organization;
+its function, lifecycle status, and optional start and end dates belong to that
+relation note. Do not encode role names as view labels or pair separate lists by
+position.
 
 Before creating a contact, check for an existing person or organization. Name
 people as configured by the instance and organizations by their clear name.

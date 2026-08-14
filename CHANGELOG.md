@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced positional organization/function pairs in contacts with validated
+  role relation notes that link one person and one organization and can carry
+  their own function, status, and optional validity period.
+- Prefer the note's declared `created` property in managed Bases views and use
+  the filesystem creation time only as a fallback.
+- Qualify frontmatter columns in managed Bases views with `note.` so configured
+  display names are applied consistently instead of falling back to lowercase
+  property keys.
+- Centralized repeated contact-role queries in one managed Bases asset with
+  dedicated person-role and organization-contact views.
+- Centralized repeated contact relationship and job displays in one managed
+  Bases asset with context-aware views for the embedding contact note.
+- Centralized project- and area-scoped PARA dashboard queries in managed Bases
+  assets with live and archive views driven by the embedding dashboard's area.
+- Replaced file- and property-based Dataview output in managed contact,
+  conversation, project, and area templates with embedded Obsidian Bases views;
+  retained Dataview only for individual Markdown task aggregation that Bases
+  cannot represent.
+- Advanced the development package to `0.2.0-dev.5` for normalized contact
+  roles, metadata-first creation dates, reliable Bases column titles, and
+  reusable contact and PARA dashboard views.
+
 ## [0.1.0] - 2026-08-12
 
 ### Added

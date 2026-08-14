@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: MPL-2.0
+formulas:
+  contact_link: "file.asLink(file.basename)"
+  note_link: "file.asLink(file.basename)"
+  last_contact_display: "if({{moduleFields.last_contact}}, {{moduleFields.last_contact}}.format(\"YYYY-MM-DD\"), \"–\")"
+  created: "if(note.created, note.created.format(\"YYYY-MM-DD\"), file.ctime.format(\"YYYY-MM-DD\"))"
+  modified: "file.mtime.format(\"YYYY-MM-DD\")"
+  last_contact_sort: "if({{moduleFields.last_contact}}, {{moduleFields.last_contact}}, date(\"1900-01-01\"))"
+properties:
+  "formula.contact_link":
+    displayName: "Contact"
+  "formula.note_link":
+    displayName: "Note"
+  "note.{{fields.type}}":
+    displayName: "Type"
+  "note.{{fields.status}}":
+    displayName: "Status"
+  "formula.last_contact_display":
+    displayName: "Last contact"
+  "formula.created":
+    displayName: "Created"
+  "formula.modified":
+    displayName: "Modified"
+views:
+  - type: table
+    name: "Contacts"
+    filters: "file.inFolder(\"{{paths.contacts}}\") && {{fields.area}} == this.{{fields.area}} && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    sort:
+      - property: "formula.last_contact_sort"
+        direction: DESC
+      - property: "file.basename"
+        direction: ASC
+    order:
+      - "formula.contact_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.last_contact_display"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Relevant links"
+    filters: "(file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Recently changed"
+    filters: "(file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}}) || {{fields.area}} == this.{{fields.area}})"
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Archive relevant links"
+    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"
+  - type: table
+    name: "Archive recently changed"
+    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}}) || {{fields.area}} == this.{{fields.area}})"
+    limit: 10
+    sort:
+      - property: "file.mtime"
+        direction: DESC
+    order:
+      - "formula.note_link"
+      - "note.{{fields.type}}"
+      - "note.{{fields.status}}"
+      - "formula.created"
+      - "formula.modified"

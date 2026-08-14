@@ -115,13 +115,13 @@
       ],
       "source": "src/modules/knowledge/templates/conversation-note.md",
       "target": "04 Assets/Templates/Knowledge/Conversation Note.md",
-      "sha256": "167553c8c142e7ed12a48af18609de19928f8e41038da319ff65a757cda025aa",
+      "sha256": "d045d922ef8d6eaedbf2f359759357d1bbb2656bb3d60cc36dfa201fffcb79c6",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/knowledge/templates/de/conversation-note.md",
-          "sha256": "b01439e57c2484d90335dce455058ddbd2c61e3da2903374125a044b4198f14c"
+          "sha256": "67060bbff16de8c846ca26e4468cbf5d4d0142e56716d08776c88748e288ac7f"
         }
       }
     },
