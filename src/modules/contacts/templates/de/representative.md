@@ -35,7 +35,9 @@ created:
 
 ## 🧠 Kontext und Notizen
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

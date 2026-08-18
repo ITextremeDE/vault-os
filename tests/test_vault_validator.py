@@ -106,6 +106,108 @@ class VaultValidatorTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn("RESULT errors=0 warnings=0", result.stdout)
 
+    def test_area_format_can_require_resolvable_wiki_links(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            fields_path = root / "Vault-OS/schema/fields.yaml"
+            fields = yaml.safe_load(fields_path.read_text(encoding="utf-8"))
+            fields["formats"]["area"] = "wiki-link"
+            fields_path.write_text(
+                yaml.safe_dump(fields, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            project = root / "Projects/2026-08-11 Example.md"
+            project.write_text(
+                project.read_text(encoding="utf-8").replace(
+                    "area: Example", 'area: "[[Areas/Example/_Example|Example]]"'
+                ),
+                encoding="utf-8",
+            )
+            area = root / "Areas/Example/_Example.md"
+            area.parent.mkdir(parents=True)
+            area.write_text(
+                """---
+kind: area
+type: area
+status: open
+area: "[[Areas/Example/_Example|Example]]"
+aliases: []
+tags: []
+cssclasses: []
+created: 2026-08-18
+---
+
+# Example
+""",
+                encoding="utf-8",
+            )
+
+            result = self.run_validator(root)
+            project.write_text(
+                project.read_text(encoding="utf-8").replace(
+                    "_Example|Example", "_Example|Wrong"
+                ),
+                encoding="utf-8",
+            )
+            invalid_alias = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("RESULT errors=0 warnings=0", result.stdout)
+        self.assertEqual(
+            invalid_alias.returncode,
+            1,
+            invalid_alias.stdout + invalid_alias.stderr,
+        )
+        self.assertIn("frontmatter.area_format", invalid_alias.stdout)
+
+    def test_area_format_rejects_the_other_representation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            project = root / "Projects/2026-08-11 Example.md"
+            project.write_text(
+                project.read_text(encoding="utf-8").replace(
+                    "area: Example", 'area: "[[Projects/2026-08-11 Example]]"'
+                ),
+                encoding="utf-8",
+            )
+            text_result = self.run_validator(root)
+
+            fields_path = root / "Vault-OS/schema/fields.yaml"
+            fields = yaml.safe_load(fields_path.read_text(encoding="utf-8"))
+            fields["formats"]["area"] = "wiki-link"
+            fields_path.write_text(
+                yaml.safe_dump(fields, sort_keys=False, allow_unicode=True),
+                encoding="utf-8",
+            )
+            project.write_text(
+                project.read_text(encoding="utf-8").replace(
+                    'area: "[[Projects/2026-08-11 Example]]"', "area: Example"
+                ),
+                encoding="utf-8",
+            )
+            link_result = self.run_validator(root)
+
+        self.assertEqual(text_result.returncode, 1, text_result.stdout + text_result.stderr)
+        self.assertIn("frontmatter.area_format", text_result.stdout)
+        self.assertEqual(link_result.returncode, 1, link_result.stdout + link_result.stderr)
+        self.assertIn("frontmatter.area_format", link_result.stdout)
+
+    def test_area_register_rejects_wiki_link_syntax(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.create_vault(root)
+            root.joinpath("Vault-OS/registers/areas.yaml").write_text(
+                'schema: 1\nregister: areas\nvalues: ["[[Areas/Example]]"]\n',
+                encoding="utf-8",
+            )
+
+            result = self.run_validator(root)
+
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("values must be canonical plain names", result.stderr)
+
     def test_invalid_module_type_is_reported(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

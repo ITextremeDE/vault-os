@@ -217,7 +217,10 @@ values, module fields, and paths are still materialized from the instance.
 After installation, `Vault-OS/config.yaml` is the instance-owned canonical
 configuration. Edit that installed file for later module or path changes; do
 not keep two competing configuration sources. Field roles, localized stored
-values, and module fields live in `Vault-OS/schema/fields.yaml`. Run `update`
+values, module fields, and the `text` or `wiki-link` representation of the area
+role live in `Vault-OS/schema/fields.yaml`. Keep canonical plain area names in
+`Vault-OS/registers/areas.yaml`; Wiki-link syntax belongs only in note
+frontmatter when `formats.area: wiki-link` is selected. Run `update`
 after changing either file; this rematerializes managed templates and views
 without adopting either instance file into release ownership.
 

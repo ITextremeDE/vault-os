@@ -33,7 +33,9 @@ Was ist hier wirklich wichtig?
 
 ## ❓ Offene Fragen
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

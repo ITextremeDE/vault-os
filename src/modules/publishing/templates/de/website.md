@@ -18,7 +18,9 @@ created:
 
 ## 🌐 Inhalt
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

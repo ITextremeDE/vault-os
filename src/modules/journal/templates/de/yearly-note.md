@@ -27,7 +27,9 @@ created:
 
 ## 🔭 Ausblick
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

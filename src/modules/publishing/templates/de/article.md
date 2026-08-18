@@ -31,7 +31,9 @@ created:
 
 Mehr unter:
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

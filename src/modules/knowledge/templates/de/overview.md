@@ -25,7 +25,9 @@ created:
 
 ## 💡 Zentrale Erkenntnisse
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

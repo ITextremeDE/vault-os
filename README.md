@@ -25,12 +25,13 @@ model.
 
 ## Status
 
-Vault-OS `0.2.0` is the current published release. It adds normalized contact
-roles, reusable Obsidian Bases views for contacts and PARA dashboards, and more
-reliable metadata-driven view rendering. Installation and update behavior have
-been validated against clean vaults and a production MindOS instance.
+Vault-OS `0.3.0` is the current published release. It adds instance-configured
+plain-text or Wiki-link area values, keeps PARA dashboard folder queries aligned
+with that choice, and standardizes the closing context/action section in German
+content templates. Installation and update behavior have been validated against
+clean vaults and synchronized temporary copies.
 
-Use the `v0.2.0` tag for a reproducible installation. The `main` branch contains
+Use the `v0.3.0` tag for a reproducible installation. The `main` branch contains
 ongoing development, and interfaces may continue to evolve throughout the
 `0.x` release line.
 
@@ -151,8 +152,9 @@ ownership.
 ## Operate and update an installation
 
 Edit `Vault-OS/config.yaml` to change modules or instance paths and
-`Vault-OS/schema/fields.yaml` to change local field or value mappings. Preview
-and apply afterward so managed templates and views are materialized again:
+`Vault-OS/schema/fields.yaml` to change local field or value mappings and choose
+`text` or `wiki-link` area values. Preview and apply afterward so managed
+templates and views are materialized again:
 
 ```bash
 .venv/bin/python -m vault_os diff "/path/to/My Vault"
@@ -260,6 +262,7 @@ using it as evidence or changing it.
 
 - [Architecture decisions](docs/adr/)
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
+- [Vault-OS 0.3.0 release validation](docs/validation/2026-08-18-v0.3.0-release.md)
 - [Vault-OS 0.2.0 release validation](docs/validation/2026-08-18-v0.2.0-release.md)
 - [Vault-OS 0.1.0 release validation](docs/validation/2026-08-12-v0.1.0-release.md)
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)

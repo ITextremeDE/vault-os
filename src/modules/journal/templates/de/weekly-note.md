@@ -30,7 +30,9 @@ Abschnitte entfernen.
 
 ## 🔭 Ausblick
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

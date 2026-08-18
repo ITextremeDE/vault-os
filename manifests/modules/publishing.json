@@ -18,7 +18,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/publishing/templates/de/article.md",
-          "sha256": "4f3ec2dbb3cb33cca74a6f606d607b2039760d575c22492847c66fef0440f625"
+          "sha256": "0a12b522c51287221f5db9c5992e4da2427e6991ac309e449894d7ee452e5921"
         }
       }
     },
@@ -34,7 +34,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/publishing/templates/de/video.md",
-          "sha256": "d2299672e6c62acde169bf43a0368c09e1abd74f424cad50da21a6d4107d419a"
+          "sha256": "dfb68177ec6e6a7d613dd10c6c3f5a31d3e9afb7fa9fe500472678eda7736d11"
         }
       }
     },
@@ -50,7 +50,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/publishing/templates/de/website.md",
-          "sha256": "9c51e3aa75aaf9d18b5e887e206280d97efe1461c14e18e825c4e8e95bd543d7"
+          "sha256": "930b547499398919e4cbae5346c35f8c0d8147e93181055a777a1404b58bb151"
         }
       }
     }

@@ -20,7 +20,7 @@ properties:
 views:
   - type: table
     name: "Active projects"
-    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} != \"{{values.status.completed}}\" && {{fields.status}} != \"{{values.status.archived}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} != \"{{values.status.completed}}\" && {{fields.status}} != \"{{values.status.archived}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     sort:
       - property: "file.mtime"
         direction: DESC
@@ -32,7 +32,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Waiting"
-    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.waiting}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.waiting}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     sort:
       - property: "file.mtime"
         direction: DESC
@@ -43,7 +43,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Completed, not archived"
-    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.completed}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) && {{fields.kind}} == \"{{values.kind.project}}\" && {{fields.status}} == \"{{values.status.completed}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     sort:
       - property: "file.mtime"
         direction: DESC
@@ -54,7 +54,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Recently changed"
-    filters: "file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     limit: 10
     sort:
       - property: "file.mtime"
@@ -67,7 +67,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Archive recently changed"
-    filters: "file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + {{expressions.areaFolderName}}) && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     limit: 10
     sort:
       - property: "file.mtime"

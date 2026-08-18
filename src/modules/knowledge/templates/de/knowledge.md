@@ -30,7 +30,9 @@ created:
 
 ## 🚀 Nächster Schritt
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

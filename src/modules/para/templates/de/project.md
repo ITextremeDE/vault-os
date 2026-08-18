@@ -40,7 +40,9 @@ created:
 | --- | --- |
 | | |
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

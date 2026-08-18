@@ -74,7 +74,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/journal/templates/de/weekly-note.md",
-          "sha256": "cd20ee324b47c6e85f11d015575c4ff83530bc1837e015ddd1640ca2f0ea41e3"
+          "sha256": "75b203bc94792eeaf30b35a1deb3f098f0b85fc8ae28e65d70775a129efb3b60"
         }
       }
     },
@@ -90,7 +90,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/journal/templates/de/yearly-note.md",
-          "sha256": "da8eff86d67afd120520108a91326ffa8ff20b657edfa771f0c9c8fbe8322319"
+          "sha256": "41e78c738aebdf7d0a570ffdcd549f8d2ef8d9aabe8dbccb883f113fd946dafc"
         }
       }
     }

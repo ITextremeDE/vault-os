@@ -142,7 +142,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/para/templates/de/project.md",
-          "sha256": "52e2bd7cd2d00f2921cfa06ac8b56d80cf19c47673f548d522c2f4c074de3b54"
+          "sha256": "700ba0b96c1e5e7fc05f76551d2ecce46faf7206fcd87e45f7c995dee53a63eb"
         }
       }
     },
@@ -153,13 +153,13 @@
       ],
       "source": "src/modules/para/views/project-dashboards.base",
       "target": "04 Assets/Bases/Project Dashboards.base",
-      "sha256": "0ab9a7b23050f46d6f46d3d33a9121a0a00269089641382241dffa7221961904",
+      "sha256": "8285f07a9ae2e1ef909cc0a3ebfe903c6d259f8e5089704a1f6a724f4e988fe0",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/para/views/de/project-dashboards.base",
-          "sha256": "9f457e07e9cbccddcf6e4583c66dd3583f17aaa6a1ba72b8080b60356b65e3d3"
+          "sha256": "4531d0fe59dd8f97037c22a050936e93af57409fe000ae6588bbc29397e101b5"
         }
       }
     },
@@ -169,13 +169,13 @@
       ],
       "source": "src/modules/para/views/area-dashboards.base",
       "target": "04 Assets/Bases/Area Dashboards.base",
-      "sha256": "7b0af9152fc3634147c4e4ae29a88904be0033dba916a5a2969c1825e703eb30",
+      "sha256": "abf77a9a9eefd32fd0dcc98cbf0167a2b21e311519ac35261d2a9e38f814c7f1",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/para/views/de/area-dashboards.base",
-          "sha256": "c59d39176e2ef1c2342295aad919963b7486b63f6de3618a6829b53b6f4bebf9"
+          "sha256": "0df9106a6a9c631150ddf25748f2261703ca94636927f5a7f1b12e565182ac7c"
         }
       }
     }

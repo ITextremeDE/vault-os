@@ -17,7 +17,7 @@ from .package import InstanceConfig, VaultOSError
 
 
 TOKEN_RE = re.compile(
-    r"\{\{(fields|moduleFields|values|paths)\.([A-Za-z0-9_.-]+)\}\}"
+    r"\{\{(fields|moduleFields|values|paths|expressions)\.([A-Za-z0-9_.-]+)\}\}"
 )
 FIELD_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -25,6 +25,7 @@ FIELD_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 @dataclass(frozen=True)
 class MaterializationProfile:
     fields: dict[str, str]
+    area_format: str
     module_fields: dict[str, str]
     values: dict[str, dict[str, str]]
     preferred_values: dict[str, dict[str, str]]
@@ -54,6 +55,14 @@ def parse_materialization_profile(content: bytes) -> MaterializationProfile:
     for role in ("kind", "type", "status", "area"):
         if role not in fields:
             raise VaultOSError(f"materialization field profile lacks role {role}")
+    formats = value.get("formats", {})
+    if not isinstance(formats, dict):
+        raise VaultOSError("materialization formats must be an object")
+    area_format = formats.get("area", "text")
+    if area_format not in {"text", "wiki-link"}:
+        raise VaultOSError(
+            "materialization formats.area must be 'text' or 'wiki-link'"
+        )
     module_fields = _string_map(
         value.get("moduleFields", {}), "materialization moduleFields"
     )
@@ -88,7 +97,9 @@ def parse_materialization_profile(content: bytes) -> MaterializationProfile:
                 raise VaultOSError(
                     f"materialization preferredValues.{role}.{token} must name a stored value mapped to {canonical!r}"
                 )
-    return MaterializationProfile(fields, module_fields, values, preferred_values)
+    return MaterializationProfile(
+        fields, area_format, module_fields, values, preferred_values
+    )
 
 
 def _stored_value(profile: MaterializationProfile, role: str, token: str) -> str:
@@ -133,6 +144,19 @@ def render_instance_source(
             return value
         if namespace == "moduleFields":
             return profile.module_fields.get(key, key)
+        if namespace == "expressions":
+            if key != "areaFolderName":
+                raise VaultOSError(f"{label}: unknown materialization expression {key}")
+            area = f"this.{profile.fields['area']}"
+            if profile.area_format == "text":
+                return area
+            area_file = f"{area}.asFile()"
+            basename = f"{area_file}.basename"
+            folder = f"{area_file}.folder"
+            return (
+                f'if({basename}.startsWith(\\"_\\") || {basename} == \\"README\\", '
+                f'{folder}.split(\\"/\\").reverse()[0], {basename})'
+            )
         if namespace == "paths":
             value = config.data["paths"].get(key)
             if not isinstance(value, str):

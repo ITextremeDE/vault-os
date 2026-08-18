@@ -103,6 +103,13 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertEqual(config["vault"]["name"], "My Vault")
             self.assertEqual(config["modules"], ["para"])
             self.assertTrue(vault.joinpath("99 System/01 Schema/Models/para.json").is_file())
+            project_dashboards = vault.joinpath(
+                "99 System/04 Assets/Bases/Project Dashboards.base"
+            ).read_text(encoding="utf-8")
+            self.assertIn(
+                'file.inFolder(\\"01 Projects/\\" + this.area)',
+                project_dashboards,
+            )
             self.assertFalse(
                 vault.joinpath("99 System/01 Schema/Models/knowledge.json").exists()
             )
@@ -595,6 +602,7 @@ class VaultOSCliTests(unittest.TestCase):
                 "status": "zustand",
                 "area": "bereich",
             }
+            fields["formats"] = {"area": "wiki-link"}
             fields["values"] = {
                 "kind": {"Kontakt": "contact", "Projekt": "project", "System": "system"},
                 "type": {
@@ -724,11 +732,11 @@ class VaultOSCliTests(unittest.TestCase):
                 ],
             )
             self.assertIn(
-                'file.inFolder(\\"01 Projekte/\\" + this.bereich)',
+                'this.bereich.asFile().folder.split(\\"/\\").reverse()[0]',
                 project_dashboards,
             )
             self.assertIn(
-                'file.inFolder(\\"04 Archive/01 Projekte/\\" + this.bereich)',
+                'this.bereich.asFile().basename.startsWith(\\"_\\")',
                 project_dashboards,
             )
 

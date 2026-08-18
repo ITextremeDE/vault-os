@@ -49,7 +49,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/person.md",
-          "sha256": "9ff4cbdcdb529767bbce3719e31c47df762212ceddce1d06bd1275a3283047e6"
+          "sha256": "9ac39369e6133f310a6c48e3a4d9ad89688bd0d2dc030fbe7f618150539d76e8"
         }
       }
     },
@@ -65,7 +65,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/representative.md",
-          "sha256": "ea78ffd59c561cfed23533f66f5bed5527aa4a5caf7ef82f7b173adc503ec5f1"
+          "sha256": "1b60c5989d165a3239cbe9d792a0025dd8155da29aab296890b94f24a8f5e382"
         }
       }
     },
@@ -81,7 +81,7 @@
       "localizedSources": {
         "de": {
           "source": "src/modules/contacts/templates/de/organization.md",
-          "sha256": "5e35ef897d03345c3ebf386aa5578d64faa3079ce323d07b2b91aefe6201125f"
+          "sha256": "fd2faac2002b9649549ecf862e3261ebfd016650eea564cefa94cb8e91b353ac"
         }
       }
     },

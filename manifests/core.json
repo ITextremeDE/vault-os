@@ -84,7 +84,7 @@
       ],
       "source": "src/core/schema/frontmatter.md",
       "target": "01 Schema/Frontmatter.md",
-      "sha256": "6cf2ca21f23588c36164b76119cf98b9d14003880ea696c8b70756c9f74e59be",
+      "sha256": "0bad09ff49d5ab290a506d1e2efdf0af9bfbe2f6e842967ee4cec0f135c212ef",
       "installMode": "managed"
     },
     {
@@ -149,7 +149,7 @@
       ],
       "source": "src/core/registers/areas.md",
       "target": "02 Registers/Areas.md",
-      "sha256": "f4a99f98c93f60f439ed319cc2e0f3b841340f7ac8b9b3b446f50c4f50f7153b",
+      "sha256": "939c27d7fc572d390bd6f8f70eb172bcfeae39c86232f5cb8b18bdff3e1566a1",
       "installMode": "managed"
     },
     {
@@ -203,7 +203,7 @@
       ],
       "source": "src/core/validation/validate_vault.py",
       "target": "05 Automation/Validators/validate_vault.py",
-      "sha256": "5b57eaa36f005094447254f27841248256e19274c61bbc12b11e602143aba5e9",
+      "sha256": "4ebed848975224c1b0a2054f7e62508d15f4617c828716550778bf3364aa0c12",
       "installMode": "managed"
     },
     {

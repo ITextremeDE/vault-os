@@ -31,7 +31,9 @@ Woraus ist die Erkenntnis entstanden?
 - **Projekt:**
 - **Wissen oder Überblick:**
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

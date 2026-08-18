@@ -23,7 +23,9 @@ created:
 - **Beschreibung:**
 - **Tags:**
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

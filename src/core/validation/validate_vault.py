@@ -18,7 +18,7 @@ import sys
 import unicodedata
 import urllib.parse
 from dataclasses import asdict, dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 import yaml
@@ -63,6 +63,7 @@ class FieldProfile:
     type: str
     status: str
     area: str
+    area_format: str
     kind_values: dict[str, str]
     type_values: dict[str, str]
     status_values: dict[str, str]
@@ -157,6 +158,14 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
     for role in ("kind", "type", "status", "area"):
         if not isinstance(roles.get(role), str) or not roles[role]:
             raise ValueError(f"frontmatter fields: missing role {role}")
+    formats = data.get("formats", {})
+    if not isinstance(formats, dict):
+        raise ValueError("frontmatter fields: formats must be an object")
+    area_format = formats.get("area", "text")
+    if area_format not in {"text", "wiki-link"}:
+        raise ValueError(
+            "frontmatter fields.formats.area must be 'text' or 'wiki-link'"
+        )
     values = data.get("values", {})
     if not isinstance(values, dict):
         raise ValueError("frontmatter fields: values must be an object")
@@ -253,6 +262,7 @@ def field_profile(root: Path, config: dict[str, Any]) -> FieldProfile:
         type=roles["type"],
         status=roles["status"],
         area=roles["area"],
+        area_format=area_format,
         kind_values=normalized_values["kind"],
         type_values=normalized_values["type"],
         status_values=normalized_values["status"],
@@ -859,12 +869,29 @@ def frontmatter_findings(
             findings.append(
                 Finding("error", "frontmatter.area_required", rel, 1, f"{profile.area} is required")
             )
-        if area not in (None, "") and (
-            not isinstance(area, str) or area not in registers["areas"].values
-        ):
-            findings.append(
-                Finding("error", "frontmatter.area", rel, 1, f"unknown area: {area!r}")
-            )
+        if area not in (None, ""):
+            canonical_area = area_name(area, profile.area_format)
+            if canonical_area is None:
+                expected = "plain text" if profile.area_format == "text" else "a Wiki link"
+                findings.append(
+                    Finding(
+                        "error",
+                        "frontmatter.area_format",
+                        rel,
+                        1,
+                        f"{profile.area} must be {expected}",
+                    )
+                )
+            elif canonical_area not in registers["areas"].values:
+                findings.append(
+                    Finding(
+                        "error",
+                        "frontmatter.area",
+                        rel,
+                        1,
+                        f"unknown area: {canonical_area!r}",
+                    )
+                )
 
         positions = [keys.index(field) for field in profile.order if field in keys]
         if positions != sorted(positions):
@@ -900,6 +927,30 @@ def file_indexes(
 def wiki_target(raw: str) -> str:
     raw = raw.replace("\\|", "|")
     return raw.split("|", 1)[0].split("#", 1)[0].strip().rstrip("\\")
+
+
+def area_name(value: object, area_format: str) -> str | None:
+    if not isinstance(value, str):
+        return None
+    match = WIKI_LINK_RE.fullmatch(value)
+    if area_format == "text":
+        return None if match is not None else value
+    if match is None or match.group(1):
+        return None
+    raw_link = match.group(2).replace("\\|", "|")
+    target = wiki_target(raw_link)
+    if not target:
+        return None
+    target_path = PurePosixPath(target)
+    name = target_path.name
+    name = name[:-3] if name.casefold().endswith(".md") else name
+    canonical = (
+        target_path.parent.name if name == "README" or name.startswith("_") else name
+    )
+    _, separator, display = raw_link.partition("|")
+    if separator and display.strip() != canonical:
+        return None
+    return canonical or None
 
 
 def resolve_wiki(
@@ -1079,6 +1130,13 @@ def main() -> int:
                     "areas",
                 )
             }
+            if any(
+                WIKI_LINK_RE.fullmatch(value)
+                for value in loaded_registers["areas"].values
+            ):
+                raise ValueError(
+                    "frontmatter.registers.areas: values must be canonical plain names"
+                )
             for definition in schema_models.fields.values():
                 if definition["type"] != "register":
                     continue

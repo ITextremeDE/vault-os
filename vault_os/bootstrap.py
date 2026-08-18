@@ -90,6 +90,13 @@ def _field_profile(vault: Path) -> dict[str, Any]:
         normalized_roles[role] = field
     if len(set(normalized_roles.values())) != len(normalized_roles):
         raise VaultOSError("bootstrap field profile roles must use distinct fields")
+    formats = value.get("formats", {})
+    if not isinstance(formats, dict):
+        raise VaultOSError("bootstrap field profile formats must be an object")
+    if formats.get("area", "text") not in {"text", "wiki-link"}:
+        raise VaultOSError(
+            "bootstrap field profile formats.area must be 'text' or 'wiki-link'"
+        )
     values = value.get("values", {})
     if not isinstance(values, dict):
         raise VaultOSError("bootstrap field profile values must be an object")

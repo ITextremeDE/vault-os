@@ -31,7 +31,9 @@ Artikel / Buch / Dokument / Link / Studie / Video / Webseite / Notiz
 
 ## 🎯 Relevanz
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

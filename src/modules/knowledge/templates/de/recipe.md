@@ -34,7 +34,9 @@ created:
 - Wie war das Ergebnis?
 - Was würde ich beim nächsten Mal anpassen?
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

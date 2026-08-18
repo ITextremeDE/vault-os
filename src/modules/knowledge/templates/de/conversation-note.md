@@ -58,7 +58,9 @@ views:
 
 - **Stand:** roh / ausgewertet / überführt
 
-# 🧩 Kontext und Aktionen
+---
+
+# 🧩 Kontext & Aktionen
 
 ## 📚 Quellen
 

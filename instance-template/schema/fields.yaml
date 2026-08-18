@@ -6,6 +6,9 @@ fields:
   status: status
   area: area
 
+formats:
+  area: text
+
 values:
   kind: {}
   type: {}

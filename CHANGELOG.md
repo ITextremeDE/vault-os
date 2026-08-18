@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-18
+
+### Added
+
+- Added an instance-owned `formats.area` contract for choosing plain-text or
+  Wiki-link area values while retaining canonical plain names in the area
+  register.
+
+### Changed
+
+- Standardized German content templates on `# 🧩 Kontext & Aktionen` with a
+  horizontal separator before the closing context and action section.
+- Materialized PARA dashboard views now derive folder names from linked area
+  notes when an instance selects Wiki-link area values.
+- Advanced the development package to `0.3.0-dev.2` for configurable area
+  representation including dashboard targets inside named area folders.
+- Advanced the development package to `0.3.0-dev.3` for the German content
+  template convention correction.
+
 ## [0.2.0] - 2026-08-18
 
 ### Changed

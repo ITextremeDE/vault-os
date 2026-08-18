@@ -39,7 +39,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Relevant links"
-    filters: "(file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "(file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.areas}}/\" + {{expressions.areaFolderName}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     limit: 10
     sort:
       - property: "file.mtime"
@@ -52,7 +52,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Recently changed"
-    filters: "(file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.areas}}/\" + this.{{fields.area}}) || {{fields.area}} == this.{{fields.area}})"
+    filters: "(file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.areas}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.areas}}/\" + {{expressions.areaFolderName}}) || {{fields.area}} == this.{{fields.area}})"
     limit: 10
     sort:
       - property: "file.mtime"
@@ -65,7 +65,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Archive relevant links"
-    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
+    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + {{expressions.areaFolderName}})) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\""
     limit: 10
     sort:
       - property: "file.mtime"
@@ -78,7 +78,7 @@ views:
       - "formula.modified"
   - type: table
     name: "Archive recently changed"
-    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + this.{{fields.area}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + this.{{fields.area}}) || {{fields.area}} == this.{{fields.area}})"
+    filters: "(file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.resources}}\")) && {{fields.type}} != \"{{values.type.role}}\" && !file.basename.startsWith(\"_\") && file.basename != \"README\" && (file.inFolder(\"{{paths.archive}}/{{paths.projects}}/\" + {{expressions.areaFolderName}}) || file.inFolder(\"{{paths.archive}}/{{paths.areas}}/\" + {{expressions.areaFolderName}}) || {{fields.area}} == this.{{fields.area}})"
     limit: 10
     sort:
       - property: "file.mtime"

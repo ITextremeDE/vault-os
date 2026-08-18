@@ -25,5 +25,18 @@ may map these roles to other field names without changing the validation
 engine. Managed templates and views are materialized from those mappings and
 the configured paths during lifecycle operations.
 
+The instance field profile also selects the representation of the area role:
+
+- `formats.area: text` stores the exact registered area name as a scalar;
+- `formats.area: wiki-link` stores one Wiki link. Its target filename matches
+  the registered area name, or an `_`-prefixed/`README` dashboard lives in the
+  folder named for that area. When the target filename differs, the link uses
+  the registered area name as its display alias.
+
+The area register always contains canonical plain names, never Wiki-link
+syntax. Existing profiles without `formats.area` use `text`. When Wiki links
+are selected, ordinary link validation still controls target existence and
+canonical paths.
+
 Managed core files do not require frontmatter. A module or instance may opt its
 own managed or content files into frontmatter validation.

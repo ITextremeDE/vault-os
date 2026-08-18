@@ -129,6 +129,25 @@ class PortabilityCheckTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_german_context_action_sections_follow_convention(self) -> None:
+        templates_root = REPOSITORY_ROOT / "src/modules"
+        old_heading = "# 🧩 Kontext und Aktionen"
+        new_heading = "# 🧩 Kontext & Aktionen"
+        separator = "\n\n---\n\n"
+        matching_templates = []
+
+        for template in templates_root.glob("*/templates/de/*.md"):
+            content = template.read_text(encoding="utf-8")
+            self.assertNotIn(old_heading, content, str(template))
+            if new_heading in content:
+                matching_templates.append(template)
+                for preceding_content in content.split(new_heading)[:-1]:
+                    self.assertTrue(
+                        preceding_content.endswith(separator), str(template)
+                    )
+
+        self.assertTrue(matching_templates, "no German context/action template found")
+
     def test_manifest_inventory_ignores_ds_store_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

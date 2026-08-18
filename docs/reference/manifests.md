@@ -26,8 +26,9 @@ Each managed entry in `core.json` or a module manifest contains:
 - `sha256`: lowercase SHA-256 digest of the source file.
 
 An entry may additionally declare `materialize: instance`. The lifecycle then
-resolves reserved `fields`, `moduleFields`, `values`, and `paths` tokens from the
-visible instance configuration before installing the managed artifact. Ordinary
+resolves reserved `fields`, `moduleFields`, `values`, `paths`, and derived
+`expressions` tokens from the visible instance configuration before installing
+the managed artifact. Ordinary
 Obsidian placeholders such as `{{title}}` and `{{date:YYYY-MM-DD}}` remain intact.
 Materialization is valid only for managed entries.
 
@@ -68,7 +69,14 @@ stable identifier, `preferredValues` selects the intended reverse mapping for a
 materialization token such as `type.contact.person`. `moduleFields` maps stable
 module-field identifiers to locally stored field names. `filenamePatterns` may override a managed
 kind's filename rule for an established instance convention. Empty maps use
-the managed identifiers and patterns directly. Module models may additionally
+the managed identifiers and patterns directly. The
+optional `formats.area` setting selects `text` or `wiki-link`; profiles without
+the setting retain the `text` behavior. The area register keeps canonical plain
+names in both modes. A Wiki-link value must resolve to a note whose filename
+matches its registered area name or to an `_`-prefixed/`README` dashboard in
+the correspondingly named folder. Materialized PARA folder queries derive the
+area name from that target so both representations preserve the same folder model.
+Module models may additionally
 declare typed fields, instance registers, and type-specific requirements. The
 register rule `allowScalar` permits a multi-value register to retain the common
 single-value scalar form while still accepting YAML lists. Optional register
