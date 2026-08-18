@@ -25,12 +25,12 @@ model.
 
 ## Status
 
-Vault-OS `0.1.0` is the first published versioned release. Installation and
-update behavior have been validated against clean vaults and a hash-verified
-copy of an existing real-world vault. A deliberate side-by-side production
-migration into a fresh Vault-OS instance has also been completed and validated.
+Vault-OS `0.2.0` is the current published release. It adds normalized contact
+roles, reusable Obsidian Bases views for contacts and PARA dashboards, and more
+reliable metadata-driven view rendering. Installation and update behavior have
+been validated against clean vaults and a production MindOS instance.
 
-Use the `v0.1.0` tag for a reproducible installation. The `main` branch contains
+Use the `v0.2.0` tag for a reproducible installation. The `main` branch contains
 ongoing development, and interfaces may continue to evolve throughout the
 `0.x` release line.
 
@@ -61,7 +61,7 @@ Clone the public repository and prepare an isolated Python environment:
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
 cd vault-os
-git checkout v0.1.0
+git checkout v0.2.0
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
@@ -260,6 +260,7 @@ using it as evidence or changing it.
 
 - [Architecture decisions](docs/adr/)
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
+- [Vault-OS 0.2.0 release validation](docs/validation/2026-08-18-v0.2.0-release.md)
 - [Vault-OS 0.1.0 release validation](docs/validation/2026-08-12-v0.1.0-release.md)
 - [Real-vault lifecycle validation](docs/validation/2026-08-11-real-vault-lifecycle.md)
 - [Agent integration validation](docs/validation/2026-08-11-agent-integration.md)
