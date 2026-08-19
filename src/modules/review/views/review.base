@@ -3,6 +3,8 @@ filters:
   and:
     - file.ext == "md"
     - {{fields.kind}} != "{{values.kind.system}}"
+    - '!file.inFolder("{{paths.system}}")'
+    - '!file.inFolder("Vault-OS")'
 formulas:
   link: "file.asLink(file.basename)"
 properties:

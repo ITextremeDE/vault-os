@@ -778,6 +778,8 @@ class VaultOSCliTests(unittest.TestCase):
                 encoding="utf-8"
             )
             self.assertIn('art != "System"', review)
+            self.assertIn('!file.inFolder("99 System")', review)
+            self.assertIn('!file.inFolder("Vault-OS")', review)
             self.assertIn("- typ", review)
 
             lock = json.loads(

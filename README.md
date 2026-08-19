@@ -25,13 +25,14 @@ model.
 
 ## Status
 
-Vault-OS `0.3.1` is the current published release. It presents PARA dashboard
-tasks with their owning note and due date, retains instance-configured plain-text
-or Wiki-link area values, and standardizes the closing context/action section in
-German content templates. Installation and update behavior have been validated
-against clean vaults and synchronized temporary copies.
+Vault-OS `0.3.2` is the current published release. It excludes the managed
+system tree and visible instance configuration recursively from the review
+queue, presents PARA dashboard tasks with their owning note and due date, and
+retains instance-configured plain-text or Wiki-link area values. Installation
+and update behavior have been validated against clean vaults and synchronized
+temporary copies.
 
-Use the `v0.3.1` tag for a reproducible installation. The `main` branch contains
+Use the `v0.3.2` tag for a reproducible installation. The `main` branch contains
 ongoing development, and interfaces may continue to evolve throughout the
 `0.x` release line.
 
