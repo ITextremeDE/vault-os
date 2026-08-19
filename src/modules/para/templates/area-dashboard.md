@@ -18,10 +18,14 @@ created:
 ## ✅ Open tasks
 
 ```dataview
-TASK
+TABLE WITHOUT ID
+  task.text AS "Task",
+  file.link AS "Note",
+  task.due AS "Due"
 FROM "{{paths.projects}}" OR "{{paths.areas}}"
-WHERE !fullyCompleted AND {{fields.area}} = this.{{fields.area}} AND file.name != "README"
-SORT file.mtime DESC
+FLATTEN file.tasks AS task
+WHERE !task.completed AND {{fields.area}} = this.{{fields.area}} AND file.name != "README"
+SORT task.due ASC, file.mtime DESC
 ```
 
 ## 📂 Active projects

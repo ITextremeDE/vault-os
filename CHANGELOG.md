@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-08-19
+
+### Changed
+
+- Replaced PARA dashboard task lists with compact task tables that show the
+  task, its owning note, and its due date.
+
 ## [0.3.0] - 2026-08-18
 
 ### Added

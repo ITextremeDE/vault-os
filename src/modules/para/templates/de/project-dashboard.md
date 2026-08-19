@@ -16,10 +16,14 @@ created:
 ## ✅ Offene Aufgaben
 
 ```dataview
-TASK
+TABLE WITHOUT ID
+  task.text AS "Aufgabe",
+  file.link AS "Notiz",
+  task.due AS "Fällig"
 FROM "{{paths.projects}}"
-WHERE !fullyCompleted AND {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
-SORT file.mtime DESC
+FLATTEN file.tasks AS task
+WHERE !task.completed AND {{fields.area}} = this.{{fields.area}} AND file.name != this.file.name AND file.name != "README"
+SORT task.due ASC, file.mtime DESC
 ```
 
 ## 📂 Aktive Projekte

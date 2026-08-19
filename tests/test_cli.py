@@ -707,6 +707,12 @@ class VaultOSCliTests(unittest.TestCase):
             self.assertIn('FROM "01 Projekte" OR "02 Bereiche"', dashboard)
             self.assertEqual(dashboard.count("```base"), 0)
             self.assertEqual(dashboard.count("```dataview"), 1)
+            self.assertIn('task.text AS "Aufgabe"', dashboard)
+            self.assertIn('file.link AS "Notiz"', dashboard)
+            self.assertIn('task.due AS "Fällig"', dashboard)
+            self.assertIn("FLATTEN file.tasks AS task", dashboard)
+            self.assertIn("WHERE !task.completed", dashboard)
+            self.assertNotIn("\nTASK\n", dashboard)
             self.assertIn(
                 "![[99 System/04 Assets/Bases/Project Dashboards.base#Aktive Projekte]]",
                 dashboard,
@@ -716,6 +722,16 @@ class VaultOSCliTests(unittest.TestCase):
                 dashboard,
             )
             self.assertNotIn("{{area}}", dashboard)
+
+            project_dashboard = vault.joinpath(
+                "99 System/04 Assets/Templates/PARA/Project Dashboard.md"
+            ).read_text(encoding="utf-8")
+            self.assertIn('task.text AS "Aufgabe"', project_dashboard)
+            self.assertIn('file.link AS "Notiz"', project_dashboard)
+            self.assertIn('task.due AS "Fällig"', project_dashboard)
+            self.assertIn("FLATTEN file.tasks AS task", project_dashboard)
+            self.assertIn("WHERE !task.completed", project_dashboard)
+            self.assertNotIn("\nTASK\n", project_dashboard)
 
             project_dashboards = vault.joinpath(
                 "99 System/04 Assets/Bases/Project Dashboards.base"

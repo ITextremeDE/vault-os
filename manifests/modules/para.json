@@ -88,13 +88,13 @@
       ],
       "source": "src/modules/para/templates/area-dashboard.md",
       "target": "04 Assets/Templates/PARA/Area Dashboard.md",
-      "sha256": "971778890ee81a9f05b4821dadd4855a3893139dabcb52b634787fdb51568e24",
+      "sha256": "598003df174126234d5735b603665f9102b26fd4e3ae0469ece513360ac4bc2d",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/para/templates/de/area-dashboard.md",
-          "sha256": "033d10705f4d57495fb884cb83d8da2b6d38a5c31b80284e47c9d675ede1d2e6"
+          "sha256": "aca45030063f70ec25d7126f163c57914f3c931549e7afc5b318dfdc2a1df8e2"
         }
       }
     },
@@ -120,13 +120,13 @@
       ],
       "source": "src/modules/para/templates/project-dashboard.md",
       "target": "04 Assets/Templates/PARA/Project Dashboard.md",
-      "sha256": "e98eb03a37a02dd1da311c68f8a6bc913f889438d2a4b2af06affd7f0d987232",
+      "sha256": "546ffaff902bafefd3d03db971596f2f5236f0c7b6266973b4faf419cb41568f",
       "installMode": "managed",
       "materialize": "instance",
       "localizedSources": {
         "de": {
           "source": "src/modules/para/templates/de/project-dashboard.md",
-          "sha256": "4e4ba97f098c77d200a6bfe96c33e6efeccc4a6cd598585b9cb5875196fd6c41"
+          "sha256": "8a78601273b6bbfe0753ea85a6092aee09126a2489500d8db8a81600d700fd21"
         }
       }
     },
