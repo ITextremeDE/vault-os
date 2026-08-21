@@ -61,8 +61,8 @@ or:
 Omitting `--provider` initializes every registered adapter. Provider selection
 is additive: rerunning the command with another provider adds it and does not
 remove an initialized provider. When refreshing only one selected provider,
-repeat the same `--provider` option. Version `0.1` has no provider de-initialize
-command.
+repeat the same `--provider` option. The current `0.x` release line has no
+provider de-initialize command.
 
 `agent-init` safely refreshes unchanged generated adapters and refuses to
 overwrite a locally modified artifact. It also refuses to run when the
@@ -185,9 +185,9 @@ with:
 Search results are candidates, not canonical knowledge. Agents must retrieve
 the original Markdown note before using a result as evidence or changing it.
 
-QMD activation is persistent in the instance integration state. Version `0.1`
-has no automatic QMD de-initialize command; restoring the pre-activation backup
-is the safe reversal path.
+QMD activation is persistent in the instance integration state. The current
+`0.x` release line has no automatic QMD de-initialize command; restoring the
+pre-activation backup is the safe reversal path.
 
 ### Use an externally managed QMD runtime
 

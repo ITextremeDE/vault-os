@@ -63,7 +63,7 @@ Clone the public repository and prepare an isolated Python environment:
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
 cd vault-os
-git checkout v0.2.0
+git checkout v0.3.2
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 ```
@@ -163,9 +163,9 @@ templates and views are materialized again:
 .venv/bin/python -m vault_os doctor "/path/to/My Vault"
 ```
 
-Installation and updates are transactional. There is no automatic downgrade or
-uninstall in version `0.1`; use a pre-change backup for release rollback or
-removal. The complete operating procedure is documented in
+Installation and updates are transactional. The current `0.x` release line has
+no automatic downgrade or uninstall; use a pre-change backup for release
+rollback or removal. The complete operating procedure is documented in
 [Upgrade, recover, and remove](docs/how-to/upgrade-recover-remove.md).
 
 On another device, wait for the approved sync service to finish, use the same
@@ -263,6 +263,8 @@ using it as evidence or changing it.
 
 - [Architecture decisions](docs/adr/)
 - [MindOS portability analysis](docs/analysis/mindos-portability-matrix.md)
+- [Vault-OS 0.3.2 release validation](docs/validation/2026-08-19-v0.3.2-release.md)
+- [Vault-OS 0.3.1 release validation](docs/validation/2026-08-19-v0.3.1-release.md)
 - [Vault-OS 0.3.0 release validation](docs/validation/2026-08-18-v0.3.0-release.md)
 - [Vault-OS 0.2.0 release validation](docs/validation/2026-08-18-v0.2.0-release.md)
 - [Vault-OS 0.1.0 release validation](docs/validation/2026-08-12-v0.1.0-release.md)
@@ -272,7 +274,7 @@ using it as evidence or changing it.
 
 ### Further reading
 
-- [Vault-OS 0.1.0: A portable operating system for Obsidian vaults](https://itextreme.de/articles/vault-os-portables-betriebssystem-fuer-obsidian-vaults)
+- [Vault-OS 0.3.2: A portable operating system for Obsidian vaults](https://itextreme.de/articles/vault-os-portables-betriebssystem-fuer-obsidian-vaults)
 
 ## Repository layout
 

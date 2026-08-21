@@ -37,9 +37,10 @@ create-only instance files other than the configuration are preserved. A file
 or symbolic link at any required operational directory is also a preflight
 conflict.
 
-There is no initial-install dry-run in version `0.1`. The installer preflights
-all targets before applying a successful installation, but users adopting an
-irreplaceable existing vault should test against a copy first. See the
+There is no initial-install dry-run in the current `0.x` release line. The
+installer preflights all targets before applying a successful installation,
+but users adopting an irreplaceable existing vault should test against a copy
+first. See the
 [installation guide](../how-to/install.md).
 
 ## Bootstrap
@@ -140,7 +141,8 @@ that registry rather than hard-coded in the lifecycle command.
 
 Provider selection is additive. Selecting another provider adds it to instance
 state; it does not remove an initialized provider. QMD activation is also
-persistent. Version `0.1` has no provider or QMD de-initialize command.
+persistent. The current `0.x` release line has no provider or QMD de-initialize
+command.
 
 Generated artifacts and their checksums are recorded in the device-local
 `.vault-os/integrations/agents.yaml`. A repeated command refreshes only

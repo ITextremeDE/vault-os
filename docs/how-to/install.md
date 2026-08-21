@@ -17,7 +17,7 @@ Codex, Claude Code, and QMD are optional and are covered by the
 
 ## Obtain Vault-OS
 
-The current published release is `0.3.0`. Use its tag for a reproducible
+The current published release is `0.3.2`. Use its tag for a reproducible
 installation instead of installing an arbitrary development commit from
 `main`.
 
@@ -26,10 +26,10 @@ Clone the public repository:
 ```bash
 git clone https://github.com/ITextremeDE/vault-os.git
 cd vault-os
-git checkout v0.3.0
+git checkout v0.3.2
 ```
 
-For a later release, replace `v0.3.0` with the intended version tag.
+For a later release, replace `v0.3.2` with the intended version tag.
 
 ## Prepare Python
 

@@ -49,4 +49,5 @@ and diagnostics from the registry. It contains no provider-specific branch.
 - Global client settings and `.obsidian` remain outside Vault-OS ownership.
 
 Adding a provider requires adapter code, documentation, and tests in the
-package. Version `0.1` does not load untrusted third-party adapters dynamically.
+package. The current `0.x` release line does not load untrusted third-party
+adapters dynamically.

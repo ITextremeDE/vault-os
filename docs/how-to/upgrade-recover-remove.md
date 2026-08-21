@@ -50,7 +50,8 @@ update:
 
 Use the provider option originally selected for the vault. Omit it only when all
 registered adapters are intended. Provider and QMD state is additive and
-persistent in version `0.1`; there is no automated de-initialize command.
+persistent in the current `0.x` release line; there is no automated
+de-initialize command.
 
 ## Add or remove modules
 
@@ -166,8 +167,9 @@ downgrade unless that release explicitly documents a downgrade path.
 
 ## Remove Vault-OS
 
-Version `0.1` has no uninstall command. The safe removal method is to restore a
-pre-install backup or migrate wanted content into a clean vault.
+The current `0.x` release line has no uninstall command. The safe removal
+method is to restore a pre-install backup or migrate wanted content into a
+clean vault.
 
 Do not blindly delete every path in `.vault-os/lock.json`: module removal may
 leave intentional instance-owned files, and a vault may contain unrelated
